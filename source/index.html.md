@@ -141,18 +141,16 @@ const generateHeaders = require("./generateHeaders");
 createOrder = async () => {
   const baseUrl = "https://app.calibri.io";
   const method = "POST";
-  const path = `/api/v2/atlas/market/orders`;
+  const path = `/api/v2/pythia/orders`;
   const url = `${baseUrl}${path}`;
   const headers = await generateHeaders();
 
   const orderData = {
-    market: "btczar",
-    side: "sell",
-    volume: "0.00001",
+    market: "12",
+    side: "yes",
     ord_type: "limit",
-    price: "800000",
-    post_only: true,
-    custom_order_id: "302b0494-1a06-4089-846c-0c6b13f1b661",
+    volume: "100",
+    price: "0.60",
   };
 
   const axiosConfig = {
@@ -176,26 +174,23 @@ createOrder = async () => {
 ```json
 {
   "id": 173757,
-  "uuid": "7e86a4fa-fcae-4953-b9bc-d6f328beea48",
-  "side": "sell",
+  "market": "12",
+  "side": "yes",
   "ord_type": "limit",
-  "price": "800000.0",
-  "avg_price": "0.0",
-  "state": "pending",
-  "market": "btczar",
+  "price": "0.60",
+  "state": "wait",
+  "origin_volume": "100",
+  "remaining_volume": "100",
+  "locked": "60.0",
+  "contracts_count": 0,
   "created_at": "2023-12-08T08:46:59+01:00",
-  "updated_at": "2023-12-08T08:46:59+01:00",
-  "origin_volume": "0.00001",
-  "remaining_volume": "0.00001",
-  "executed_volume": "0.0",
-  "trades_count": 0,
-  "custom_order_id": "302b0494-1a06-4089-846c-0c6b13f1b661"
+  "updated_at": "2023-12-08T08:46:59+01:00"
 }
 ```
 
-`https://app.calibri.io/api/v2/atlas/market/orders`
+`https://app.calibri.io/api/v2/pythia/orders`
 
-Create a new order on your account by signing your request and submitting the request
+Buys 100 YES shares at `0.60` USDC each, locking `60.00` USDC of collateral. Create a new order on your account by signing your request and submitting it.
 
 ## <span class="request-type__post">POST</span> Create order as sub-account
 
@@ -235,16 +230,16 @@ const generateHeaders = require("./generateHeadersWithSubAccount");
 createOrder = async () => {
   const baseUrl = "https://app.calibri.io";
   const method = "POST";
-  const path = `/api/v2/atlas/market/orders`;
+  const path = `/api/v2/pythia/orders`;
   const url = `${baseUrl}${path}`;
   const headers = await generateHeaders();
 
   const orderData = {
-    market: "btczar",
-    side: "buy",
-    volume: "0.00001",
+    market: "12",
+    side: "no",
     ord_type: "limit",
-    price: "750000",
+    volume: "50",
+    price: "0.40",
   };
 
   const axiosConfig = {
@@ -263,97 +258,9 @@ createOrder = async () => {
 };
 ```
 
-`https://app.calibri.io/api/v2/atlas/market/orders`
+`https://app.calibri.io/api/v2/pythia/orders`
 
 When the `X-Auth-Subaccount-Uid` header is included, the order is created on behalf of the specified sub-account or customer. The parent account's API credentials are used for authentication, but the operation is performed in the context of the sub-account.
-
-# Public request example
-
-## <span class="request-type__get">GET</span> Get available markets
-
-```javascript
-const axios = require("axios");
-
-getMarkets = async () => {
-  const baseUrl = "https://app.calibri.io";
-  const method = "GET";
-  const path = `/api/v2/atlas/public/markets`;
-  const url = `${baseUrl}${path}`;
-
-  const axiosConfig = {
-    method: method,
-    url: url,
-  };
-
-  try {
-    const results = await axios(axiosConfig);
-    console.log(JSON.stringify(results.data, undefined, 2));
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-getMarkets();
-```
-
-> Markets response:
-
-```json
-[
-  {
-    "id": "btczar",
-    "name": "BTC/ZAR",
-    "base_unit": "btc",
-    "quote_unit": "zar",
-    "min_price": "200000.0",
-    "max_price": "1200000.0",
-    "min_amount": "0.00001",
-    "amount_precision": 8,
-    "price_precision": 2,
-    "state": "enabled"
-  },
-  {
-    "id": "ethzar",
-    "name": "ETH/ZAR",
-    "base_unit": "eth",
-    "quote_unit": "zar",
-    "min_price": "10000.0",
-    "max_price": "100000.0",
-    "min_amount": "0.0001",
-    "amount_precision": 8,
-    "price_precision": 2,
-    "state": "enabled"
-  },
-  {
-    "id": "xrpzar",
-    "name": "XRP/ZAR",
-    "base_unit": "xrp",
-    "quote_unit": "zar",
-    "min_price": "1.0",
-    "max_price": "100.0",
-    "min_amount": "1.0",
-    "amount_precision": 6,
-    "price_precision": 2,
-    "state": "enabled"
-  },
-  {
-    "id": "usdczar",
-    "name": "USDC/ZAR",
-    "base_unit": "usdc",
-    "quote_unit": "zar",
-    "min_price": "14.0",
-    "max_price": "29.0",
-    "min_amount": "0.5",
-    "amount_precision": 2,
-    "price_precision": 2,
-    "state": "enabled"
-  }
-]
-```
-
-`GET https://app.calibri.io/api/v2/atlas/public/markets`
-
-Returns a list of all available markets
 
 # Prediction Markets
 
@@ -804,7 +711,7 @@ Transactions can be filtered by currency (matches both credit and debit currenci
 
 | Name      | Located in | Description                                                                                                 | Required | Schema  |
 | --------- | ---------- | ----------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| currency  | query      | Filter by currency code (matches credit or debit currency, e.g., "btc", "zar")                              | No       | string  |
+| currency  | query      | Filter by currency code (matches credit or debit currency, e.g., "btc", "usdc")                             | No       | string  |
 | type      | query      | Filter by transaction type: 'deposit', 'withdraw', 'internal_transfer', 'trade', 'referral', 'maker_reward' | No       | string  |
 | txid      | query      | Filter by specific transaction ID                                                                           | No       | string  |
 | time_from | query      | Start timestamp (Unix timestamp in seconds)                                                                 | No       | integer |
@@ -865,13 +772,13 @@ getTransactions();
 
 ### Description
 
-Create a new beneficiary (a saved withdrawal destination — a cryptocurrency wallet address or a bank account for fiat transfers). All beneficiaries created via the API are automatically activated and ready for use.
+Create a new beneficiary (a saved withdrawal destination — a cryptocurrency wallet address). All beneficiaries created via the API are automatically activated and ready for use.
 
 ### Parameters
 
 | Name               | Located in | Description                                                                                   | Required | Schema  | Max Length |
 | ------------------ | ---------- | --------------------------------------------------------------------------------------------- | -------- | ------- | ---------- |
-| currency           | formData   | Currency code (e.g., "btc", "eth", "zar", "gbp")                                              | Yes      | string  | 10 chars   |
+| currency           | formData   | Currency code (e.g., "btc", "eth", "usdc", "usdt", "xrp", "sol")                              | Yes      | string  | 10 chars   |
 | name               | formData   | Display name for the beneficiary                                                              | Yes      | string  | 64 chars   |
 | description        | formData   | Optional notes about the beneficiary                                                          | No       | string  | 255 chars  |
 | blockchain_key     | formData   | Blockchain identifier (defaults to currency's blockchain if omitted)                          | No       | string  | 255 chars  |
@@ -884,22 +791,6 @@ Cryptocurrency `data` Object Fields
 | -------------- | ------- | -------- | ----------------------------------------------------------------------- |
 | address        | string  | Yes      | Cryptocurrency wallet address                                           |
 | tag            | string  | No       | Destination tag (for XRP, Stellar, etc.) - max: 4294967295              |
-
-Fiat `data` Object Fields
-
-| Field                   | Type   | Required | Description                                                |
-| ----------------------- | ------ | -------- | ---------------------------------------------------------- |
-| full_name               | string | **Yes**  | Account holder's full legal name (mandatory for fiat)      |
-| account_number          | string | No       | Bank account number                                        |
-| bank_name               | string | No       | Name of the bank                                           |
-| bank_swift_code         | string | No       | SWIFT/BIC code                                             |
-| bank_routing_number     | string | No       | Routing number (US banks)                                  |
-| iban                    | string | No       | IBAN (International Bank Account Number)                   |
-| bank_address            | string | No       | Bank's physical address                                    |
-| bank_city               | string | No       | Bank's city                                                |
-| intermediary_bank_swift | string | No       | Intermediary bank SWIFT code (for international transfers) |
-| account_holder_name     | string | No       | Account holder name (may differ from full_name)            |
-| account_type            | string | No       | Type of account (checking, savings, etc.)                  |
 
 ### Request Examples
 
@@ -930,76 +821,15 @@ Fiat `data` Object Fields
 }
 ```
 
-**Example 3: Fiat - ZAR (South African Rand)**
+**Example 3: Crypto - USDC**
 
 ```json
 {
-  "currency": "zar",
-  "name": "South African Bank Account",
-  "description": "Personal savings account",
+  "currency": "usdc",
+  "name": "My USDC Wallet",
+  "description": "Settlement wallet",
   "data": {
-    "full_name": "Thabo Mbeki",
-    "account_number": "1234567890",
-    "bank_name": "Standard Bank",
-    "bank_swift_code": "SBZAZAJJ",
-    "bank_address": "30 Baker Street",
-    "bank_city": "Johannesburg",
-    "account_type": "savings"
-  }
-}
-```
-
-**Example 4: Fiat - GBP SWIFT Transfer**
-
-```json
-{
-  "currency": "gbp",
-  "name": "UK Business Account",
-  "description": "Company bank account",
-  "data": {
-    "full_name": "John Smith",
-    "account_number": "12345678",
-    "bank_name": "Barclays Bank",
-    "bank_swift_code": "BARCGB22",
-    "bank_address": "1 Churchill Place",
-    "bank_city": "London",
-    "account_type": "checking"
-  }
-}
-```
-
-**Example 5: Fiat - EUR IBAN Transfer**
-
-```json
-{
-  "currency": "eur",
-  "name": "EU Partner Account",
-  "description": "European supplier payment",
-  "data": {
-    "full_name": "Jean Dupont",
-    "iban": "FR1420041010050500013M02606",
-    "bank_name": "BNP Paribas",
-    "bank_swift_code": "BNPAFRPP",
-    "bank_city": "Paris"
-  }
-}
-```
-
-**Example 6: Fiat - International with Intermediary Bank**
-
-```json
-{
-  "currency": "usd",
-  "name": "International Vendor",
-  "description": "Asian supplier USD payment",
-  "data": {
-    "full_name": "ABC Trading Company Ltd",
-    "account_number": "9876543210",
-    "bank_name": "Asia Commercial Bank",
-    "bank_swift_code": "ACBVSGSG",
-    "intermediary_bank_swift": "CHASUS33",
-    "bank_address": "123 Business Street",
-    "bank_city": "Singapore"
+    "address": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
   }
 }
 ```
@@ -1007,7 +837,6 @@ Fiat `data` Object Fields
 ### Important Notes
 
 - **API-created beneficiaries** are automatically activated (state = `active`) and do not require PIN activation
-- **Fiat beneficiaries** must include `full_name` in the `data` object (mandatory)
 - **Cryptocurrency addresses** are validated against the blockchain service before creation
 - **XRP destination tags** must be unsigned int32 (maximum: 4294967295)
 - **Duplicate addresses** are not allowed for the same currency/blockchain combination
@@ -1143,7 +972,7 @@ Creates new withdrawal to active beneficiary.
 | beneficiary_id | formData   | ID of active Beneficiary.                                                                                                                                     | Yes      | integer |
 | currency       | formData   | The currency code matching the beneficiary.                                                                                                                   | Yes      | string  |
 | amount         | formData   | The amount to withdraw.                                                                                                                                       | Yes      | double  |
-| note           | formData   | ZAR withdrawals only. Use 'same_day_rtc' for [Faster withdraws](https://calibri.io/help) | No       | string  |
+| note           | formData   | Optional note to attach to the withdrawal.                                                                                                                   | No       | string  |
 
 ### Responses
 
@@ -1181,7 +1010,7 @@ Get your withdraw history, paginated.
 
 ### Description
 
-Get all available deposit methods for the authenticated user. Returns deposit methods for both cryptocurrencies and fiat currencies, filtered based on your remaining transaction limits.
+Get all available deposit methods for the authenticated user. Returns the supported cryptocurrency deposit methods, filtered based on your remaining transaction limits.
 
 Each method includes minimum and maximum amounts, fees, provider information, and remaining limits for different time periods (daily, weekly, monthly, yearly).
 
@@ -1197,7 +1026,7 @@ Each method includes minimum and maximum amounts, fees, provider information, an
 
 ### Description
 
-Get all available withdrawal methods for the authenticated user. Returns withdrawal methods for both cryptocurrencies and fiat currencies, filtered based on your remaining transaction limits.
+Get all available withdrawal methods for the authenticated user. Returns the supported cryptocurrency withdrawal methods, filtered based on your remaining transaction limits.
 
 Each method includes minimum and maximum amounts, fees, provider information, processor details, and remaining limits for different time periods (daily, weekly, monthly, yearly).
 
@@ -1381,7 +1210,7 @@ The `deposit_action` parameter accepts a JSON object with the following structur
 ```json
 {
   "action": "none|aggregate|convert_and_withdraw|aggregate_convert_and_withdraw",
-  "target_currency": "currency_code", // Required for convert actions (e.g., "zar", "usd")
+  "target_currency": "currency_code", // Required for convert actions (e.g., "usdc", "btc")
   "beneficiary_id": 123, // Required for withdraw actions
   "lightning_invoice": "lnbc...", // Alternative to beneficiary_id for Lightning withdrawals
   "max_slippage": 2.5, // Optional: Max slippage percentage (0.1-10, default: 2.0)
@@ -1419,10 +1248,10 @@ When `beneficiary_amount` is specified (as a string), it defines the exact amoun
 
 ```json
 {
-  "account_name": "USD Conversion Account",
+  "account_name": "USDC Conversion Account",
   "deposit_action": {
     "action": "convert_and_withdraw",
-    "target_currency": "usd",
+    "target_currency": "usdc",
     "beneficiary_id": 789,
     "max_slippage": 2.5
   }
@@ -1679,7 +1508,7 @@ The orderbook endpoint does not require authenticaiton, while the private endpoi
 To connect to the private endpoints on the websocket, send the authentication headers with the connection request, similar to the REST authentication, and subscribe to the streams you are interested in.
 You can combine multiple subscriptions in one request, and also provide the subscriptions at the same time as connecting - ie. you only need 1x request to get fully connected.
 
-You can also combine the public and private streams into one so that you only need to maintain 1x connection for example `?stream=btczar.ob-inc&stream=order&stream=trade&stream=balance`
+You can also combine the public and private streams into one so that you only need to maintain 1x connection for example `?stream=12.ob-inc&stream=order&stream=trade&stream=balance`
 
 ## <span class="request-type__get">SUBSCRIBE</span> Orderbook
 
@@ -1689,7 +1518,7 @@ const WebSocket = require("ws");
 async function connectWssPublic() {
   try {
     const baseUrl = `wss://app.calibri.io/api/v2`;
-    const streams = "?stream=btczar.ob-inc&stream=ethzar.ob-inc";
+    const streams = "?stream=12.ob-inc&stream=15.ob-inc";
     const path = `/websocket/public${streams}`;
 
     ws = new WebSocket(`${baseUrl}${path}`);
@@ -1721,7 +1550,7 @@ connectWssPublic();
 
 Subscribe to orderbook updates for the specified market. You can subscribe to multiple markets at the same time by adding each market as a param, eg
 
-`?stream=btczar.ob-inc&ethzar.ob-inc`
+`?stream=12.ob-inc&15.ob-inc`
 
 Note: if the amount is empty "", the order has been removed from the orderbook
 
@@ -1746,7 +1575,7 @@ const WebSocket = require("ws");
 async function connectWssPublic() {
   try {
     const baseUrl = `wss://app.calibri.io/api/v2`;
-    const streams = "?stream=btczar.kline-15m";
+    const streams = "?stream=12.kline-15m";
     const path = `/websocket/public${streams}`;
 
     ws = new WebSocket(`${baseUrl}${path}`);
@@ -1800,7 +1629,7 @@ async function connectWssPrivate() {
     const baseUrl = `wss://app.calibri.io/api/v2`;
     const headers = await generateHeaders();
     const streams =
-      "?stream=btczar.ob-inc&stream=ethzar.ob-inc&stream=order&stream=trade&stream=balance";
+      "?stream=12.ob-inc&stream=15.ob-inc&stream=order&stream=trade&stream=balance";
     const path = `/websocket/private${streams}`;
 
     ws = new WebSocket(`${baseUrl}${path}`, { headers });
@@ -1816,7 +1645,7 @@ async function connectWssPrivate() {
     data = JSON.parse(data);
     console.log(JSON.stringify(data, undefined, 2));
 
-    if (data["xrpzar.ob-snap"] || data["xrpzar.ob-inc"]) {
+    if (data["12.ob-snap"] || data["12.ob-inc"]) {
       // handle orderbook updates for subscribed markets
       // updateOrderBook(data);
     }
@@ -1845,7 +1674,7 @@ Subscribe to your account and receive real-time updates on your orders, trades, 
 
 **Combining public orderbook + private streams (recommended):**
 
-`?stream=btczar.ob-inc&stream=order&stream=trade&stream=balance`
+`?stream=12.ob-inc&stream=order&stream=trade&stream=balance`
 
 **Benefits of combining streams:**
 
@@ -1866,19 +1695,17 @@ Receive real-time updates when your orders are created, updated, filled, or canc
 {
   "order": {
     "id": 173757,
-    "uuid": "7e86a4fa-fcae-4953-b9bc-d6f328beea48",
-    "side": "sell",
+    "side": "yes",
     "ord_type": "limit",
-    "price": "800000.0",
-    "avg_price": "0.0",
+    "price": "0.60",
     "state": "wait",
-    "market": "btczar",
+    "market": "12",
     "created_at": "2023-12-08T08:46:59+01:00",
     "updated_at": "2023-12-08T08:46:59+01:00",
-    "origin_volume": "0.00001",
-    "remaining_volume": "0.00001",
-    "executed_volume": "0.0",
-    "trades_count": 0
+    "origin_volume": "100",
+    "remaining_volume": "100",
+    "locked": "60.0",
+    "contracts_count": 0
   }
 }
 ```
@@ -1904,15 +1731,15 @@ Receive real-time updates when your orders are matched and trades are executed.
   "trade": {
     "id": 12345,
     "order_id": 173757,
-    "price": "800000.0",
-    "amount": "0.00001",
-    "total": "8.0",
-    "market": "btczar",
-    "side": "sell",
-    "taker_type": "buy",
-    "fee_currency": "zar",
+    "price": "0.60",
+    "amount": "100",
+    "total": "60.0",
+    "market": "12",
+    "side": "yes",
+    "taker_type": "no",
+    "fee_currency": "usdc",
     "fee": "0.002",
-    "fee_amount": "0.016",
+    "fee_amount": "0.12",
     "created_at": "2023-12-08T08:47:01+01:00"
   }
 }
@@ -1935,10 +1762,10 @@ Receive real-time updates when your account balances change. Balance updates are
 ```json
 {
   "balance": {
-    "currency": "btc",
-    "balance": "0.05000000",
-    "locked": "0.00001000",
-    "available": "0.04999000",
+    "currency": "usdc",
+    "balance": "10000.00",
+    "locked": "60.00",
+    "available": "9940.00",
     "updated_at": 1702027621000
   }
 }
@@ -1948,7 +1775,7 @@ Receive real-time updates when your account balances change. Balance updates are
 
 | Field      | Type    | Description                                                      |
 | ---------- | ------- | ---------------------------------------------------------------- |
-| currency   | string  | Currency code (btc, eth, zar, usdt, etc.)                        |
+| currency   | string  | Currency code (usdc, btc, eth, usdt, etc.)                       |
 | balance    | string  | Total balance (available + locked). String for decimal precision |
 | locked     | string  | Amount currently locked in open orders                           |
 | available  | string  | Available balance for trading (balance - locked)                 |
@@ -1956,37 +1783,37 @@ Receive real-time updates when your account balances change. Balance updates are
 
 **Balance Update Triggers:**
 
-1. **Order Creation** - Locks balance when a limit or market order is placed
-2. **Order Cancellation** - Unlocks balance when an order is canceled
-3. **Trade Execution (Maker)** - Updates both base and quote currency balances
-4. **Trade Execution (Taker)** - Updates both base and quote currency balances with fee deduction
-5. **Partial Fill** - Each partial fill triggers separate balance updates
-6. **Order Rejection** - Balance unlock if order validation fails after initial lock
+1. **Order Creation** - Locks USDC collateral when a limit or market order is placed
+2. **Order Cancellation** - Unlocks collateral when the unmatched remainder of an order is canceled
+3. **Settlement (winning side)** - Credits USDC (`1.00` per winning share, minus fee) when the event resolves
+4. **Settlement (losing side)** - Releases the locked collateral (losing shares settle to `0.00`)
+5. **Partial Fill** - Each partial fill keeps the matched collateral locked against the new contract
+6. **Order Rejection** - Collateral unlock if order validation fails after initial lock
 
-**Example 1: Order Creation (Balance Lock)**
+**Example 1: Order Creation (Collateral Lock)**
 
-When you place a buy order for 0.001 BTC @ 800,000 ZAR, your ZAR balance is locked:
+When you place a YES order for 100 shares @ `0.60` USDC, `60.00` USDC of collateral is locked:
 
 ```json
 {
   "balance": {
-    "currency": "zar",
+    "currency": "usdc",
     "balance": "10000.00",
-    "locked": "800.00",
-    "available": "9200.00",
+    "locked": "60.00",
+    "available": "9940.00",
     "updated_at": 1702027621000
   }
 }
 ```
 
-**Example 2: Order Cancellation (Balance Unlock)**
+**Example 2: Order Cancellation (Collateral Unlock)**
 
-When you cancel the order, the locked ZAR is released:
+When you cancel the unmatched remainder, the locked USDC is released:
 
 ```json
 {
   "balance": {
-    "currency": "zar",
+    "currency": "usdc",
     "balance": "10000.00",
     "locked": "0.00",
     "available": "10000.00",
@@ -1995,49 +1822,33 @@ When you cancel the order, the locked ZAR is released:
 }
 ```
 
-**Example 3: Trade Execution - Sell Order (Base Currency)**
+**Example 3: Settlement (Winning Side)**
 
-When your sell order for 0.00001 BTC executes, you receive two balance updates. First, the BTC is deducted:
-
-```json
-{
-  "balance": {
-    "currency": "btc",
-    "balance": "0.04999000",
-    "locked": "0.00000000",
-    "available": "0.04999000",
-    "updated_at": 1702027630000
-  }
-}
-```
-
-**Example 4: Trade Execution - Sell Order (Quote Currency)**
-
-Immediately after, you receive ZAR (minus the taker fee of 0.2%):
+When the event resolves in your favour, each winning share redeems to `1.00` USDC (minus the settlement fee) and the locked collateral is released as available balance:
 
 ```json
 {
   "balance": {
-    "currency": "zar",
-    "balance": "10007.984",
+    "currency": "usdc",
+    "balance": "10039.80",
     "locked": "0.00",
-    "available": "10007.984",
-    "updated_at": 1702027630001
+    "available": "10039.80",
+    "updated_at": 1702027630000
   }
 }
 ```
 
 **Example 4: Partial Fill**
 
-When your order is partially filled (50% of 0.001 BTC order):
+When your order is partially filled (50 of 100 shares match), the matched collateral remains locked against the new contract:
 
 ```json
 {
   "balance": {
-    "currency": "btc",
-    "balance": "0.04999500",
-    "locked": "0.00000500",
-    "available": "0.04999000",
+    "currency": "usdc",
+    "balance": "10000.00",
+    "locked": "60.00",
+    "available": "9940.00",
     "updated_at": 1702027635000
   }
 }
@@ -2046,7 +1857,7 @@ When your order is partially filled (50% of 0.001 BTC order):
 **Important Notes:**
 
 - **Atomic Updates**: Balance updates are atomic - you receive one update per currency per event
-- **Dual Updates for Trades**: For each trade, expect **two balance updates** - one for the base currency and one for the quote currency
+- **Single Settlement Currency**: Markets are collateralised and settled in **USDC** - balance updates track your USDC collateral and payouts
 - **Timestamp Precision**: The `updated_at` field uses **Unix milliseconds** (not seconds)
 - **String Values**: Balance values are strings to preserve decimal precision - parse them as decimals, not floats
 - **Rapid Updates**: Multiple rapid trades may result in several balance updates in quick succession
@@ -2056,8 +1867,8 @@ When your order is partially filled (50% of 0.001 BTC order):
 
 - **Insufficient Funds**: No balance update is sent (order is rejected before locking funds)
 - **Self-Trade Prevention**: If a self-trade is prevented, balance may lock and then immediately unlock
-- **Partial Fills**: Each partial fill of an order triggers separate balance updates for both currencies
-- **Maker vs Taker Fees**: Fee amounts differ based on whether you're the maker (0.1%) or taker (0.2%)
+- **Partial Fills**: Each partial fill of an order triggers a balance update reflecting the locked collateral
+- **Maker rebate vs Taker Fees**: The taker pays the fee; the resting maker earns a rebate (a percentage of the taker fee) credited at settlement
 
 **Integration Example:**
 
@@ -2155,32 +1966,32 @@ All paginated list endpoints return an array of items in the response body, with
 | ---------------- | ----------------- | ------------------------------------------------------- |
 | id               | integer           | Unique order id.                                        |
 | custom_order_id  | string            | Custom order id if supplied during order creation.      |
-| side             | string            | Either 'sell' or 'buy'.                                 |
+| side             | string            | Either 'yes' or 'no'.                                   |
 | ord_type         | string            | Type of order, either 'limit' or 'market'.              |
 | post_only        | boolean           | If the Limit order was submitted as post_only .         |
-| price            | double            | Price for 1x base unit.                                 |
-| avg_price        | double            | Average execution price over all executed trades.       |
+| price            | double            | Probability price per share `0.01`–`0.99` (in USDC).    |
 | state            | string            | Current state of the order [Order states](#states)      |
-| market           | string            | The market in which the order is placed, e.g. 'btczar'. |
+| market           | string            | The market in which the order is placed, e.g. '12'.     |
 | created_at       | string            | Order create time in iso8601 format.                    |
 | updated_at       | string            | Order updated time in iso8601 format.                   |
-| origin_volume    | double            | The original amount of the order.                       |
-| remaining_volume | double            | The remaining amount of the original order volume.      |
-| executed_volume  | double            | The executed volume of the original order volume.       |
-| trades_count     | integer           | Number of trades executed against this limit order.     |
-| trades           | [[Trade](#trade)] | Array of trades executed against this order.            |
+| origin_volume    | double            | The original number of shares of the order.             |
+| remaining_volume | double            | The remaining (unmatched) shares of the order.          |
+| filled_volume    | double            | The matched share volume of the order.                  |
+| contracts_count  | integer           | Number of contracts formed from this order.             |
+| locked           | double            | Collateral currently locked for this order (USDC).      |
+| quote_currency   | string            | Settlement currency for the market (e.g. 'usdc').       |
 
 ### Market
 
 | Name             | Type   | Description                                  |
 | ---------------- | ------ | -------------------------------------------- |
-| id               | string | Unique market id eg 'btczar'                 |
+| id               | string | Unique market id eg '12'                      |
 | name             | string | Market name.                                 |
-| base_unit        | string | Market Base unit.                            |
-| quote_unit       | string | Market Quote unit.                           |
-| min_price        | double | Minimum order price.                         |
-| max_price        | double | Maximum order price.                         |
-| min_amount       | double | Minimum order amount.                        |
+| base_unit        | string | Outcome share unit.                          |
+| quote_unit       | string | Settlement currency (e.g. 'usdc').           |
+| min_price        | double | Minimum order price (probability, e.g. 0.01).|
+| max_price        | double | Maximum order price (probability, e.g. 0.99).|
+| min_amount       | double | Minimum order size in shares.                |
 | amount_precision | double | Precision for order amount.                  |
 | price_precision  | double | Precision for order price.                   |
 | state            | string | If the market is enabled for trading or not. |
@@ -2249,7 +2060,7 @@ All paginated list endpoints return an array of items in the response body, with
 | currency    | string  | Beneficiary currency code.                                                                                                                      |
 | name        | string  | Name of the beneficiary.                                                                                                                        |
 | description | string  | A personal description of the beneficiary for your records.                                                                                     |
-| data        | json    | Bank account details for a fiat beneficiary in JSON format. For crypto it's the blockchain address and/or tag |
+| data        | json    | The beneficiary's blockchain address and/or destination tag, in JSON format. |
 | state       | string  | Pending, Active, Archived (0,1,2)                                                                                                               |
 
 ### SubAccount
@@ -2293,8 +2104,6 @@ Customer accounts come in two types with different response structures:
 | level            | integer | Account level                                                                                                                                                    |
 | state            | string  | Account state (active, pending, deleted)                                                                                                                         |
 | custom_id        | string  | Custom identifier set by merchant/aggregator                                                                                                                     |
-| business_profile | object  | Business details (legal_name, trading_name, registration_number, tax_id, incorporation_date, business_type, industry, address, city, postcode, country, website) |
-| ubos             | array   | Array of Ultimate Beneficial Owners with ownership details                                                                                                       |
 | created_at       | string  | Timestamp when customer was created in ISO 8601 format                                                                                                           |
 | updated_at       | string  | Timestamp when customer was last updated in ISO 8601 format                                                                                                      |
 
@@ -2334,14 +2143,10 @@ Customer accounts come in two types with different response structures:
 | order_id                 | string  | Order ID (for trades)                                                                  |
 | price                    | decimal | Trade price (for trades)                                                               |
 | origin_volume            | decimal | Original order volume (for trades)                                                     |
-| payment_method_provider  | string  | Payment provider (for fiat transactions)                                               |
+| payment_method_provider  | string  | Payment provider (for provider-backed transactions)                                    |
 | payment_method_name      | string  | Payment method name                                                                    |
 | payment_method_precision | integer | Decimal precision for payment method                                                   |
 | payment_method_icon_url  | string  | Payment method icon URL                                                                |
-| voucher_pin              | string  | Voucher PIN (if applicable)                                                            |
-| change_voucher_pin       | string  | Change voucher PIN (if change was issued)                                              |
-| change_voucher_expiry    | string  | Change voucher expiry date (ISO8601)                                                   |
-| change_voucher_amount    | decimal | Change voucher amount                                                                  |
 | description              | string  | Transaction description                                                                |
 | member_description       | string  | Your personal note for this transaction                                                |
 | sender                   | string  | Sender information                                                                     |
@@ -2351,7 +2156,6 @@ Customer accounts come in two types with different response structures:
 | txid                     | string  | Transaction ID (blockchain txid or internal reference)                                 |
 | beneficiary_id           | integer | Beneficiary ID (for withdrawals)                                                       |
 | paid_at                  | string  | Payment completion timestamp (ISO8601)                                                 |
-| expires_at               | string  | Expiry timestamp (ISO8601, for vouchers)                                               |
 | created_at               | string  | Transaction creation timestamp (ISO8601)                                               |
 | updated_at               | string  | Last update timestamp (ISO8601)                                                        |
 
@@ -2362,7 +2166,7 @@ Customer accounts come in two types with different response structures:
 | id                   | integer | Payment reference ID                                                   |
 | reference            | string  | Unique payment reference code (used by customer for deposits)          |
 | uid                  | string  | Customer sub-account UID                                               |
-| currency             | string  | Currency code (e.g., "btc", "zar")                                     |
+| currency             | string  | Currency code (e.g., "btc", "usdc")                                    |
 | expected_amount      | string  | Expected deposit amount (null if not specified)                        |
 | deposit_action       | object  | Automated action configuration (null if not configured)                |
 | state                | string  | Current state (see PaymentReference States)                            |
@@ -2420,17 +2224,17 @@ Payment references progress through various states based on the configured actio
 | uuid            | string  | Unique identifier for the deposit method                         |
 | name            | string  | Display name of the deposit method                               |
 | description     | string  | Human-readable description of the method                         |
-| currencyId      | string  | Currency identifier (e.g., "btc", "zar")                         |
-| symbol          | string  | Currency symbol (e.g., "BTC", "ZAR")                             |
-| blockchainName  | string  | Blockchain network name (e.g., "bitcoin", "ethereum", "fiat")    |
-| type            | string  | Method type (e.g., "bank", "crypto", "voucher")                  |
-| currencyType    | string  | Currency type: "fiat" or "crypto"                                |
-| providerId      | string  | Payment provider identifier (e.g., "stitch", "xago", "cape")     |
+| currencyId      | string  | Currency identifier (e.g., "btc", "usdc")                        |
+| symbol          | string  | Currency symbol (e.g., "BTC", "USDC")                            |
+| blockchainName  | string  | Blockchain network name (e.g., "bitcoin", "ethereum", "solana") |
+| type            | string  | Method type (e.g., "crypto", "address", "lightning")            |
+| currencyType    | string  | Currency type: always "crypto"                                  |
+| providerId      | string  | Payment provider identifier (e.g., "calibri")                   |
 | minAmount       | number  | Minimum deposit amount (after baseFactor conversion)             |
 | maxAmount       | number  | Maximum deposit amount (derived from remaining limits)           |
 | baseFactor      | number  | Conversion factor (divide stored amounts by this for display)    |
 | precision       | number  | Decimal precision for display                                    |
-| feeCape         | number  | Cape's fee amount or percentage                                  |
+| feeCape         | number  | Platform fee amount or percentage                               |
 | feeProvider     | number  | Provider's fee amount or percentage                              |
 | position        | number  | Display order position                                           |
 | iconUrl         | string  | Icon URL for UI display                                          |
@@ -2445,18 +2249,18 @@ Payment references progress through various states based on the configured actio
 | id              | number  | Database ID (included for legacy support)                        |
 | name            | string  | Display name of the withdraw method                              |
 | description     | string  | Human-readable description of the method                         |
-| currencyId      | string  | Currency identifier (e.g., "btc", "zar")                         |
-| symbol          | string  | Currency symbol (e.g., "BTC", "ZAR")                             |
-| blockchainName  | string  | Blockchain network name (e.g., "bitcoin", "ethereum", "fiat")    |
-| type            | string  | Method type (e.g., "crypto", "bank", "wallet")                   |
-| currencyType    | string  | Currency type: "fiat" or "crypto"                                |
-| providerId      | string  | Payment provider identifier (e.g., "xago", "celbux", "cape")     |
+| currencyId      | string  | Currency identifier (e.g., "btc", "usdc")                        |
+| symbol          | string  | Currency symbol (e.g., "BTC", "USDC")                            |
+| blockchainName  | string  | Blockchain network name (e.g., "bitcoin", "ethereum", "solana") |
+| type            | string  | Method type (e.g., "crypto", "address", "wallet")               |
+| currencyType    | string  | Currency type: always "crypto"                                  |
+| providerId      | string  | Payment provider identifier (e.g., "calibri")                   |
 | processorId     | string  | Processor that handles withdrawals for this method               |
 | minAmount       | number  | Minimum withdrawal amount (after baseFactor conversion)          |
 | maxAmount       | number  | Maximum withdrawal amount (derived from remaining limits)        |
 | baseFactor      | number  | Conversion factor (divide stored amounts by this for display)    |
 | precision       | number  | Decimal precision for display                                    |
-| feeCape         | number  | Cape's withdrawal fee amount or percentage                       |
+| feeCape         | number  | Platform withdrawal fee amount or percentage                    |
 | feeProvider     | number  | Provider's withdrawal fee amount or percentage                   |
 | position        | number  | Display order position                                           |
 | iconUrl         | string  | Icon URL for UI display                                          |
@@ -2474,22 +2278,6 @@ The `remainingLimits` object is included in both Deposit Method and Withdraw Met
 | week            | number | Remaining limit for the current week          |
 | month           | number | Remaining limit for the current month         |
 | year_to_date    | number | Remaining limit for the current year          |
-
-### Voucher Redemption
-
-| Name           | Type                              | Description                                                              |
-| -------------- | --------------------------------- | ------------------------------------------------------------------------ |
-| amount         | number                            | The amount deposited after fees.                                         |
-| origin_amount  | number                            | The original amount of the voucher.                                      |
-| change_voucher | [Change voucher](#change-voucher) | Optional if provider offers this, a new voucher for the remaining amount |
-
-### Change voucher
-
-| Name          | Type   | Description                                                       |
-| ------------- | ------ | ----------------------------------------------------------------- |
-| change_amount | number | Amount of change from the redeemed voucher, available to be spent |
-| change_expiry | string | Expiry date of the new voucher.                                   |
-| change_pin    | number | The new voucher_pin to be used for redemption.                    |
 
 ### Lightning payment
 
@@ -2509,7 +2297,7 @@ The `remainingLimits` object is included in both Deposit Method and Withdraw Met
 | ------------------ | -------------------------- | -------------------------------------------- |
 | bolt               | String                     | The invoice in bolt11.                       |
 | amount             | BigDecimal                 | Invoice amount to be paid in SAT.            |
-| conversion_percent | BigDecimal                 | The amount to automatically convert to FIAT. |
+| conversion_percent | BigDecimal                 | The percentage to automatically convert to USDC on receipt. |
 | amount_msat        | BigDecimal                 | Invoice amount to be paid in Mili SAT.       |
 | description        | String                     | Description for this invoice.                |
 | member_description | String                     | Private member Description for this invoice. |
@@ -2538,17 +2326,17 @@ The `remainingLimits` object is included in both Deposit Method and Withdraw Met
 
 ```json
 {
-  "btczar.ob-snap": {
+  "12.ob-snap": {
     "asks": [
-      ["841039.73", "0.156431"],
-      ["845402.1", "0.004389"],
-      ["900000.0", "0.00001"]
+      ["0.62", "150"],
+      ["0.63", "80"],
+      ["0.65", "200"]
     ],
     "bids": [
-      ["835956.8", "0.047756"],
-      ["831012.48", "0.03749"],
-      ["829990.51", "0.019462"],
-      ["400000.0", "0.0001"]
+      ["0.60", "100"],
+      ["0.59", "75"],
+      ["0.58", "120"],
+      ["0.55", "300"]
     ],
     "sequence": 9712
   }
@@ -2588,811 +2376,3 @@ The `remainingLimits` object is included in both Deposit Method and Withdraw Met
 | errored         |
 | confirming      |
 
-# Lists
-
-Lists of supported Source of funds and occupations
-
-### Source of funds
-
-Please see the array of supported source of funds to the right
-
-<pre><code>SOURCE_OF_FUNDS = [
-'Angel Investments',
-'Business Income',
-'Client funds',
-'Crowdfunding',
-'Dividends',
-'Foreign Investments',
-'Gifts',
-'Government Benefits',
-'Grants and Scholarships',
-'Inheritance',
-'Insurance Payouts',
-'Investment Income',
-'Legal Settlements',
-'Loans',
-'Partnership or Shareholder Distributions',
-'Personal Savings',
-'Retirement Funds',
-'Royalties',
-'Salary or Wages',
-'Sale of Assets',
-'Shareholder funds',
-'Venture Capital',
-]</code></pre>
-
-### Occupations
-
-Please see the array of supported occupations to the right
-
-<pre><code>OCCUPATIONS = [
-'Account Collector',
-'Accountant',
-'Accounting Clerk',
-'Actor',
-'Actuary',
-'Acupuncturist',
-'Administrative Assistant',
-'Administrative Service and Facility Manager',
-'Adult Literacy Teacher',
-'Advertising Manager',
-'Advertising Sale Agent',
-'Aerospace Engineering and Operation Technician',
-'Aerospace Engineer',
-'Agent and Business Manager of Artist, Performer, and Athlete',
-'Agricultural Engineer',
-'Agricultural Inspector',
-'Agricultural Manager',
-'Agricultural Scientist',
-'Agricultural Technician',
-'Agricultural Worker',
-'Air Conditioning and Heating Mechanic and Installer',
-'Air Traffic Controller',
-'Aircraft Cargo Handling Supervisor',
-'Aircraft Equipment Mechanic and Technician',
-'Aircraft Service Attendant',
-'Airfield Operation Specialist',
-'Airline and Commercial Pilot',
-'Ambulance Dispatcher',
-'Ambulance Driver and Attendant (Except Emergency Medical Technician)',
-'Amusement and Recreation Attendant',
-'Animal Care and Service Worker',
-'Animal Control Worker',
-'Announcer',
-'Anthropologist',
-'Appraiser and Assessor of Property',
-'Arbitrator',
-'Archeologist',
-'Architect',
-'Architectural Manager',
-'Archivist',
-'Art Director',
-'Assembler',
-'Astronomer',
-'Athlete and Sport Competitor',
-'Athletic Trainer',
-'Atmospheric Scientist',
-'Attorney',
-'Avionic Equipment Mechanic and Technician',
-'Audio Technician',
-'Audiologist',
-'Audiovisual Equipment Installer and Repairer',
-'Auditing Clerk',
-'Auditor',
-'Author',
-'Automated Teller Machine (ATM) Repairer',
-'Automotive and Watercraft Service Attendant',
-'Automotive Body and Glass Repairer',
-'Automotive Service Technician and Mechanic',
-'Baggage Porter and Bellhop',
-'Bailiff',
-'Baker',
-'Barber',
-'Bartender',
-'Behavioral Disorder Counselor',
-'Benefit Manager',
-'Bicycle Repairer',
-'Bill Collector',
-'Biochemist and Biophysicist',
-'Bioengineer',
-'Biological Scientist (all other)',
-'Biological Technician',
-'Biomedical Engineer',
-'Blockmason',
-'Boiler Operator',
-'Boilermaker',
-'Bookkeeping Clerk',
-'Brazer',
-'Brickmason',
-'Bridge and Lock Tender',
-'Broadcast Technician',
-'Budget Analyst',
-'Building Cleaner',
-'Building Cleaning Worker (all other)',
-'Building Inspector',
-'Bu Driver',
-'Business Operation Specialist (all other)',
-'Butcher',
-'Buyer',
-'Camera and Photographic Equipment Repairer',
-'Camera Operator',
-'Captioner',
-'Cardiovascular Technologist and Technician',
-'Career Counselor and Advisor',
-'Career and Technical Education Teacher',
-'Cargo and Freight Agent',
-'Carpenter',
-'Carpet Installer',
-'Cartographer',
-'Cashier',
-'Ceiling Tile Installer',
-'Cement Mason',
-'Chauffeur',
-'Chef',
-'Chemical Engineer',
-'Chemical Plant and System Operator',
-'Chemical Technician',
-'Chemist',
-'Childcare Center Director',
-'Childcare Worker',
-'Chiropractor',
-'Choreographer',
-'Civil Engineering Technician',
-'Civil Engineer',
-'Claim Adjuster, Appraiser, Examiner, and Investigator',
-'Clergy',
-'Clerk',
-'Bookkeeping, Accounting, and Auditing Clerk',
-'Counter and Rental Clerk',
-'Financial Clerk',
-'General Office Clerk',
-'Information Clerk',
-'Mail Clerk and Mail Machine Operator (Except Postal Service)',
-'Material Recording Clerk',
-'Clinical Laboratory Technologist and Technician',
-'Coach and Scout',
-'Coating Worker',
-'Commercial Designer',
-'Commercial Diver',
-'Commodity Sale Agent',
-'Communication Equipment Operator (all other)',
-'Community and Social Service Specialist (all other)',
-'Community Association Manager',
-'Community Health Worker',
-'Community Service Manager',
-'Compensation, Benefit, and Job Analysi Specialist',
-'Compensation and Benefit Manager',
-'Compliance Officer',
-'Composer - Music',
-'Computer Control Programmer and Operator',
-'Computer Hardware Engineer',
-'Computer Manager',
-'Computer Network Architect',
-'Computer Occupation (all other)',
-'Computer Programmer',
-'Computer Repairer',
-'Computer Scientist',
-'Computer Software Engineer',
-'Computer Support Specialist',
-'Computer System Analyst',
-'Computer System Administrator',
-'Concierge',
-'Conciliator',
-'Conservation Scientist',
-'Conservation Technician',
-'Construction and Related Worker (all other)',
-'Construction Equipment Operator',
-'Construction Inspector',
-'Construction Laborer and Helper',
-'Construction Manager',
-'Continuou Mining Machine Operator',
-'Control and Valve Installer and Repairer (Except Mechanical Door)',
-'Cook',
-'Correctional Officer',
-'Correctional Treatment Specialist',
-'Cosmetologist',
-'Cost Estimator',
-'Costume Attendant',
-'Counselor (all other)',
-'Counter and Rental Clerk',
-'Courier and Messenger',
-'Court Reporter',
-'Craft Artist',
-'Credit Analyst',
-'Credit Counselor',
-'Crematory Operator',
-'Crossing Guard',
-'Curator',
-'Customer Service Representative',
-'Cutter and Trimmer (Hand)',
-'Dancer',
-'Data Entry Keyer',
-'Data Scientist',
-'Database Administrator',
-'Delivery Truck Driver and Driver/Sale Worker',
-'Demonstrator and Product Promoter',
-'Dental Assistant',
-'Dental Hygienist',
-'Dental Laboratory Technician',
-'Dentist',
-'Derrick Operator (Oil and Ga)',
-'Designer (all other)',
-'Desktop Publisher',
-'Development Manager',
-'Diagnostic Medical Sonographer',
-'Diesel Service Technician and Mechanic',
-'Dietitian',
-'Digital Designer',
-'Director - Music',
-'Director - Film, Theater',
-'Disc Jockey / DJ',
-'Dishwasher',
-'Dispatcher (Police, Fire, and Ambulance)',
-'Dispatcher (Except Police, Fire, and Ambulance)',
-'Doctor',
-'Door-to-Door Sale Worker, New and Street Vendor, and Related Worker',
-'Drafter',
-'Drywall Installer',
-'Earth Driller (Except Oil and Ga)',
-'Economist',
-'Editor',
-'Education Administrator - Postsecondary',
-'Education Administrator - Elementary, Middle, and High School',
-'Education Administrator (all other)',
-'Education, Training, and Library Worker (all other)',
-'Electrical and Electronic Engineering Technician',
-'Electrical and Electronic Engineer',
-'Electrical and Electronic Installer and Repairer',
-'Electrician',
-'Electro-mechanical Technician',
-'Elementary School Principal',
-'Elementary School Teacher',
-'Elevator Installer and Repairer',
-'Embalmer',
-'Emergency Management Director',
-'Emergency Medical Technician (EMT)',
-'Emergency Response Dispatcher',
-'Engineering Manager',
-'Engineering Technician, except Drafter (all other)',
-'Aerospace Engineer',
-'Agricultural Engineer',
-'Biomedical Engineer',
-'Chemical Engineer',
-'Civil Engineer',
-'Computer Hardware Engineer',
-'Computer Software Engineer',
-'Electrical and Electronic Engineer',
-'Environmental Engineer',
-'Flight Engineer',
-'Geological Engineer',
-'Health and Safety Engineer',
-'Industrial Engineer',
-'Manufacturing Engineer',
-'Marine Engineer',
-'Material Engineer',
-'Mechanical Engineer',
-'Mining Engineer',
-'Mining Safety Engineer',
-'Nuclear Engineer',
-'Petroleum Engineer',
-'Sale Engineer',
-'Stationary Engineer',
-'All other Engineer',
-'English a a Second Language (ESL) Teacher',
-'Entertainer and Performer, Sport and Related Worker (all other)',
-'Entertainment Attendant and Related Worker (all other)',
-'Environmental Engineering Technologist and Technician',
-'Environmental Science and Protection Technician',
-'Environmental Scientist and Specialist',
-'Epidemiologist',
-'Escalator Installer and Repairer',
-'Etcher and Engraver',
-'Exercise Physiologist',
-'Explosive Worker, Ordnance Handling Expert, and Blaster',
-'Extraction Worker Helper',
-'Extraction Worker (all other)',
-'Fabric and Apparel Patternmaker',
-'Fabricator',
-'Family Therapist',
-'Farm Labor Contractor',
-'Farmer',
-'Fashion Designer',
-'Fence Erector',
-'Film Editor',
-'Financial Analyst',
-'Financial Clerk',
-'Financial Clerk (all other)',
-'Financial Examiner',
-'Financial Manager',
-'Financial Service Sale Agent',
-'Fine Artist',
-'Fire Inspector and Investigator',
-'Firefighter',
-'First-Line Supervisor of Construction Trade and Extraction Worker',
-'First-Line Supervisor of Correctional Officer',
-'First-Line Supervisor of Farming, Fishing, and Forestry Worker',
-'First-Line Supervisor of Fire Fighting and Prevention Worker',
-'First-Line Supervisor of Food Preparation and Serving Worker',
-'First-Line Supervisor of Housekeeping and Janitorial Worker',
-'First-Line Supervisor of Landscaping, Lawn Service, and Groundskeeping Worker',
-'First-Line Supervisor of Mechanic, Installer, and Repairer',
-'First-Line Supervisor of Nonretail Sale Worker',
-'First-Line Supervisor of Office and Administrative Support Worker',
-'First-Line Supervisor of Personal Service Worker',
-'First-Line Supervisor of Police Officer and Detective',
-'First-Line Supervisor of Production and Operating Worker',
-'First-Line Supervisor of Protective Service Worker (all other)',
-'First-Line Supervisor of Retail Sale Worker',
-'First-Line Supervisor of Transportation and Material-Moving Machine and Vehicle Operator',
-'Fishing Worker',
-'Fitness Trainer and Instructor',
-'Flight Attendant',
-'Floor Layer, Sander and Finisher',
-'Flooring Installer',
-'Floral Designer',
-'Food and Beverage Serving and Related Worker',
-'Food Preparation Worker',
-'Food Processing Equipment Worker',
-'Food Science Technician',
-'Food Scientist',
-'Food Preparation and Serving Related Worker (all over)',
-'Food Service Manager',
-'Forensic Science Technician',
-'Forest and Conservation Technician',
-'Forest and Conservation Worker',
-'Forest Fire Inspector and Prevention Specialist',
-'Forester',
-'Fundraiser',
-'Fundraising Manager',
-'Funeral Attendant',
-'Funeral Service Worker',
-'G.E.D. Teacher',
-'Gaming Change Person and Booth Cashier',
-'Gambing Service Worker',
-'Gambing Surveillance Officer',
-'Ga Compressor and Ga Pumping Station Operator',
-'Ga Plant Operator',
-'General Maintenance and Repair Worker',
-'Genetic Counselor',
-'Geographer',
-'Geological Technician',
-'Geoscientist',
-'Glazier',
-'Grader and Sorter (Agricultural Product)',
-'Graduate Teaching Assistant',
-'Graphic Designer',
-'Grinding and Polishing Worker (Hand)',
-'Ground Maintenance Worker',
-'Hairstylist',
-'Hand Laborer',
-'Hazardou Material Removal Worker',
-'Head Cook',
-'Health Diagnosing and Treating Practitioner (all other)',
-'Health Educator and Community Health Worker',
-'Health Information Technologist',
-'Health Service Manager',
-'Healthcare Support Worker (all other)',
-'Hearing Officer',
-'Heating and Air Conditioning Mechanic and Installer',
-'Heavy and Tractor-trailer Truck Driver',
-'Heavy Vehicle Service Technician',
-'High School Equivalency Diploma Teacher',
-'High School Principal',
-'High School Teacher',
-'Highway Maintenance Worker',
-'Historian',
-'Home Appliance Repairer',
-'Home Health Aide',
-'Hotel Manager',
-'Housekeeping Cleaner',
-'Human Resource Manager',
-'Human Resource Specialist',
-'Human Service Assistant',
-'Hunting Worker',
-'Hydrologic Technician',
-'Hydrologist',
-'Industrial Designer',
-'Industrial Engineering Technologist and Technician',
-'Industrial Machinery Mechanic and Maintenance Worker',
-'Industrial Production Manager',
-'Information Research Scientist',
-'Information Security Analyst',
-'Information System Manager',
-'Inspector, Tester, Sorter, Sampler, and Weigher',
-'Installation, Maintenance, and Repair Worker Helper',
-'Installation, Maintenance, and Repair Worker (all other)',
-'Instructional Coordinator',
-'Insulation Worker',
-'Insurance Sale Agent',
-'Insurance Underwriter',
-'Interior Designer',
-'Interpreter',
-'Iron Worker',
-'Janitor',
-'Jeweler',
-'Job Analysi Specialist',
-'Journalist',
-'Judge',
-'Kindergarten Teacher',
-'Labor Relation Specialist',
-'Laboratory Animal Caretaker',
-'Landscape Architect',
-'Lawyer',
-'Layout Worker (Metal and Plastic)',
-'Legal Assistant',
-'Legal Support Worker (all other)',
-'Legislator',
-'Librarian and Library Media Specialist',
-'Library Technician and Assistant',
-'Licensed Practical and Licensed Vocational Nurse',
-'Life Scientist (all other)',
-'Life, Physical, and Social Science Technician (all other)',
-'Lifeguard and Other Recreational Protective Service Worker',
-'Lighting Technician',
-'Line Installer and Repairer',
-'Loan Officer',
-'Locker Room, Coatroom, and Dressing Room Attendant',
-'Locksmith and Safe Repairer',
-'Lodging Manager',
-'Logging Worker',
-'Logistician',
-'Adhesive Bonding Machine Operator and Tender',
-'Chemical Equipment Operator and Tender',
-'Cleaning, Washing, and Metal Pickling Equipment Operator and Tender',
-'Cooling and Freezing Equipment Operator and Tender',
-'Crushing, Grinding, and Polishing Machine Setter, Operator, and Tender',
-'Cutting and Slicing Machine Setter, Operator, and Tender',
-'Extruding and Forming Machine Setter, Operator, and Tender (Synthetic and Glass Fiber)',
-'Extruding, Forming, Pressing, and Compacting Machine Setter, Operator, and Tender',
-'Furnace, Kiln, Oven, Drier, and Kettle Operator and Tender',
-'Mixing and Blending Machine Setter, Operator, and Tender',
-'Packaging and Filling Machine Operator and Tender',
-'Paper Good Machine Setter, Operator, and Tender',
-'Photographic Process Worker and Processing Machine Operator',
-'Separating, Filtering, Clarifying, Precipitating, and Still Machine Setter, Operator, and Tender',
-'Sewing Machine Operator',
-'Shoe Machine Operator and Tender',
-'Textile Bleaching and Dyeing Machine Operator and Tender',
-'Textile Cutting Machine Setter, Operator, and Tender',
-'Textile Knitting and Weaving Machine Setter, Operator, and Tender',
-'Textile Winding, Twisting, and Drawing Out Machine Setter, Operator, and Tender',
-'Machinist',
-'Maid',
-'Maintenance and Repair Worker, General',
-'Makeup Artist (Theatrical and Performance)',
-'Management Analyst',
-'Manager (all other)',
-'Manicurist',
-'Manufactured Building and Mobile Home Installer',
-'Manufacturing Sale Representative',
-'Mapping Technician',
-'Marble Setter',
-'Marine Mechanic',
-'Market Research Analyst',
-'Marketing Manager',
-'Marriage and Family Therapist',
-'Mason: Brick, Block, Stone, and Cement',
-'Massage Therapist',
-'Material Mover',
-'Material Moving Worker (all other)',
-'Material Moving Machine Operator',
-'Mathematical Science Occupation (all other)',
-'Material Scientist',
-'Mathematician',
-'Meat, Poultry, and Fish Cutter and Trimmer',
-'Meat Packer',
-'Mechanical Door Repairer',
-'Mechanical Engineering Technologist and Technician',
-'Mechanic - Automotive',
-'Mechanic - Diesel',
-'Mechanic - Heating, Air Conditioning, and Refrigeration',
-'Mechanic - Industrial Machinery',
-'Mechanic - Small Engine',
-'Mediator',
-'Medical Appliance Technician',
-'Medical Assistant',
-'Medical Billing and Coding',
-'Medical Doctor',
-'Medical Equipment Repairer',
-'Medical Laboratory Technologist and Technician',
-'Medical Record Technician',
-'Medical Registrar Technician',
-'Medical Scientist',
-'Medical Service Manager',
-'Medical Transcriptionist',
-'Meeting, Convention, and Event Planner',
-'Mental Health Counselor',
-'Merchandise Displayer and Window Trimmer',
-'Metal Machine Worker',
-'Metal Worker',
-'Metal Worker and Plastic Worker (all other)',
-'Meteorologist',
-'Meter Reader (Utility)',
-'Microbiologist',
-'Middle School Principal',
-'Middle School Teacher',
-'Millwright',
-'Mine Cutting and Channeling Machine Operator',
-'Mining Machine Operator (all other)',
-'Mobile Equipment Service Technician',
-'Model',
-'Model Maker (Wood)',
-'Molder, Shaper, and Caster (Except Metal and Plastic)',
-'Mortician',
-'Motel Manager',
-'Motion Picture Projectionist',
-'Motor Vehicle Operator (all other)',
-'Motorcycle Mechanic',
-'MRI Technologist',
-'Multimedia Artist and Animator',
-'Museum Technician',
-'Music Director and Composer',
-'Musical Instrument Repairer and Tuner',
-'Musician',
-'Nail Technician',
-'Natural Science Manager',
-'Naval Architect',
-'Network Architect',
-'Network System Administrator',
-'New Analyst',
-'Nuclear Medicine Technologist',
-'Nuclear Technician',
-'Nurse',
-'Nurse Anesthetist, Nurse Midwive, and Nurse Practitioner',
-'Nursing Assistant',
-'Nutritionist',
-'Office and Administrative Support Worker (all other)',
-'Office Clerk',
-'Office Machine Operator (Except Computer)',
-'Occupational Health and Safety Specialist',
-'Occupational Health and Safety Technician',
-'Occupational Therapist',
-'Occupational Therapy Assistant and Aide',
-'Operation Research Analyst',
-'Ophthalmic Medical Technician',
-'Optician, Dispensing',
-'Optometrist',
-'Orderly',
-'Orthotist',
-'Painter (Construction and Maintenance)',
-'Painting Worker',
-'Paperhanger',
-'Paralegal',
-'Paramedic',
-'Parking Enforcement Worker',
-'Parking Attendant',
-'Passenger Attendant',
-'Passenger Vehicle Driver',
-'Patternmaker (Wood)',
-'Payroll Clerk',
-'Pedicurist',
-'Personal Care Aide',
-'Personal Care and Service Worker (all other)',
-'Personal Financial Advisor',
-'Pest Control Worker',
-'Petroleum Pump System Operator, Refinery Operator, and Gauger',
-'Petroleum Technician',
-'Pharmacist',
-'Pharmacy Technician',
-'Phlebotomist',
-'Photogrammetrist',
-'Photographer',
-'Physical Scientist (all other)',
-'Physical Therapist Assistant and Aide',
-'Physical Therapist',
-'Physician Assistant',
-'Physician',
-'Physicist',
-'Pipefitter',
-'Pipelayer',
-'Plant and System Operator (all other)',
-'Plasterer and Stucco Mason',
-'Plastic Machine Worker',
-'Plumber',
-'Podiatrist',
-'Police Officer and Detective',
-'Police Dispatcher',
-'Political Scientist',
-'Postal Service Worker',
-'Postmaster and Mail Superintendent',
-'Postsecondary Education Administrator',
-'Postsecondary Teacher',
-'Postsecondary Teacher (all other)',
-'Power Plant Operator, Distributor, and Dispatcher',
-'Practical Nurse, Licensed',
-'Preciou Stone and Metal Worker',
-'Precision Instrument and Equipment Repairer (all other)',
-'Prepress Technician and Worker',
-'Preschool Director',
-'Preschool Teacher',
-'Presser (Textile, Garment, and Related Material)',
-'Print Binding and Finishing Worker',
-'Printing Press Operator',
-'Private Detective and Investigator',
-'Probation Officer',
-'Producer - Film, Theater',
-'Production Manager',
-'Production Worker Helper',
-'Production Worker (all other)',
-'Promotion Manager',
-'Proofreader and Copy Marker',
-'Property Appraiser and Assessor',
-'Property Manager',
-'Prosthetist',
-'Protective Service Worker (all other)',
-'Psychiatric Technician and Aide',
-'Psychologist',
-'Public Safety Telecommunicator',
-'Public Relation Manager',
-'Public Relation Specialist',
-'Pump Operator',
-'Purchasing Agent and Manager',
-'Quality Assurance Analyst',
-'Quality Control Inspector',
-'Quarry Rock Splitter',
-'Radiation Therapist',
-'Radio, Cellular, and Tower Equipment Installer and Repairer',
-'Radiologic Technologist',
-'Rail Transportation Worker (all other)',
-'Rail-Track Laying and Maintenance Equipment Operator',
-'Railroad Occupation',
-'Rancher',
-'Real Estate Appraiser and Assessor',
-'Real Estate Broker and Sale Agent',
-'Real Estate Manager',
-'Receptionist',
-'Recreation Worker',
-'Recreational Therapist',
-'Recreational Vehicle Service Technician',
-'Referee, Umpire, and Other Sport Official',
-'Refractory Material Repairer (Except Brickmason)',
-'Refrigeration Mechanic and Installer',
-'Registered Nurse',
-'Rehabilitation Counselor',
-'Reinforcing Iron and Rebar Worker',
-'Religiou Activity and Education Director',
-'Religiou Worker (all other)',
-'Repair and Maintenance Worker, General',
-'Reporter',
-'Retail Sale Worker',
-'Rigger',
-'Roof Bolter (Mining)',
-'Roofer',
-'Rotary Drill Operator (Oil and Ga)',
-'Roustabout (Oil and Ga)',
-'Sale and Related Worker (all other)',
-'Sale Manager',
-'Sale Representative, Service (all other)',
-'School Counselor and Advisor',
-'School Principal - Elementary, Middle, and High',
-'Science Technician',
-'Secretary',
-'Security Sale Agent',
-'Security and Fire Alarm System Installer',
-'Security Guard',
-'Segmental Paver',
-'Semi Truck Driver',
-'Septic Tank Servicer and Sewer Pipe Cleaner',
-'Service Unit Operator (Oil, Ga, and Mining)',
-'Set and Exhibit Designer',
-'Sewer (Hand)',
-'Shampooer',
-'Sheet Metal Worker',
-'Shipping, Receiving, and Traffic Clerk',
-'Shoe and Leather Worker and Repairer',
-'Signal and Track Switch Repairer',
-'Singer',
-'Ski Patrol and Other Recreational Protective Service Worker',
-'Skincare Specialist',
-'Slaughterer',
-'Small Engine Mechanic',
-'Social Science Research Assistant',
-'Social Scientist and Related Worker (all other)',
-'Social Service Assistant',
-'Social Service Manager',
-'Social Worker',
-'Sociologist',
-'Software Developer',
-'Software Engineer',
-'Solar Photovoltaic Installer',
-'Solderer',
-'Sound Engineering Technician',
-'Special Education Teacher',
-'Special Effect Artist and Animator',
-'Speech-Language Pathologist',
-'Statistical Assistant',
-'Statistician',
-'Steamfitter',
-'Steel Worker',
-'Stone Setter',
-'Stonemason',
-'Substance Abuse Counselor',
-'Subway and Streetcar Operator',
-'Surgeon',
-'Surgical Assistant and Surgical Technologist',
-'Survey Researcher',
-'Surveying Technician',
-'Surveyor',
-'Switchboard Operator (Including Answering Service)',
-'System Analyst',
-'Tailor, Dressmaker, and Custom Sewer',
-'Tank Car, Truck, and Ship Loader',
-'Taper (Drywall)',
-'Tax Examiner and Collector, and Revenue Agent',
-'Tax Preparer',
-'Taxi Driver',
-'Teacher Assistant',
-'Adult Basic and Secondary Education and ESL Teacher',
-'High School Teacher',
-'Kindergarten and Elementary School Teacher',
-'Middle School Teacher',
-'Substitute Teacher',
-'All Other Teacher and Instructor',
-'Technical Writer',
-'Telecommunication Equipment Installer and Repairer (Except Line Installer)',
-'Telemarketer',
-'Telephone Operator',
-'Television, Video, and Motion Picture Camera Operator and Editor',
-'Teller',
-'Terrazzo Worker',
-'Textile Career',
-'Textile, Apparel, and Furnishing Worker (all other)',
-'Therapist (all other)',
-'Tile Setter',
-'Timekeeping Clerk',
-'Tire Builder',
-'Tire Repairer and Changer',
-'Tobacco Processing Worker',
-'Tool and Die Maker',
-'Tool Grinder, Filer, and Sharpener',
-'Top Executive',
-'Tour Guide and Escort',
-'Traffic Technician',
-'Training Manager',
-'Training and Development Specialist',
-'Translator',
-'Transportation Attendant',
-'Transportation Inspector',
-'Transportation Security Screener',
-'Transportation Worker (all other)',
-'Transportation, Storage, and Distribution Manager',
-'Travel Agent',
-'Travel Clerk',
-'Truck Driver - Delivery and Sale Worker',
-'Truck Driver - Heavy and Tractor-trailer',
-'Ultrasound Technician',
-'Umpire, Referee, and Other Sport Official',
-'Upholsterer',
-'Urban and Regional Planner',
-'Usher, Lobby Attendant, and Ticket Taker',
-'Vascular Technologist',
-'Vending, Coin, and Amusement Machine Servicer and Repairer',
-'Veterinarian',
-'Veterinary Assistant',
-'Veterinary Technologist and Technician',
-'Video Editor',
-'Video Technician',
-'Vocational Nurse, Licensed',
-'Waiter or Waitress',
-'Watch Repairer',
-'Water and Wastewater Treatment Plant and System Operator',
-'Water Transportation Occupation',
-'Web Developer',
-'Weigher, Measurer, Checker, and Sampler, Recordkeeping',
-'Welder and Cutter',
-'Wellhead Pumper',
-'Wholesale Sale Representative',
-'Wildlife Biologist',
-'Wind Turbine Technician',
-'Word Processor and Typist',
-'Woodworker',
-'Woodworker (all other)',
-'Writer',
-'X-Ray Technician',
-'Yard Conductor',
-'Yoga Instructor/Teacher',
-'Youth Program Director',
-'Youth Worker',
-'Zookeeper',
-'Zoologist',
-]</code></pre>
