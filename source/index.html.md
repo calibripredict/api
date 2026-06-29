@@ -720,9 +720,7 @@ getTransactions();
 
 ### Description
 
-Create a new beneficiary for cryptocurrency or fiat withdrawals. Beneficiaries can be cryptocurrency wallet addresses (with required travel rule information) or bank accounts for fiat transfers. All beneficiaries created via the API are automatically activated and ready for use.
-
-For cryptocurrency beneficiaries with travel rule requirements, you can specify whether the wallet is your own (`is_own`), unhosted (`is_unhosted`), or associated with a Virtual Asset Service Provider (VASP).
+Create a new beneficiary (a saved withdrawal destination — a cryptocurrency wallet address or a bank account for fiat transfers). All beneficiaries created via the API are automatically activated and ready for use.
 
 ### Parameters
 
@@ -741,10 +739,6 @@ Cryptocurrency `data` Object Fields
 | -------------- | ------- | -------- | ----------------------------------------------------------------------- |
 | address        | string  | Yes      | Cryptocurrency wallet address                                           |
 | tag            | string  | No       | Destination tag (for XRP, Stellar, etc.) - max: 4294967295              |
-| is_own         | boolean | No       | Travel rule: Is this your own wallet?                                   |
-| is_unhosted    | boolean | No       | Travel rule: Is this an unhosted wallet?                                |
-| vasp_id        | number  | No       | Travel rule: VASP ID |
-| recipient_data | object  | No       | Travel rule: Recipient information (see travel rule fields)             |
 
 Fiat `data` Object Fields
 
@@ -761,16 +755,6 @@ Fiat `data` Object Fields
 | intermediary_bank_swift | string | No       | Intermediary bank SWIFT code (for international transfers) |
 | account_holder_name     | string | No       | Account holder name (may differ from full_name)            |
 | account_type            | string | No       | Type of account (checking, savings, etc.)                  |
-
-Travel Rule `recipient_data` Object (Nested within `data`) (required for Cryptocurrency Beneficiaries)
-
-| Field         | Type   | Required              | Description                            |
-| ------------- | ------ | --------------------- | -------------------------------------- |
-| first_name    | string | Yes (for Individuals) | Recipient's first name                 |
-| last_name     | string | Yes (for Individuals) | Recipient's last name                  |
-| country       | string | Yes                   | Recipient's country code               |
-| identity_type | string | Yes                   | Individual or Business                 |
-| company_name  | string | Yes (for Businesses)  | Company name (for business recipients) |
 
 ### Request Examples
 
@@ -801,27 +785,7 @@ Travel Rule `recipient_data` Object (Nested within `data`) (required for Cryptoc
 }
 ```
 
-**Example 3: Crypto - Ethereum with Travel Rule Info**
-
-```json
-{
-  "currency": "eth",
-  "name": "Friend's Wallet",
-  "description": "John's Ethereum wallet",
-  "data": {
-    "address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
-    "is_own": false,
-    "is_unhosted": true,
-    "recipient_data": {
-      "first_name": "John",
-      "last_name": "Doe",
-      "country": "US"
-    }
-  }
-}
-```
-
-**Example 4: Fiat - ZAR (South African Rand)**
+**Example 3: Fiat - ZAR (South African Rand)**
 
 ```json
 {
@@ -840,7 +804,7 @@ Travel Rule `recipient_data` Object (Nested within `data`) (required for Cryptoc
 }
 ```
 
-**Example 5: Fiat - GBP SWIFT Transfer**
+**Example 4: Fiat - GBP SWIFT Transfer**
 
 ```json
 {
@@ -859,7 +823,7 @@ Travel Rule `recipient_data` Object (Nested within `data`) (required for Cryptoc
 }
 ```
 
-**Example 6: Fiat - EUR IBAN Transfer**
+**Example 5: Fiat - EUR IBAN Transfer**
 
 ```json
 {
@@ -876,7 +840,7 @@ Travel Rule `recipient_data` Object (Nested within `data`) (required for Cryptoc
 }
 ```
 
-**Example 7: Fiat - International with Intermediary Bank**
+**Example 6: Fiat - International with Intermediary Bank**
 
 ```json
 {
@@ -1072,7 +1036,7 @@ Get your withdraw history, paginated.
 
 ### Description
 
-Get all available deposit methods for the authenticated user. Returns deposit methods for both cryptocurrencies and fiat currencies, filtered based on the user's KYC level and remaining transaction limits.
+Get all available deposit methods for the authenticated user. Returns deposit methods for both cryptocurrencies and fiat currencies, filtered based on your remaining transaction limits.
 
 Each method includes minimum and maximum amounts, fees, provider information, and remaining limits for different time periods (daily, weekly, monthly, yearly).
 
@@ -1088,7 +1052,7 @@ Each method includes minimum and maximum amounts, fees, provider information, an
 
 ### Description
 
-Get all available withdrawal methods for the authenticated user. Returns withdrawal methods for both cryptocurrencies and fiat currencies, filtered based on the user's KYC level and remaining transaction limits.
+Get all available withdrawal methods for the authenticated user. Returns withdrawal methods for both cryptocurrencies and fiat currencies, filtered based on your remaining transaction limits.
 
 Each method includes minimum and maximum amounts, fees, provider information, processor details, and remaining limits for different time periods (daily, weekly, monthly, yearly).
 
@@ -1253,7 +1217,7 @@ createSubAccount();
 
 ### Description
 
-Create a new sub-account that inherits the parent's KYC verification. Sub-accounts cannot login independently and are managed by the parent account.
+Create a new sub-account managed by the parent account. Sub-accounts cannot login independently and are managed by the parent account.
 
 ### Parameters
 
@@ -1918,7 +1882,7 @@ Immediately after, you receive ZAR (minus the taker fee of 0.2%):
 }
 ```
 
-**Example 5: Partial Fill**
+**Example 4: Partial Fill**
 
 When your order is partially filled (50% of 0.001 BTC order):
 
@@ -2140,7 +2104,7 @@ All paginated list endpoints return an array of items in the response body, with
 | currency    | string  | Beneficiary currency code.                                                                                                                      |
 | name        | string  | Name of the beneficiary.                                                                                                                        |
 | description | string  | A personal description of the beneficiary for your records.                                                                                     |
-| data        | json    | Bank Account details for FIAT Beneficiary in JSON format. For crypto it's blockchain address and or tag, as well as the travel rule information |
+| data        | json    | Bank account details for a fiat beneficiary in JSON format. For crypto it's the blockchain address and/or tag |
 | state       | string  | Pending, Active, Archived (0,1,2)                                                                                                               |
 
 ### SubAccount
@@ -2168,8 +2132,6 @@ Customer accounts come in two types with different response structures:
 | account_name              | string | Display name for the customer (usually custom_id)                        |
 | state                     | string | Account state (active, deleted)                                          |
 | custom_id                 | string | Custom identifier set by merchant/aggregator                             |
-| external_verification_url | string | URL for external verification system                                     |
-| kyc_status                | string | KYC verification status (verified, pending, rejected)                    |
 | created_at                | string | Timestamp when customer was created in ISO 8601 format                   |
 | profile                   | object | Customer profile information (first_name, last_name, dob, address, etc.) |
 | phone                     | object | Phone information (country, number, validated_at)                        |
@@ -2247,18 +2209,6 @@ Customer accounts come in two types with different response structures:
 | expires_at               | string  | Expiry timestamp (ISO8601, for vouchers)                                               |
 | created_at               | string  | Transaction creation timestamp (ISO8601)                                               |
 | updated_at               | string  | Last update timestamp (ISO8601)                                                        |
-
-### VASP
-
-| Name       | Type    | Description                                       |
-| ---------- | ------- | ------------------------------------------------- |
-| id         | integer | Unique VASP identifier (use for vasp_id)          |
-| name       | string  | VASP name                                         |
-| url        | string  | VASP website URL                                  |
-| email      | string  | VASP contact email                                |
-| state      | string  | VASP state (active, pending, rejected, requested) |
-| icon_url   | string  | VASP icon/logo URL                                |
-| created_at | string  | ISO8601 timestamp of VASP registration            |
 
 ### PaymentReference
 
