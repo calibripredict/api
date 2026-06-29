@@ -397,6 +397,18 @@
                   <li>
                     <a href="#post-place-signed-order" class="toc-h2 toc-link" data-title="POST Place signed order"><span class="request-type__post">POST</span> Place signed order</a>
                   </li>
+                  <li>
+                    <a href="#funding-your-wallet" class="toc-h2 toc-link" data-title="Funding your wallet">Funding your wallet</a>
+                  </li>
+                  <li>
+                    <a href="#matching-amp-settlement" class="toc-h2 toc-link" data-title="Matching &amp; settlement">Matching &amp; settlement</a>
+                  </li>
+                  <li>
+                    <a href="#withdrawing" class="toc-h2 toc-link" data-title="Withdrawing">Withdrawing</a>
+                  </li>
+                  <li>
+                    <a href="#trustless-recovery-the-72-hour-deadman" class="toc-h2 toc-link" data-title="Trustless recovery (the 72-hour deadman)">Trustless recovery (the 72-hour deadman)</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -1275,6 +1287,38 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td><code>signed_order with signature is required</code> or signature/validation failure</td>
 </tr>
 </tbody></table>
+<h2 id='funding-your-wallet'>Funding your wallet</h2>
+<p>Your trading collateral stays in <strong>your own wallet</strong>, never in Calibri&#39;s custody. To fund:</p>
+
+<ol>
+<li>Read your Safe/proxy address (<code>proxy_address</code>) from <a href="#ctf-config">CTF config</a>.</li>
+<li>Send <strong>USDC to that address</strong> on-chain (a normal ERC-20 transfer).</li>
+</ol>
+
+<p>Calibri&#39;s on-chain deposit watcher detects the transfer and credits your trading balance — the <strong>same</strong> balance custodial users hold — so the funds are immediately usable on the shared order book. The deposit itself is an on-chain action you control; no API call is required for it.</p>
+<h2 id='matching-amp-settlement'>Matching &amp; settlement</h2>
+<p>Non-custodial orders match and settle <strong>entirely on-chain</strong> via three contracts:</p>
+
+<ul>
+<li><strong>CTF Exchange</strong> (<code>exchange_address</code> from <code>ctf-config</code>) — matches your signed order against a counterparty (<code>matchOrders</code>). A <strong>mixed match</strong> (a non-custodial maker against a custodial taker) is bridged by Calibri&#39;s operator acting as the on-chain counterparty for the custodial leg.</li>
+<li><strong>Gnosis Conditional Tokens</strong> — your YES/NO positions are <strong>ERC-1155 outcome shares</strong> minted/transferred at match time. A complete YES + NO set is always worth <code>1.00</code> USDC.</li>
+<li><strong>PythiaResolver</strong> — at event resolution Calibri reports the outcome on-chain; the winning outcome token redeems for <code>1.00</code> USDC per share (minus fee), the losing token for <code>0.00</code>.</li>
+</ul>
+
+<p>Because matching is on-chain, an order only fills when its on-chain transaction succeeds — there is no off-chain promise of backing. The maker rebate and any winnings are credited to your balance the same as for custodial trades.</p>
+<h2 id='withdrawing'>Withdrawing</h2>
+<p>Your funds remain in <strong>your own Safe/proxy</strong> the whole time, so you withdraw by moving USDC out of it on-chain — you never need Calibri&#39;s permission or co-operation. When you withdraw directly from your wallet, Calibri&#39;s watcher reconciles your off-chain trading balance (debits it and cancels any resting orders the withdrawn funds were collateralising).</p>
+
+<p>Only your <strong>available (uncommitted)</strong> balance is freely withdrawable. Collateral locked in an <strong>open (matched) contract</strong> is held until that contract settles.</p>
+<h2 id='trustless-recovery-the-72-hour-deadman'>Trustless recovery (the 72-hour deadman)</h2>
+<p>The one thing you trust Calibri for is reporting the <strong>correct outcome on time</strong>. That trust is bounded by a <strong>deadman switch</strong> in <code>PythiaResolver</code>:</p>
+
+<ul>
+<li>If Calibri fails to report a market&#39;s outcome by its scheduled resolution time <strong>plus a grace window (default 72 hours)</strong>, the resolver&#39;s <code>forceVoid</code> becomes <strong>permissionless</strong> — <em>anyone</em> can call it to void the market.</li>
+<li>A <strong>voided</strong> market returns every position&#39;s collateral (no winners, no losers), redeemable directly from the on-chain contracts.</li>
+</ul>
+
+<p>So even if Calibri goes offline permanently, your funds are always recoverable: you either get paid the correct outcome, or — once the deadman elapses — you reclaim your collateral straight from the contracts. This is the liveness guarantee that makes the model genuinely non-custodial.</p>
 <h1 id='public'>Public</h1><h2 id='get-alive'><span class="request-type__get">GET</span> Alive</h2>
 <p><code>/public/health/alive</code></p>
 <h3 id='description-15'>Description</h3>
