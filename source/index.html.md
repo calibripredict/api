@@ -5,7 +5,7 @@ title: Calibri API Documentation
 #   - shell
 
 toc_footers:
-  - <a href="https://app.calibri.app" target="_blank">Calibri</a>
+  - <a href="https://app.calibri.io" target="_blank">Calibri</a>
 
 includes:
   - errors
@@ -28,7 +28,7 @@ Create and cancel orders, view your account balance, stream orderbook and accoun
 
 The API suite consists of public and private endpoints. Private endpoints require your requests to be signed for authentication. In order to sign your requests, you will need to create and API key and secret, and have 2FA enabled:
 
-1. Sign into your account <a href="https://app.calibri.app" target="_blank">Calibri</a>
+1. Sign into your account <a href="https://app.calibri.io" target="_blank">Calibri</a>
 2. Head to the <strong>Profile</strong> page by clicking the profile icon at the top right
 3. Enable 2FA
 4. Create a new API key
@@ -38,13 +38,13 @@ Use your API key and secret to sign your requests for all private endpoints. (Pu
 
 All requests unless otherwise noted (EG for sub-account / customer management) use the following base URLs:
 
-- Base url REST: `https://app.calibri.app/api/v2/atlas`
-- Base url Websocket: `wss://app.calibri.app/api/v2/websocket`
+- Base url REST: `https://app.calibri.io/api/v2/atlas`
+- Base url Websocket: `wss://app.calibri.io/api/v2/websocket`
 
 For Sub-account and customer management (noted in the routes below):
 
-- Base url: `https://app.calibri.app/api/v2/persona`
-- Base url: `https://app.calibri.app/api/v2/verification`
+- Base url: `https://app.calibri.io/api/v2/persona`
+- Base url: `https://app.calibri.io/api/v2/verification`
 
 # Authentication
 
@@ -133,7 +133,7 @@ const axios = require("axios");
 const generateHeaders = require("./generateHeaders");
 
 createOrder = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "POST";
   const path = `/api/v2/atlas/market/orders`;
   const url = `${baseUrl}${path}`;
@@ -187,7 +187,7 @@ createOrder = async () => {
 }
 ```
 
-`https://app.calibri.app/api/v2/atlas/market/orders`
+`https://app.calibri.io/api/v2/atlas/market/orders`
 
 Create a new order on your account by signing your request and submitting the request
 
@@ -227,7 +227,7 @@ const axios = require("axios");
 const generateHeaders = require("./generateHeadersWithSubAccount");
 
 createOrder = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "POST";
   const path = `/api/v2/atlas/market/orders`;
   const url = `${baseUrl}${path}`;
@@ -257,7 +257,7 @@ createOrder = async () => {
 };
 ```
 
-`https://app.calibri.app/api/v2/atlas/market/orders`
+`https://app.calibri.io/api/v2/atlas/market/orders`
 
 When the `X-Auth-Subaccount-Uid` header is included, the order is created on behalf of the specified sub-account or customer. The parent account's API credentials are used for authentication, but the operation is performed in the context of the sub-account.
 
@@ -269,7 +269,7 @@ When the `X-Auth-Subaccount-Uid` header is included, the order is created on beh
 const axios = require("axios");
 
 getMarkets = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "GET";
   const path = `/api/v2/atlas/public/markets`;
   const url = `${baseUrl}${path}`;
@@ -345,7 +345,7 @@ getMarkets();
 ]
 ```
 
-`GET https://app.calibri.app/api/v2/atlas/public/markets`
+`GET https://app.calibri.io/api/v2/atlas/public/markets`
 
 Returns a list of all available markets
 
@@ -615,7 +615,7 @@ const axios = require("axios");
 const generateHeaders = require("./generateHeaders");
 
 getTransactions = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "GET";
   const path = `/api/v2/account/transactions?currency=btc&type=deposit&limit=25&page=1`;
   const url = `${baseUrl}${path}`;
@@ -958,7 +958,7 @@ Creates new withdrawal to active beneficiary.
 | beneficiary_id | formData   | ID of active Beneficiary.                                                                                                                                     | Yes      | integer |
 | currency       | formData   | The currency code matching the beneficiary.                                                                                                                   | Yes      | string  |
 | amount         | formData   | The amount to withdraw.                                                                                                                                       | Yes      | double  |
-| note           | formData   | ZAR withdrawals only. Use 'same_day_rtc' for [Faster withdraws](https://calibri.app/help) | No       | string  |
+| note           | formData   | ZAR withdrawals only. Use 'same_day_rtc' for [Faster withdraws](https://calibri.io/help) | No       | string  |
 
 ### Responses
 
@@ -1305,7 +1305,7 @@ const axios = require("axios");
 const generateHeaders = require("./generateHeaders");
 
 createSubAccount = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "POST";
   const path = `/api/v2/persona/resource/sub_accounts`;
   const url = `${baseUrl}${path}`;
@@ -1420,7 +1420,7 @@ const axios = require("axios");
 const generateHeaders = require("./generateHeaders");
 
 listSubAccounts = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "GET";
   const path = `/api/v2/persona/resource/sub_accounts?page=1&limit=100`;
   const url = `${baseUrl}${path}`;
@@ -1470,7 +1470,7 @@ const axios = require("axios");
 const generateHeaders = require("./generateHeaders");
 
 getSubAccount = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "GET";
   const subAccountUid = "CCT1234567";
   const path = `/api/v2/persona/resource/sub_accounts/${subAccountUid}`;
@@ -1521,7 +1521,7 @@ const axios = require("axios");
 const generateHeaders = require("./generateHeaders");
 
 updateSubAccount = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "PUT";
   const subAccountUid = "CCT1234567";
   const path = `/api/v2/persona/resource/sub_accounts/${subAccountUid}`;
@@ -1579,7 +1579,7 @@ const axios = require("axios");
 const generateHeaders = require("./generateHeaders");
 
 deleteSubAccount = async () => {
-  const baseUrl = "https://app.calibri.app";
+  const baseUrl = "https://app.calibri.io";
   const method = "DELETE";
   const subAccountUid = "CCT1234567";
   const path = `/api/v2/persona/resource/sub_accounts/${subAccountUid}`;
@@ -1813,7 +1813,7 @@ const WebSocket = require("ws");
 
 async function connectWssPublic() {
   try {
-    const baseUrl = `wss://app.calibri.app/api/v2`;
+    const baseUrl = `wss://app.calibri.io/api/v2`;
     const streams = "?stream=btczar.ob-inc&stream=ethzar.ob-inc";
     const path = `/websocket/public${streams}`;
 
@@ -1870,7 +1870,7 @@ const WebSocket = require("ws");
 
 async function connectWssPublic() {
   try {
-    const baseUrl = `wss://app.calibri.app/api/v2`;
+    const baseUrl = `wss://app.calibri.io/api/v2`;
     const streams = "?stream=btczar.kline-15m";
     const path = `/websocket/public${streams}`;
 
@@ -1922,7 +1922,7 @@ Subscribe to the K-LINE (OHLC) for the specified market to get updates on the OH
 ```javascript
 async function connectWssPrivate() {
   try {
-    const baseUrl = `wss://app.calibri.app/api/v2`;
+    const baseUrl = `wss://app.calibri.io/api/v2`;
     const headers = await generateHeaders();
     const streams =
       "?stream=btczar.ob-inc&stream=ethzar.ob-inc&stream=order&stream=trade&stream=balance";
