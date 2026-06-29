@@ -21,7 +21,7 @@ Welcome to the Calibri API Documentation. You can use our full API suite to inte
 
 Create and cancel orders, view your account balance, stream orderbook and account updates over websocket, and perform all other actions you can perform from the apps.
 
-🚀 Looking for trading features that we haven't added yet? We'll add them for you! <a href="mailto:developers@calibri.app" target="_blank">Reach out to us</a>
+🚀 Looking for trading features that we haven't added yet? We'll add them for you! <a href="https://support.calibri.io/help/en-us/8-help-contact/23-how-to-contact-support" target="_blank">Reach out to us</a>
 
 
 # Getting started
