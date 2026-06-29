@@ -660,6 +660,118 @@ The one thing you trust Calibri for is reporting the **correct outcome on time**
 
 So even if Calibri goes offline permanently, your funds are always recoverable: you either get paid the correct outcome, or — once the deadman elapses — you reclaim your collateral straight from the contracts. This is the liveness guarantee that makes the model genuinely non-custodial.
 
+## Worked example: a non-custodial trade end-to-end
+
+A complete walk-through — buy **100 YES shares at 0.60** on market `12` from a self-custody wallet. Replace addresses, ids, and amounts with your own.
+
+**Step 1 — Sign in with your wallet (SIWE).** Request a nonce, sign the EIP-4361 message with your wallet, and exchange it for a session cookie.
+
+```shell
+# 1a. get a nonce (also sets a temporary cookie)
+curl -X POST https://app.calibri.io/api/v2/persona/identity/sessions/web3/nonce \
+  -c cookies.txt -H 'content-type: application/json' \
+  -d '{"address":"0xE1188438C85C98aADFf1a88f97764E607B4978C3"}'
+# → { "nonce": "9f2c..." }
+
+# 1b. sign the SIWE message in your wallet, then exchange it for a session
+curl -X POST https://app.calibri.io/api/v2/persona/identity/sessions/web3 \
+  -b cookies.txt -c cookies.txt -H 'content-type: application/json' \
+  -d '{"message":"<EIP-4361 message>","signature":"0x<siwe signature>"}'
+# → { "uid": "CC4BF46C", "csrf_token": "..." }   (session cookie now in cookies.txt)
+```
+
+**Step 2 — Fetch the market's CTF config.** This returns your Safe, the exchange, the YES/NO token ids, and any one-time approvals.
+
+```shell
+curl https://app.calibri.io/api/v2/atlas/account/predictions/markets/12/ctf-config \
+  -b cookies.txt
+```
+
+```json
+{
+  "exchange_address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+  "chain_id": 137,
+  "yes_token_id": "7138...",
+  "no_token_id": "4519...",
+  "proxy_address": "0x0DECE7d83f8D47CD8dD8278c0F22c361C58577BD",
+  "signature_type": 2,
+  "safe_setup": { "ready": false, "calls": [ { "to": "0x...", "data": "0x...", "operation": 0, "nonce": 0, "hash": "0x9ab..." } ] }
+}
+```
+
+**Step 3 — One-time: make the Safe trade-ready.** Only when `safe_setup.ready` is `false`. Sign each `call.hash` in your wallet and relay it (Calibri pays the gas).
+
+```shell
+curl -X POST https://app.calibri.io/api/v2/atlas/account/predictions/ctf/relay \
+  -b cookies.txt -H 'content-type: application/json' \
+  -d '{"to":"0x...","data":"0x...","operation":0,"signature":"0x<sig over call.hash>"}'
+```
+
+**Step 4 — Fund (one-time / top-up).** Send USDC on-chain to your `proxy_address`. Calibri's watcher credits your trading balance — no API call needed.
+
+**Step 5 — Build and sign the EIP-712 order.** `maker` = your Safe, `signer` = your EOA. For a YES buy, use `yes_token_id`; amounts are 6-decimal USDC (`0.60 × 100 = 60` USDC collateral for `100` shares).
+
+```javascript
+import { privateKeyToAccount } from 'viem/accounts'
+const account = privateKeyToAccount('0x<your-eoa-key>')
+
+const order = {
+  salt:          BigInt('0x' + crypto.randomBytes(8).toString('hex')),
+  maker:         cfg.proxy_address,                                  // your Safe
+  signer:        account.address,                                   // your EOA
+  taker:         '0x0000000000000000000000000000000000000000',
+  tokenId:       BigInt(cfg.yes_token_id),                          // YES for a YES buy
+  makerAmount:   60_000000n,                                        // 0.60 × 100, 6-dec USDC
+  takerAmount:   100_000000n,                                       // 100 shares, 6-dec
+  expiration:    BigInt(Math.floor(Date.now()/1000) + 7*86400),
+  nonce:         0n,
+  feeRateBps:    0n,
+  side:          0,                                                 // 0 = BUY
+  signatureType: cfg.signature_type,                               // 2 = POLY_GNOSIS_SAFE
+}
+
+const signature = await account.signTypedData({
+  domain: { name: 'Polymarket CTF Exchange', version: '1',
+            chainId: cfg.chain_id, verifyingContract: cfg.exchange_address },
+  types:  { Order: [
+    { name:'salt', type:'uint256' }, { name:'maker', type:'address' },
+    { name:'signer', type:'address' }, { name:'taker', type:'address' },
+    { name:'tokenId', type:'uint256' }, { name:'makerAmount', type:'uint256' },
+    { name:'takerAmount', type:'uint256' }, { name:'expiration', type:'uint256' },
+    { name:'nonce', type:'uint256' }, { name:'feeRateBps', type:'uint256' },
+    { name:'side', type:'uint8' }, { name:'signatureType', type:'uint8' } ] },
+  primaryType: 'Order',
+  message: order,
+})
+```
+
+**Step 6 — Submit the signed order.** Field names in `signed_order` are snake_case.
+
+```shell
+curl -X POST https://app.calibri.io/api/v2/atlas/account/predictions/orders \
+  -b cookies.txt -H 'content-type: application/json' \
+  -d '{
+    "market":"12", "side":"yes", "ord_type":"limit", "volume":"100", "price":"0.60",
+    "signed_order": {
+      "salt":"5821...", "maker":"0x0DECE7...", "signer":"0xE11884...",
+      "taker":"0x0000000000000000000000000000000000000000",
+      "token_id":"7138...", "maker_amount":"60000000", "taker_amount":"100000000",
+      "expiration":"1788000000", "nonce":"0", "fee_rate_bps":"0",
+      "side":0, "signature_type":2, "signature":"0x..."
+    }
+  }'
+# → 201 { "id": 305, "state": "wait", "remaining_volume": "100", ... }
+```
+
+**Step 7 — Track it.** Your order rests on the shared book until matched; matching and settlement then happen on-chain.
+
+```shell
+curl https://app.calibri.io/api/v2/pythia/orders/305 -b cookies.txt           # order state
+curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts -b cookies.txt  # your positions
+```
+
+When the event resolves, the resolver reports the outcome on-chain and your winning shares redeem to `1.00` USDC each (minus fee). If Calibri never resolves, recover your collateral via the [72-hour deadman](#trustless-recovery-the-72-hour-deadman).
+
 # Public
 
 ## <span class="request-type__get">GET</span> Alive
