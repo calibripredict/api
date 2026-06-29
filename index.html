@@ -409,6 +409,9 @@
                   <li>
                     <a href="#trustless-recovery-the-72-hour-deadman" class="toc-h2 toc-link" data-title="Trustless recovery (the 72-hour deadman)">Trustless recovery (the 72-hour deadman)</a>
                   </li>
+                  <li>
+                    <a href="#worked-example-a-non-custodial-trade-end-to-end" class="toc-h2 toc-link" data-title="Worked example: a non-custodial trade end-to-end">Worked example: a non-custodial trade end-to-end</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -1319,6 +1322,95 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </ul>
 
 <p>So even if Calibri goes offline permanently, your funds are always recoverable: you either get paid the correct outcome, or — once the deadman elapses — you reclaim your collateral straight from the contracts. This is the liveness guarantee that makes the model genuinely non-custodial.</p>
+<h2 id='worked-example-a-non-custodial-trade-end-to-end'>Worked example: a non-custodial trade end-to-end</h2>
+<p>A complete walk-through — buy <strong>100 YES shares at 0.60</strong> on market <code>12</code> from a self-custody wallet. Replace addresses, ids, and amounts with your own.</p>
+
+<p><strong>Step 1 — Sign in with your wallet (SIWE).</strong> Request a nonce, sign the EIP-4361 message with your wallet, and exchange it for a session cookie.</p>
+<div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># 1a. get a nonce (also sets a temporary cookie)</span>
+curl <span class="nt">-X</span> POST https://app.calibri.io/api/v2/persona/identity/sessions/web3/nonce <span class="se">\</span>
+  <span class="nt">-c</span> cookies.txt <span class="nt">-H</span> <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{"address":"0xE1188438C85C98aADFf1a88f97764E607B4978C3"}'</span>
+<span class="c"># → { "nonce": "9f2c..." }</span>
+
+<span class="c"># 1b. sign the SIWE message in your wallet, then exchange it for a session</span>
+curl <span class="nt">-X</span> POST https://app.calibri.io/api/v2/persona/identity/sessions/web3 <span class="se">\</span>
+  <span class="nt">-b</span> cookies.txt <span class="nt">-c</span> cookies.txt <span class="nt">-H</span> <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{"message":"&lt;EIP-4361 message&gt;","signature":"0x&lt;siwe signature&gt;"}'</span>
+<span class="c"># → { "uid": "CC4BF46C", "csrf_token": "..." }   (session cookie now in cookies.txt)</span>
+</code></pre></div>
+<p><strong>Step 2 — Fetch the market&#39;s CTF config.</strong> This returns your Safe, the exchange, the YES/NO token ids, and any one-time approvals.</p>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl https://app.calibri.io/api/v2/atlas/account/predictions/markets/12/ctf-config <span class="se">\</span>
+  <span class="nt">-b</span> cookies.txt
+</code></pre></div><div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"exchange_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"chain_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">137</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"yes_token_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7138..."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"no_token_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4519..."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"proxy_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0DECE7d83f8D47CD8dD8278c0F22c361C58577BD"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"signature_type"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"safe_setup"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"ready"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">"calls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x..."</span><span class="p">,</span><span class="w"> </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x..."</span><span class="p">,</span><span class="w"> </span><span class="nl">"operation"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"nonce"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x9ab..."</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p><strong>Step 3 — One-time: make the Safe trade-ready.</strong> Only when <code>safe_setup.ready</code> is <code>false</code>. Sign each <code>call.hash</code> in your wallet and relay it (Calibri pays the gas).</p>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST https://app.calibri.io/api/v2/atlas/account/predictions/ctf/relay <span class="se">\</span>
+  <span class="nt">-b</span> cookies.txt <span class="nt">-H</span> <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{"to":"0x...","data":"0x...","operation":0,"signature":"0x&lt;sig over call.hash&gt;"}'</span>
+</code></pre></div>
+<p><strong>Step 4 — Fund (one-time / top-up).</strong> Send USDC on-chain to your <code>proxy_address</code>. Calibri&#39;s watcher credits your trading balance — no API call needed.</p>
+
+<p><strong>Step 5 — Build and sign the EIP-712 order.</strong> <code>maker</code> = your Safe, <code>signer</code> = your EOA. For a YES buy, use <code>yes_token_id</code>; amounts are 6-decimal USDC (<code>0.60 × 100 = 60</code> USDC collateral for <code>100</code> shares).</p>
+<div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">privateKeyToAccount</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">viem/accounts</span><span class="dl">'</span>
+<span class="kd">const</span> <span class="nx">account</span> <span class="o">=</span> <span class="nx">privateKeyToAccount</span><span class="p">(</span><span class="dl">'</span><span class="s1">0x&lt;your-eoa-key&gt;</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">order</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">salt</span><span class="p">:</span>          <span class="nx">BigInt</span><span class="p">(</span><span class="dl">'</span><span class="s1">0x</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">randomBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="dl">'</span><span class="s1">hex</span><span class="dl">'</span><span class="p">)),</span>
+  <span class="na">maker</span><span class="p">:</span>         <span class="nx">cfg</span><span class="p">.</span><span class="nx">proxy_address</span><span class="p">,</span>                                  <span class="c1">// your Safe</span>
+  <span class="na">signer</span><span class="p">:</span>        <span class="nx">account</span><span class="p">.</span><span class="nx">address</span><span class="p">,</span>                                   <span class="c1">// your EOA</span>
+  <span class="na">taker</span><span class="p">:</span>         <span class="dl">'</span><span class="s1">0x0000000000000000000000000000000000000000</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">tokenId</span><span class="p">:</span>       <span class="nx">BigInt</span><span class="p">(</span><span class="nx">cfg</span><span class="p">.</span><span class="nx">yes_token_id</span><span class="p">),</span>                          <span class="c1">// YES for a YES buy</span>
+  <span class="na">makerAmount</span><span class="p">:</span>   <span class="mi">60</span><span class="nx">_000000n</span><span class="p">,</span>                                        <span class="c1">// 0.60 × 100, 6-dec USDC</span>
+  <span class="na">takerAmount</span><span class="p">:</span>   <span class="mi">100</span><span class="nx">_000000n</span><span class="p">,</span>                                       <span class="c1">// 100 shares, 6-dec</span>
+  <span class="na">expiration</span><span class="p">:</span>    <span class="nx">BigInt</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="mi">7</span><span class="o">*</span><span class="mi">86400</span><span class="p">),</span>
+  <span class="na">nonce</span><span class="p">:</span>         <span class="mi">0</span><span class="nx">n</span><span class="p">,</span>
+  <span class="na">feeRateBps</span><span class="p">:</span>    <span class="mi">0</span><span class="nx">n</span><span class="p">,</span>
+  <span class="na">side</span><span class="p">:</span>          <span class="mi">0</span><span class="p">,</span>                                                 <span class="c1">// 0 = BUY</span>
+  <span class="na">signatureType</span><span class="p">:</span> <span class="nx">cfg</span><span class="p">.</span><span class="nx">signature_type</span><span class="p">,</span>                               <span class="c1">// 2 = POLY_GNOSIS_SAFE</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">signature</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">account</span><span class="p">.</span><span class="nx">signTypedData</span><span class="p">({</span>
+  <span class="na">domain</span><span class="p">:</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Polymarket CTF Exchange</span><span class="dl">'</span><span class="p">,</span> <span class="na">version</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">chainId</span><span class="p">:</span> <span class="nx">cfg</span><span class="p">.</span><span class="nx">chain_id</span><span class="p">,</span> <span class="na">verifyingContract</span><span class="p">:</span> <span class="nx">cfg</span><span class="p">.</span><span class="nx">exchange_address</span> <span class="p">},</span>
+  <span class="na">types</span><span class="p">:</span>  <span class="p">{</span> <span class="na">Order</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">salt</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint256</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">maker</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">address</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">signer</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">address</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">taker</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">address</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">tokenId</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint256</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">makerAmount</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint256</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">takerAmount</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint256</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">expiration</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint256</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">nonce</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint256</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">feeRateBps</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint256</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">side</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint8</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">name</span><span class="p">:</span><span class="dl">'</span><span class="s1">signatureType</span><span class="dl">'</span><span class="p">,</span> <span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">uint8</span><span class="dl">'</span> <span class="p">}</span> <span class="p">]</span> <span class="p">},</span>
+  <span class="na">primaryType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Order</span><span class="dl">'</span><span class="p">,</span>
+  <span class="na">message</span><span class="p">:</span> <span class="nx">order</span><span class="p">,</span>
+<span class="p">})</span>
+</code></pre></div>
+<p><strong>Step 6 — Submit the signed order.</strong> Field names in <code>signed_order</code> are snake_case.</p>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST https://app.calibri.io/api/v2/atlas/account/predictions/orders <span class="se">\</span>
+  <span class="nt">-b</span> cookies.txt <span class="nt">-H</span> <span class="s1">'content-type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "market":"12", "side":"yes", "ord_type":"limit", "volume":"100", "price":"0.60",
+    "signed_order": {
+      "salt":"5821...", "maker":"0x0DECE7...", "signer":"0xE11884...",
+      "taker":"0x0000000000000000000000000000000000000000",
+      "token_id":"7138...", "maker_amount":"60000000", "taker_amount":"100000000",
+      "expiration":"1788000000", "nonce":"0", "fee_rate_bps":"0",
+      "side":0, "signature_type":2, "signature":"0x..."
+    }
+  }'</span>
+<span class="c"># → 201 { "id": 305, "state": "wait", "remaining_volume": "100", ... }</span>
+</code></pre></div>
+<p><strong>Step 7 — Track it.</strong> Your order rests on the shared book until matched; matching and settlement then happen on-chain.</p>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl https://app.calibri.io/api/v2/pythia/orders/305 <span class="nt">-b</span> cookies.txt           <span class="c"># order state</span>
+curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span class="nt">-b</span> cookies.txt  <span class="c"># your positions</span>
+</code></pre></div>
+<p>When the event resolves, the resolver reports the outcome on-chain and your winning shares redeem to <code>1.00</code> USDC each (minus fee). If Calibri never resolves, recover your collateral via the <a href="#trustless-recovery-the-72-hour-deadman">72-hour deadman</a>.</p>
 <h1 id='public'>Public</h1><h2 id='get-alive'><span class="request-type__get">GET</span> Alive</h2>
 <p><code>/public/health/alive</code></p>
 <h3 id='description-15'>Description</h3>
