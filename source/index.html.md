@@ -17,11 +17,18 @@ code_clipboard: true
 
 # Introduction
 
-Welcome to the Calibri API Documentation. You can use our full API suite to integrate with us.
+Welcome to the Calibri API Documentation. Calibri is a **binary prediction-market exchange**: each market resolves to one of two outcomes, **YES** or **NO**, and prices are probabilities between `0.01` and `0.99` where **YES + NO = 1.00**. You trade outcome shares on a single combined order book; at settlement the winning side pays `1.00` per share (minus fee) and the losing side `0.00`.
 
-Create and cancel orders, view your account balance, stream orderbook and account updates over websocket, and perform all other actions you can perform from the apps.
+The data model is **events → markets → contracts**: an *event* is the real-world question, a *market* is its tradable YES/NO book, and a matched buy/sell becomes a *contract* held to settlement.
 
-🚀 Looking for trading features that we haven't added yet? We'll add them for you! <a href="https://support.calibri.io/contact" target="_blank">Reach out to us</a>
+Calibri supports two ways to trade the **same** order book:
+
+- **Custodial** — you deposit funds, Calibri holds them, and you place orders directly. Simplest integration.
+- **Non-custodial** — you connect a self-custody wallet, keep funds in your own on-chain Gnosis Safe, and submit **signed orders** that settle on-chain. See [Non-custodial Trading](#non-custodial-trading).
+
+Use this API to browse events and markets, place and cancel orders (custodial or non-custodial), view your positions and contracts, manage funds, and stream order-book and account updates over WebSocket.
+
+🚀 Looking for features we haven't added yet? <a href="https://support.calibri.io/contact" target="_blank">Reach out to us</a>
 
 
 # Getting started
@@ -348,6 +355,277 @@ getMarkets();
 `GET https://app.calibri.io/api/v2/atlas/public/markets`
 
 Returns a list of all available markets
+
+# Prediction Markets
+
+Calibri's prediction-market endpoints. The model is **events → markets → contracts**:
+
+- An **event** is the real-world question (e.g. *"Will X happen by date Y?"*) and carries one or more markets.
+- A **market** is the tradable book for one binary outcome pair (**YES / NO**). Prices are probabilities in `[0.01, 0.99]`; **YES + NO = 1.00**. Volume is denominated in *shares*; each winning share settles to `1.00` of the quote currency (USDC) minus the settlement fee, each losing share to `0.00`.
+- A **contract** is a matched position (a YES holder vs a NO holder) held until the event resolves.
+
+**Maker rebate:** the resting (maker) side of a matched trade earns a rebate — a percentage of the taker fee — credited automatically at settlement.
+
+Public endpoints need no authentication. Order placement and account data require [authentication](#authentication) (API key or session).
+
+- Public base URL: `https://app.calibri.io/api/v2/pythia/public`
+- Trading base URL: `https://app.calibri.io/api/v2/pythia`
+- Account base URL: `https://app.calibri.io/api/v2/atlas/account/predictions`
+
+## <span class="request-type__get">GET</span> List events
+
+`GET /api/v2/pythia/public/events`
+
+### Description
+
+Returns the catalogue of events. Each event includes its title, slug, category, status (`active`, `closed`, `settled`, …) and its child markets.
+
+### Parameters
+
+| Name     | In    | Description                                   | Required |
+| -------- | ----- | --------------------------------------------- | -------- |
+| category | query | Filter by category                            | No       |
+| status   | query | Filter by event status                        | No       |
+| limit    | query | Page size                                     | No       |
+
+## <span class="request-type__get">GET</span> Event by slug
+
+`GET /api/v2/pythia/public/events/{slug}`
+
+### Description
+
+Returns a single event (with its markets) by slug.
+
+## <span class="request-type__get">GET</span> List markets
+
+`GET /api/v2/pythia/public/markets`
+
+### Description
+
+Returns all tradable markets with current YES/NO prices, status, quote currency, and the parent event.
+
+## <span class="request-type__get">GET</span> Market detail
+
+`GET /api/v2/pythia/public/markets/{market}`
+
+### Description
+
+Returns a single market: YES/NO last prices, best bid/ask, status, close time, and settlement details once resolved.
+
+## <span class="request-type__get">GET</span> Order book
+
+`GET /api/v2/pythia/public/markets/{market}/order-book`
+
+### Description
+
+Aggregated combined order book for the market. Each level is `{ side, price, volume }` (YES bids and NO bids on one book — no order IDs or owner data are exposed). Use `/depth` for a depth-limited view.
+
+## <span class="request-type__get">GET</span> Recent contracts
+
+`GET /api/v2/pythia/public/markets/{market}/contracts/recent`
+
+### Description
+
+The public trade tape — recently matched contracts (price, volume, time) for the market.
+
+## <span class="request-type__get">GET</span> Ticker / K-line / All tickers
+
+`GET /api/v2/pythia/public/markets/{market}/ticker`<br/>
+`GET /api/v2/pythia/public/markets/{market}/k-line`<br/>
+`GET /api/v2/pythia/public/tickers`
+
+### Description
+
+Per-market ticker, candlestick (K-line) history, and a tickers snapshot across all markets.
+
+## <span class="request-type__post">POST</span> Place order (custodial)
+
+`POST /api/v2/pythia/orders`
+
+> Body
+
+```json
+{
+  "market": "12",
+  "side": "yes",
+  "ord_type": "limit",
+  "volume": "100",
+  "price": "0.60"
+}
+```
+
+### Description
+
+Places an order on the market's book using your **custodial** balance. Collateral (`price × volume` for the chosen side) is locked from your account immediately. This is the simplest way to trade — Calibri holds your funds and settles you off-chain at resolution.
+
+Self-custody members must **not** use this endpoint; they place [non-custodial signed orders](#non-custodial-trading) instead, and a direct call returns `market.order.use_signed_endpoint`.
+
+### Parameters
+
+| Name     | Type   | Description                                            | Required |
+| -------- | ------ | ------------------------------------------------------ | -------- |
+| market   | string | Market id                                              | Yes      |
+| side     | string | `yes` or `no`                                          | Yes      |
+| ord_type | string | `limit` or `market`                                    | Yes      |
+| volume   | string | Number of shares                                       | Yes      |
+| price    | string | Limit price `0.01`–`0.99` (required for `limit`)       | For limit |
+
+### Responses
+
+| Code | Meaning                                          |
+| ---- | ------------------------------------------------ |
+| 201  | Order accepted (returns the order with its `id` and `state`) |
+| 422  | Validation error (e.g. `market.order.invalid_price`) |
+
+## <span class="request-type__get">GET</span> Your orders / trades
+
+`GET /api/v2/pythia/orders`<br/>
+`GET /api/v2/pythia/orders/{id}`
+
+### Description
+
+List your prediction orders, or fetch one by id. Includes state, filled volume, and contracts formed.
+
+## <span class="request-type__post">POST</span> Cancel order
+
+`POST /api/v2/pythia/orders/{id}/cancel`
+
+### Description
+
+Cancels a resting order and releases its locked collateral. Only the unmatched remainder is cancellable; matched positions are held to settlement.
+
+## <span class="request-type__get">GET</span> Your contracts / positions
+
+`GET /api/v2/atlas/account/predictions/contracts`<br/>
+`GET /api/v2/atlas/account/predictions/contracts/{id}`
+
+### Description
+
+Your matched positions. Each contract shows the market, your side (YES/NO), share count, locked collateral, taker fee, and — once the event resolves — the settled state (`settled_yes` / `settled_no` / `voided`) and payout. You can only view contracts you are a party to.
+
+# Non-custodial Trading
+
+Non-custodial trading lets a user **keep their funds in their own on-chain wallet** and trade the **same** Calibri order book as custodial users, without ever depositing into Calibri's custody.
+
+### How it differs from custodial
+
+| | Custodial | Non-custodial |
+| --- | --- | --- |
+| **Where funds live** | Held by Calibri | In **your own Gnosis Safe** on-chain (USDC) — you can always withdraw, even if Calibri is unavailable |
+| **How you order** | Plain `POST /pythia/orders` | You **sign an EIP-712 order**; Calibri validates and relays it |
+| **Settlement** | Off-chain ledger | **On-chain** via Gnosis Conditional Tokens (trustless) |
+| **Gas** | None | None for trading — Calibri's operator relays your Safe transactions (gasless); you only sign |
+| **Order book / prices** | Shared | **Same** book and prices — custodial and non-custodial orders match against each other |
+
+The trust model is wallet-custody: Calibri can never move your funds; it can only match orders you have cryptographically signed, and settlement is enforced by the on-chain Conditional Tokens contracts. You still trust Calibri to report the correct outcome at resolution (a bounded on-chain deadman releases funds if it never does).
+
+### The flow
+
+1. **Connect a wallet** and sign in (Sign-In-With-Ethereum). Your member identity is keyed to your wallet address.
+2. **Fetch the market's CTF config** (below). It returns your per-member Safe (`proxy_address`), the exchange address, chain id, the YES/NO ERC-1155 token ids, and a one-time `safe_setup` if your Safe still needs trading approvals.
+3. **If `safe_setup.ready` is false**, sign each approval `hash` and relay it (gaslessly) via [Relay Safe transaction](#relay-safe-transaction) to make the Safe trade-ready (USDC allowance + Conditional-Tokens operator approval). This is a one-time setup per Safe.
+4. **Build and sign an EIP-712 order** (the Polymarket CTF Exchange `Order` struct — see below) with your wallet EOA: `maker` = your Safe, `signer` = your EOA, `signatureType` = `2` (POLY_GNOSIS_SAFE).
+5. **Submit the signed order** via [Place signed order](#place-signed-order). Calibri fully validates it server-side, then places it on the shared book.
+6. **Matching and settlement happen on-chain.** Funds move only via the Conditional Tokens contracts; your maker rebate and any winnings are credited the same as custodial.
+
+## <span class="request-type__get">GET</span> CTF config
+
+`GET /api/v2/atlas/account/predictions/markets/{id}/ctf-config`
+
+> Response
+
+```json
+{
+  "exchange_address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+  "chain_id": 137,
+  "yes_token_id": "713...",
+  "no_token_id": "451...",
+  "proxy_address": "0x0DECE7d83f8D47CD8dD8278c0F22c361C58577BD",
+  "signature_type": 2,
+  "safe_setup": {
+    "ready": false,
+    "calls": [
+      { "to": "0x...", "data": "0x...", "operation": 0, "nonce": 0, "hash": "0x..." }
+    ]
+  }
+}
+```
+
+### Description
+
+Everything the browser needs to build and sign a non-custodial order for a CTF-registered market. `signature_type` is `2` (Gnosis Safe) when you have a Safe, or `0` (EOA-direct) otherwise. `safe_setup.calls` is non-empty only while the Safe still needs approvals — sign each `hash` and relay it (next endpoint); when already trade-ready it is `{ "ready": true, "calls": [] }`.
+
+### Responses
+
+| Code | Meaning |
+| ---- | ------- |
+| 200  | Config returned |
+| 404  | `Market is not CTF-registered` |
+
+## <span class="request-type__post">POST</span> Relay Safe transaction
+
+`POST /api/v2/atlas/account/predictions/ctf/relay`
+
+### Description
+
+Gasless relay: submit a Safe-exec for an approval `hash` you signed from `ctf-config`'s `safe_setup`. Calibri's operator pays the gas and broadcasts it. Used to make your Safe trade-ready (one-time) — you sign, the operator executes.
+
+## <span class="request-type__post">POST</span> Place signed order
+
+`POST /api/v2/atlas/account/predictions/orders`
+
+> Body
+
+```json
+{
+  "market": "12",
+  "side": "yes",
+  "ord_type": "limit",
+  "volume": "100",
+  "price": "0.60",
+  "signed_order": {
+    "salt": "5821...",
+    "maker": "0x0DECE7d83f8D47CD8dD8278c0F22c361C58577BD",
+    "signer": "0xE1188438C85C98aADFf1a88f97764E607B4978C3",
+    "taker": "0x0000000000000000000000000000000000000000",
+    "token_id": "713...",
+    "maker_amount": "60000000",
+    "taker_amount": "100000000",
+    "expiration": "1788000000",
+    "nonce": "0",
+    "fee_rate_bps": "0",
+    "side": 0,
+    "signature_type": 2,
+    "signature": "0x..."
+  }
+}
+```
+
+### Description
+
+Places a **non-custodial** order. The `signed_order` is an EIP-712 signature over the Polymarket CTF Exchange `Order` struct, signed by your wallet. Calibri **fully validates it server-side** before placing — the leg price must equal `price`, `token_id` must be the market's YES/NO token for `side`, `taker` must be the zero address, `fee_rate_bps` must be `0`, `maker` must be your Safe and `signer` your EOA — so a tampered order is rejected, never placed.
+
+**EIP-712 domain:** `{ name: "Polymarket CTF Exchange", version: "1", chainId, verifyingContract: exchange_address }`.
+
+**`Order` struct fields:** `salt` (uint256), `maker` (address — your Safe), `signer` (address — your EOA), `taker` (address — `0x0`), `tokenId` (uint256 — YES or NO token), `makerAmount` (uint256 — collateral you provide, 6-dec USDC), `takerAmount` (uint256 — shares, 6-dec), `expiration` (uint256 — unix seconds), `nonce` (uint256), `feeRateBps` (uint256 — `0`), `side` (uint8 — `0` = BUY), `signatureType` (uint8 — `2` = POLY_GNOSIS_SAFE).
+
+### Parameters
+
+| Name         | Type   | Description                                              | Required |
+| ------------ | ------ | ------------------------------------------------------- | -------- |
+| market       | string | Market id                                               | Yes      |
+| side         | string | `yes` or `no`                                           | Yes      |
+| ord_type     | string | `limit` or `market`                                     | Yes      |
+| volume       | string | Number of shares                                        | Yes      |
+| price        | string | Limit price `0.01`–`0.99`                               | Yes      |
+| signed_order | object | The EIP-712-signed `Order` (fields above)               | Yes      |
+
+### Responses
+
+| Code | Meaning |
+| ---- | ------- |
+| 201  | Signed order accepted and placed |
+| 422  | `signed_order with signature is required` or signature/validation failure |
 
 # Public
 
