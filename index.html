@@ -549,9 +549,6 @@
                     <a href="#transaction" class="toc-h2 toc-link" data-title="Transaction">Transaction</a>
                   </li>
                   <li>
-                    <a href="#vasp" class="toc-h2 toc-link" data-title="VASP">VASP</a>
-                  </li>
-                  <li>
                     <a href="#paymentreference" class="toc-h2 toc-link" data-title="PaymentReference">PaymentReference</a>
                   </li>
                   <li>
@@ -1440,9 +1437,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </code></pre></div><h2 id='post-create-new-beneficiary'><span class="request-type__post">POST</span> Create new beneficiary</h2>
 <p><code>/account/beneficiaries</code></p>
 <h3 id='description-17'>Description</h3>
-<p>Create a new beneficiary for cryptocurrency or fiat withdrawals. Beneficiaries can be cryptocurrency wallet addresses (with required travel rule information) or bank accounts for fiat transfers. All beneficiaries created via the API are automatically activated and ready for use.</p>
-
-<p>For cryptocurrency beneficiaries with travel rule requirements, you can specify whether the wallet is your own (<code>is_own</code>), unhosted (<code>is_unhosted</code>), or associated with a Virtual Asset Service Provider (VASP).</p>
+<p>Create a new beneficiary (a saved withdrawal destination — a cryptocurrency wallet address or a bank account for fiat transfers). All beneficiaries created via the API are automatically activated and ready for use.</p>
 <h3 id='parameters-5'>Parameters</h3>
 <table><thead>
 <tr>
@@ -1526,30 +1521,6 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>No</td>
 <td>Destination tag (for XRP, Stellar, etc.) - max: 4294967295</td>
 </tr>
-<tr>
-<td>is_own</td>
-<td>boolean</td>
-<td>No</td>
-<td>Travel rule: Is this your own wallet?</td>
-</tr>
-<tr>
-<td>is_unhosted</td>
-<td>boolean</td>
-<td>No</td>
-<td>Travel rule: Is this an unhosted wallet?</td>
-</tr>
-<tr>
-<td>vasp_id</td>
-<td>number</td>
-<td>No</td>
-<td>Travel rule: VASP ID</td>
-</tr>
-<tr>
-<td>recipient_data</td>
-<td>object</td>
-<td>No</td>
-<td>Travel rule: Recipient information (see travel rule fields)</td>
-</tr>
 </tbody></table>
 
 <p>Fiat <code>data</code> Object Fields</p>
@@ -1629,48 +1600,6 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>Type of account (checking, savings, etc.)</td>
 </tr>
 </tbody></table>
-
-<p>Travel Rule <code>recipient_data</code> Object (Nested within <code>data</code>) (required for Cryptocurrency Beneficiaries)</p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>first_name</td>
-<td>string</td>
-<td>Yes (for Individuals)</td>
-<td>Recipient&#39;s first name</td>
-</tr>
-<tr>
-<td>last_name</td>
-<td>string</td>
-<td>Yes (for Individuals)</td>
-<td>Recipient&#39;s last name</td>
-</tr>
-<tr>
-<td>country</td>
-<td>string</td>
-<td>Yes</td>
-<td>Recipient&#39;s country code</td>
-</tr>
-<tr>
-<td>identity_type</td>
-<td>string</td>
-<td>Yes</td>
-<td>Individual or Business</td>
-</tr>
-<tr>
-<td>company_name</td>
-<td>string</td>
-<td>Yes (for Businesses)</td>
-<td>Company name (for business recipients)</td>
-</tr>
-</tbody></table>
 <h3 id='request-examples'>Request Examples</h3>
 <p><strong>Example 1: Crypto - Bitcoin</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
@@ -1693,24 +1622,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><strong>Example 3: Crypto - Ethereum with Travel Rule Info</strong></p>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eth"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Friend's Wallet"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John's Ethereum wallet"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"is_own"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"is_unhosted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"recipient_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p><strong>Example 4: Fiat - ZAR (South African Rand)</strong></p>
+<p><strong>Example 3: Fiat - ZAR (South African Rand)</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"South African Bank Account"</span><span class="p">,</span><span class="w">
@@ -1726,7 +1638,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><strong>Example 5: Fiat - GBP SWIFT Transfer</strong></p>
+<p><strong>Example 4: Fiat - GBP SWIFT Transfer</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gbp"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UK Business Account"</span><span class="p">,</span><span class="w">
@@ -1742,7 +1654,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><strong>Example 6: Fiat - EUR IBAN Transfer</strong></p>
+<p><strong>Example 5: Fiat - EUR IBAN Transfer</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eur"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EU Partner Account"</span><span class="p">,</span><span class="w">
@@ -1756,7 +1668,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><strong>Example 7: Fiat - International with Intermediary Bank</strong></p>
+<p><strong>Example 6: Fiat - International with Intermediary Bank</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usd"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"International Vendor"</span><span class="p">,</span><span class="w">
@@ -2125,7 +2037,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <h2 id='get-get-deposit-methods'><span class="request-type__get">GET</span> Get deposit methods</h2>
 <p><code>/api/v2/payments/deposits/methods</code></p>
 <h3 id='description-25'>Description</h3>
-<p>Get all available deposit methods for the authenticated user. Returns deposit methods for both cryptocurrencies and fiat currencies, filtered based on the user&#39;s KYC level and remaining transaction limits.</p>
+<p>Get all available deposit methods for the authenticated user. Returns deposit methods for both cryptocurrencies and fiat currencies, filtered based on your remaining transaction limits.</p>
 
 <p>Each method includes minimum and maximum amounts, fees, provider information, and remaining limits for different time periods (daily, weekly, monthly, yearly).</p>
 <h3 id='responses-14'>Responses</h3>
@@ -2145,7 +2057,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <h2 id='get-get-withdraw-methods'><span class="request-type__get">GET</span> Get withdraw methods</h2>
 <p><code>/api/v2/payments/withdraws/methods</code></p>
 <h3 id='description-26'>Description</h3>
-<p>Get all available withdrawal methods for the authenticated user. Returns withdrawal methods for both cryptocurrencies and fiat currencies, filtered based on the user&#39;s KYC level and remaining transaction limits.</p>
+<p>Get all available withdrawal methods for the authenticated user. Returns withdrawal methods for both cryptocurrencies and fiat currencies, filtered based on your remaining transaction limits.</p>
 
 <p>Each method includes minimum and maximum amounts, fees, provider information, processor details, and remaining limits for different time periods (daily, weekly, monthly, yearly).</p>
 <h3 id='responses-15'>Responses</h3>
@@ -2425,7 +2337,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </code></pre></div>
 <p><code>/persona/resource/sub_accounts</code></p>
 <h3 id='description-32'>Description</h3>
-<p>Create a new sub-account that inherits the parent&#39;s KYC verification. Sub-accounts cannot login independently and are managed by the parent account.</p>
+<p>Create a new sub-account managed by the parent account. Sub-accounts cannot login independently and are managed by the parent account.</p>
 <h3 id='parameters-18'>Parameters</h3>
 <table><thead>
 <tr>
@@ -3250,7 +3162,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><strong>Example 5: Partial Fill</strong></p>
+<p><strong>Example 4: Partial Fill</strong></p>
 
 <p>When your order is partially filled (50% of 0.001 BTC order):</p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
@@ -3918,7 +3830,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>data</td>
 <td>json</td>
-<td>Bank Account details for FIAT Beneficiary in JSON format. For crypto it&#39;s blockchain address and or tag, as well as the travel rule information</td>
+<td>Bank account details for a fiat beneficiary in JSON format. For crypto it&#39;s the blockchain address and/or tag</td>
 </tr>
 <tr>
 <td>state</td>
@@ -3994,16 +3906,6 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>custom_id</td>
 <td>string</td>
 <td>Custom identifier set by merchant/aggregator</td>
-</tr>
-<tr>
-<td>external_verification_url</td>
-<td>string</td>
-<td>URL for external verification system</td>
-</tr>
-<tr>
-<td>kyc_status</td>
-<td>string</td>
-<td>KYC verification status (verified, pending, rejected)</td>
 </tr>
 <tr>
 <td>created_at</td>
@@ -4341,50 +4243,6 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>updated_at</td>
 <td>string</td>
 <td>Last update timestamp (ISO8601)</td>
-</tr>
-</tbody></table>
-<h3 id='vasp'>VASP</h3>
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>id</td>
-<td>integer</td>
-<td>Unique VASP identifier (use for vasp_id)</td>
-</tr>
-<tr>
-<td>name</td>
-<td>string</td>
-<td>VASP name</td>
-</tr>
-<tr>
-<td>url</td>
-<td>string</td>
-<td>VASP website URL</td>
-</tr>
-<tr>
-<td>email</td>
-<td>string</td>
-<td>VASP contact email</td>
-</tr>
-<tr>
-<td>state</td>
-<td>string</td>
-<td>VASP state (active, pending, rejected, requested)</td>
-</tr>
-<tr>
-<td>icon_url</td>
-<td>string</td>
-<td>VASP icon/logo URL</td>
-</tr>
-<tr>
-<td>created_at</td>
-<td>string</td>
-<td>ISO8601 timestamp of VASP registration</td>
 </tr>
 </tbody></table>
 <h3 id='paymentreference'>PaymentReference</h3>
