@@ -51,7 +51,6 @@ All requests unless otherwise noted (EG for sub-account / customer management) u
 For Sub-account and customer management (noted in the routes below):
 
 - Base url: `https://app.calibri.io/api/v2/persona`
-- Base url: `https://app.calibri.io/api/v2/verification`
 
 # Authentication
 
