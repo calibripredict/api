@@ -609,7 +609,7 @@
           </li>
       </ul>
         <ul class="toc-footer">
-            <li><a href="https://app.calibri.app" target="_blank">Calibri</a></li>
+            <li><a href="https://app.calibri.io" target="_blank">Calibri</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -625,7 +625,7 @@
 <p>The API suite consists of public and private endpoints. Private endpoints require your requests to be signed for authentication. In order to sign your requests, you will need to create and API key and secret, and have 2FA enabled:</p>
 
 <ol>
-<li>Sign into your account <a href="https://app.calibri.app" target="_blank">Calibri</a></li>
+<li>Sign into your account <a href="https://app.calibri.io" target="_blank">Calibri</a></li>
 <li>Head to the <strong>Profile</strong> page by clicking the profile icon at the top right</li>
 <li>Enable 2FA</li>
 <li>Create a new API key</li>
@@ -637,15 +637,15 @@
 <p>All requests unless otherwise noted (EG for sub-account / customer management) use the following base URLs:</p>
 
 <ul>
-<li>Base url REST: <code>https://app.calibri.app/api/v2/atlas</code></li>
-<li>Base url Websocket: <code>wss://app.calibri.app/api/v2/websocket</code></li>
+<li>Base url REST: <code>https://app.calibri.io/api/v2/atlas</code></li>
+<li>Base url Websocket: <code>wss://app.calibri.io/api/v2/websocket</code></li>
 </ul>
 
 <p>For Sub-account and customer management (noted in the routes below):</p>
 
 <ul>
-<li>Base url: <code>https://app.calibri.app/api/v2/persona</code></li>
-<li>Base url: <code>https://app.calibri.app/api/v2/verification</code></li>
+<li>Base url: <code>https://app.calibri.io/api/v2/persona</code></li>
+<li>Base url: <code>https://app.calibri.io/api/v2/verification</code></li>
 </ul>
 <h1 id='authentication'>Authentication</h1>
 <blockquote>
@@ -727,7 +727,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="kd">const</span> <span class="nx">generateHeaders</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">./generateHeaders</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">createOrder</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/atlas/market/orders`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -779,7 +779,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
   </span><span class="nl">"custom_order_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"302b0494-1a06-4089-846c-0c6b13f1b661"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><code>https://app.calibri.app/api/v2/atlas/market/orders</code></p>
+<p><code>https://app.calibri.io/api/v2/atlas/market/orders</code></p>
 
 <p>Create a new order on your account by signing your request and submitting the request</p>
 <h2 id='post-create-order-as-sub-account'><span class="request-type__post">POST</span> Create order as sub-account</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// generateHeadersWithSubAccount.js</span>
@@ -814,7 +814,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="kd">const</span> <span class="nx">generateHeaders</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">./generateHeadersWithSubAccount</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">createOrder</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/atlas/market/orders`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -843,13 +843,13 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
   <span class="p">}</span>
 <span class="p">};</span>
 </code></pre></div>
-<p><code>https://app.calibri.app/api/v2/atlas/market/orders</code></p>
+<p><code>https://app.calibri.io/api/v2/atlas/market/orders</code></p>
 
 <p>When the <code>X-Auth-Subaccount-Uid</code> header is included, the order is created on behalf of the specified sub-account or customer. The parent account&#39;s API credentials are used for authentication, but the operation is performed in the context of the sub-account.</p>
 <h1 id='public-request-example'>Public request example</h1><h2 id='get-get-available-markets'><span class="request-type__get">GET</span> Get available markets</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">axios</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">axios</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">getMarkets</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/atlas/public/markets`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -923,7 +923,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre></div>
-<p><code>GET https://app.calibri.app/api/v2/atlas/public/markets</code></p>
+<p><code>GET https://app.calibri.io/api/v2/atlas/public/markets</code></p>
 
 <p>Returns a list of all available markets</p>
 <h1 id='public'>Public</h1><h2 id='get-alive'><span class="request-type__get">GET</span> Alive</h2>
@@ -1513,7 +1513,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="kd">const</span> <span class="nx">generateHeaders</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">./generateHeaders</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">getTransactions</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/account/transactions?currency=btc&amp;type=deposit&amp;limit=25&amp;page=1`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -2138,7 +2138,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <tr>
 <td>note</td>
 <td>formData</td>
-<td>ZAR withdrawals only. Use &#39;same_day_rtc&#39; for <a href="https://calibri.app/help">Faster withdraws</a></td>
+<td>ZAR withdrawals only. Use &#39;same_day_rtc&#39; for <a href="https://calibri.io/help">Faster withdraws</a></td>
 <td>No</td>
 <td>string</td>
 </tr>
@@ -2902,7 +2902,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="kd">const</span> <span class="nx">generateHeaders</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">./generateHeaders</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">createSubAccount</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/persona/resource/sub_accounts`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -3059,7 +3059,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="kd">const</span> <span class="nx">generateHeaders</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">./generateHeaders</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">listSubAccounts</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/persona/resource/sub_accounts?page=1&amp;limit=100`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -3128,7 +3128,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="kd">const</span> <span class="nx">generateHeaders</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">./generateHeaders</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">getSubAccount</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">subAccountUid</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">CCT1234567</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/persona/resource/sub_accounts/</span><span class="p">${</span><span class="nx">subAccountUid</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -3196,7 +3196,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="kd">const</span> <span class="nx">generateHeaders</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">./generateHeaders</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">updateSubAccount</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">PUT</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">subAccountUid</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">CCT1234567</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/persona/resource/sub_accounts/</span><span class="p">${</span><span class="nx">subAccountUid</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -3281,7 +3281,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="kd">const</span> <span class="nx">generateHeaders</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">./generateHeaders</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="nx">deleteSubAccount</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.app</span><span class="dl">"</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">DELETE</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">subAccountUid</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">CCT1234567</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/persona/resource/sub_accounts/</span><span class="p">${</span><span class="nx">subAccountUid</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
@@ -3746,7 +3746,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 
 <span class="k">async</span> <span class="kd">function</span> <span class="nx">connectWssPublic</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">try</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.app/api/v2`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.io/api/v2`</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">streams</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">?stream=btczar.ob-inc&amp;stream=ethzar.ob-inc</span><span class="dl">"</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/websocket/public</span><span class="p">${</span><span class="nx">streams</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
 
@@ -3817,7 +3817,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 
 <span class="k">async</span> <span class="kd">function</span> <span class="nx">connectWssPublic</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">try</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.app/api/v2`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.io/api/v2`</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">streams</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">?stream=btczar.kline-15m</span><span class="dl">"</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/websocket/public</span><span class="p">${</span><span class="nx">streams</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
 
@@ -3892,7 +3892,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 </tbody></table>
 <h2 id='subscribe-private'><span class="request-type__get">SUBSCRIBE</span> Private</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">connectWssPrivate</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">try</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.app/api/v2`</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.io/api/v2`</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">headers</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">generateHeaders</span><span class="p">();</span>
     <span class="kd">const</span> <span class="nx">streams</span> <span class="o">=</span>
       <span class="dl">"</span><span class="s2">?stream=btczar.ob-inc&amp;stream=ethzar.ob-inc&amp;stream=order&amp;stream=trade&amp;stream=balance</span><span class="dl">"</span><span class="p">;</span>
