@@ -342,6 +342,64 @@
               </ul>
           </li>
           <li>
+            <a href="#prediction-markets" class="toc-h1 toc-link" data-title="Prediction Markets">Prediction Markets</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-list-events" class="toc-h2 toc-link" data-title="GET List events"><span class="request-type__get">GET</span> List events</a>
+                  </li>
+                  <li>
+                    <a href="#get-event-by-slug" class="toc-h2 toc-link" data-title="GET Event by slug"><span class="request-type__get">GET</span> Event by slug</a>
+                  </li>
+                  <li>
+                    <a href="#get-list-markets" class="toc-h2 toc-link" data-title="GET List markets"><span class="request-type__get">GET</span> List markets</a>
+                  </li>
+                  <li>
+                    <a href="#get-market-detail" class="toc-h2 toc-link" data-title="GET Market detail"><span class="request-type__get">GET</span> Market detail</a>
+                  </li>
+                  <li>
+                    <a href="#get-order-book" class="toc-h2 toc-link" data-title="GET Order book"><span class="request-type__get">GET</span> Order book</a>
+                  </li>
+                  <li>
+                    <a href="#get-recent-contracts" class="toc-h2 toc-link" data-title="GET Recent contracts"><span class="request-type__get">GET</span> Recent contracts</a>
+                  </li>
+                  <li>
+                    <a href="#get-ticker-k-line-all-tickers" class="toc-h2 toc-link" data-title="GET Ticker / K-line / All tickers"><span class="request-type__get">GET</span> Ticker / K-line / All tickers</a>
+                  </li>
+                  <li>
+                    <a href="#post-place-order-custodial" class="toc-h2 toc-link" data-title="POST Place order (custodial)"><span class="request-type__post">POST</span> Place order (custodial)</a>
+                  </li>
+                  <li>
+                    <a href="#get-your-orders-trades" class="toc-h2 toc-link" data-title="GET Your orders / trades"><span class="request-type__get">GET</span> Your orders / trades</a>
+                  </li>
+                  <li>
+                    <a href="#post-cancel-order" class="toc-h2 toc-link" data-title="POST Cancel order"><span class="request-type__post">POST</span> Cancel order</a>
+                  </li>
+                  <li>
+                    <a href="#get-your-contracts-positions" class="toc-h2 toc-link" data-title="GET Your contracts / positions"><span class="request-type__get">GET</span> Your contracts / positions</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#non-custodial-trading" class="toc-h1 toc-link" data-title="Non-custodial Trading">Non-custodial Trading</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#how-it-differs-from-custodial" class="toc-h2 toc-link" data-title="How it differs from custodial">How it differs from custodial</a>
+                  </li>
+                  <li>
+                    <a href="#the-flow" class="toc-h2 toc-link" data-title="The flow">The flow</a>
+                  </li>
+                  <li>
+                    <a href="#get-ctf-config" class="toc-h2 toc-link" data-title="GET CTF config"><span class="request-type__get">GET</span> CTF config</a>
+                  </li>
+                  <li>
+                    <a href="#post-relay-safe-transaction" class="toc-h2 toc-link" data-title="POST Relay Safe transaction"><span class="request-type__post">POST</span> Relay Safe transaction</a>
+                  </li>
+                  <li>
+                    <a href="#post-place-signed-order" class="toc-h2 toc-link" data-title="POST Place signed order"><span class="request-type__post">POST</span> Place signed order</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#public" class="toc-h1 toc-link" data-title="Public">Public</a>
               <ul class="toc-list-h2">
                   <li>
@@ -477,7 +535,7 @@
                     <a href="#get-trades" class="toc-h2 toc-link" data-title="GET Trades"><span class="request-type__get">GET</span> Trades</a>
                   </li>
                   <li>
-                    <a href="#post-cancel-order" class="toc-h2 toc-link" data-title="POST Cancel Order"><span class="request-type__post">POST</span> Cancel Order</a>
+                    <a href="#post-cancel-order-2" class="toc-h2 toc-link" data-title="POST Cancel Order"><span class="request-type__post">POST</span> Cancel Order</a>
                   </li>
                   <li>
                     <a href="#post-cancel-all-orders" class="toc-h2 toc-link" data-title="POST Cancel All Orders"><span class="request-type__post">POST</span> Cancel All Orders</a>
@@ -616,11 +674,20 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Calibri API Documentation. You can use our full API suite to integrate with us.</p>
+<p>Welcome to the Calibri API Documentation. Calibri is a <strong>binary prediction-market exchange</strong>: each market resolves to one of two outcomes, <strong>YES</strong> or <strong>NO</strong>, and prices are probabilities between <code>0.01</code> and <code>0.99</code> where <strong>YES + NO = 1.00</strong>. You trade outcome shares on a single combined order book; at settlement the winning side pays <code>1.00</code> per share (minus fee) and the losing side <code>0.00</code>.</p>
 
-<p>Create and cancel orders, view your account balance, stream orderbook and account updates over websocket, and perform all other actions you can perform from the apps.</p>
+<p>The data model is <strong>events → markets → contracts</strong>: an <em>event</em> is the real-world question, a <em>market</em> is its tradable YES/NO book, and a matched buy/sell becomes a <em>contract</em> held to settlement.</p>
 
-<p>🚀 Looking for trading features that we haven&#39;t added yet? We&#39;ll add them for you! <a href="https://support.calibri.io/contact" target="_blank">Reach out to us</a></p>
+<p>Calibri supports two ways to trade the <strong>same</strong> order book:</p>
+
+<ul>
+<li><strong>Custodial</strong> — you deposit funds, Calibri holds them, and you place orders directly. Simplest integration.</li>
+<li><strong>Non-custodial</strong> — you connect a self-custody wallet, keep funds in your own on-chain Gnosis Safe, and submit <strong>signed orders</strong> that settle on-chain. See <a href="#non-custodial-trading">Non-custodial Trading</a>.</li>
+</ul>
+
+<p>Use this API to browse events and markets, place and cancel orders (custodial or non-custodial), view your positions and contracts, manage funds, and stream order-book and account updates over WebSocket.</p>
+
+<p>🚀 Looking for features we haven&#39;t added yet? <a href="https://support.calibri.io/contact" target="_blank">Reach out to us</a></p>
 <h1 id='getting-started'>Getting started</h1>
 <p>The API suite consists of public and private endpoints. Private endpoints require your requests to be signed for authentication. In order to sign your requests, you will need to create and API key and secret, and have 2FA enabled:</p>
 
@@ -926,11 +993,359 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <p><code>GET https://app.calibri.io/api/v2/atlas/public/markets</code></p>
 
 <p>Returns a list of all available markets</p>
+<h1 id='prediction-markets'>Prediction Markets</h1>
+<p>Calibri&#39;s prediction-market endpoints. The model is <strong>events → markets → contracts</strong>:</p>
+
+<ul>
+<li>An <strong>event</strong> is the real-world question (e.g. <em>&quot;Will X happen by date Y?&quot;</em>) and carries one or more markets.</li>
+<li>A <strong>market</strong> is the tradable book for one binary outcome pair (<strong>YES / NO</strong>). Prices are probabilities in <code>[0.01, 0.99]</code>; <strong>YES + NO = 1.00</strong>. Volume is denominated in <em>shares</em>; each winning share settles to <code>1.00</code> of the quote currency (USDC) minus the settlement fee, each losing share to <code>0.00</code>.</li>
+<li>A <strong>contract</strong> is a matched position (a YES holder vs a NO holder) held until the event resolves.</li>
+</ul>
+
+<p><strong>Maker rebate:</strong> the resting (maker) side of a matched trade earns a rebate — a percentage of the taker fee — credited automatically at settlement.</p>
+
+<p>Public endpoints need no authentication. Order placement and account data require <a href="#authentication">authentication</a> (API key or session).</p>
+
+<ul>
+<li>Public base URL: <code>https://app.calibri.io/api/v2/pythia/public</code></li>
+<li>Trading base URL: <code>https://app.calibri.io/api/v2/pythia</code></li>
+<li>Account base URL: <code>https://app.calibri.io/api/v2/atlas/account/predictions</code></li>
+</ul>
+<h2 id='get-list-events'><span class="request-type__get">GET</span> List events</h2>
+<p><code>GET /api/v2/pythia/public/events</code></p>
+<h3 id='description'>Description</h3>
+<p>Returns the catalogue of events. Each event includes its title, slug, category, status (<code>active</code>, <code>closed</code>, <code>settled</code>, …) and its child markets.</p>
+<h3 id='parameters'>Parameters</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>In</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>category</td>
+<td>query</td>
+<td>Filter by category</td>
+<td>No</td>
+</tr>
+<tr>
+<td>status</td>
+<td>query</td>
+<td>Filter by event status</td>
+<td>No</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>query</td>
+<td>Page size</td>
+<td>No</td>
+</tr>
+</tbody></table>
+<h2 id='get-event-by-slug'><span class="request-type__get">GET</span> Event by slug</h2>
+<p><code>GET /api/v2/pythia/public/events/{slug}</code></p>
+<h3 id='description-2'>Description</h3>
+<p>Returns a single event (with its markets) by slug.</p>
+<h2 id='get-list-markets'><span class="request-type__get">GET</span> List markets</h2>
+<p><code>GET /api/v2/pythia/public/markets</code></p>
+<h3 id='description-3'>Description</h3>
+<p>Returns all tradable markets with current YES/NO prices, status, quote currency, and the parent event.</p>
+<h2 id='get-market-detail'><span class="request-type__get">GET</span> Market detail</h2>
+<p><code>GET /api/v2/pythia/public/markets/{market}</code></p>
+<h3 id='description-4'>Description</h3>
+<p>Returns a single market: YES/NO last prices, best bid/ask, status, close time, and settlement details once resolved.</p>
+<h2 id='get-order-book'><span class="request-type__get">GET</span> Order book</h2>
+<p><code>GET /api/v2/pythia/public/markets/{market}/order-book</code></p>
+<h3 id='description-5'>Description</h3>
+<p>Aggregated combined order book for the market. Each level is <code>{ side, price, volume }</code> (YES bids and NO bids on one book — no order IDs or owner data are exposed). Use <code>/depth</code> for a depth-limited view.</p>
+<h2 id='get-recent-contracts'><span class="request-type__get">GET</span> Recent contracts</h2>
+<p><code>GET /api/v2/pythia/public/markets/{market}/contracts/recent</code></p>
+<h3 id='description-6'>Description</h3>
+<p>The public trade tape — recently matched contracts (price, volume, time) for the market.</p>
+<h2 id='get-ticker-k-line-all-tickers'><span class="request-type__get">GET</span> Ticker / K-line / All tickers</h2>
+<p><code>GET /api/v2/pythia/public/markets/{market}/ticker</code><br/>
+<code>GET /api/v2/pythia/public/markets/{market}/k-line</code><br/>
+<code>GET /api/v2/pythia/public/tickers</code></p>
+<h3 id='description-7'>Description</h3>
+<p>Per-market ticker, candlestick (K-line) history, and a tickers snapshot across all markets.</p>
+<h2 id='post-place-order-custodial'><span class="request-type__post">POST</span> Place order (custodial)</h2>
+<p><code>POST /api/v2/pythia/orders</code></p>
+
+<blockquote>
+<p>Body</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"market"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ord_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"limit"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.60"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='description-8'>Description</h3>
+<p>Places an order on the market&#39;s book using your <strong>custodial</strong> balance. Collateral (<code>price × volume</code> for the chosen side) is locked from your account immediately. This is the simplest way to trade — Calibri holds your funds and settles you off-chain at resolution.</p>
+
+<p>Self-custody members must <strong>not</strong> use this endpoint; they place <a href="#non-custodial-trading">non-custodial signed orders</a> instead, and a direct call returns <code>market.order.use_signed_endpoint</code>.</p>
+<h3 id='parameters-2'>Parameters</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>market</td>
+<td>string</td>
+<td>Market id</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>side</td>
+<td>string</td>
+<td><code>yes</code> or <code>no</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>ord_type</td>
+<td>string</td>
+<td><code>limit</code> or <code>market</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>volume</td>
+<td>string</td>
+<td>Number of shares</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>price</td>
+<td>string</td>
+<td>Limit price <code>0.01</code>–<code>0.99</code> (required for <code>limit</code>)</td>
+<td>For limit</td>
+</tr>
+</tbody></table>
+<h3 id='responses'>Responses</h3>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>201</td>
+<td>Order accepted (returns the order with its <code>id</code> and <code>state</code>)</td>
+</tr>
+<tr>
+<td>422</td>
+<td>Validation error (e.g. <code>market.order.invalid_price</code>)</td>
+</tr>
+</tbody></table>
+<h2 id='get-your-orders-trades'><span class="request-type__get">GET</span> Your orders / trades</h2>
+<p><code>GET /api/v2/pythia/orders</code><br/>
+<code>GET /api/v2/pythia/orders/{id}</code></p>
+<h3 id='description-9'>Description</h3>
+<p>List your prediction orders, or fetch one by id. Includes state, filled volume, and contracts formed.</p>
+<h2 id='post-cancel-order'><span class="request-type__post">POST</span> Cancel order</h2>
+<p><code>POST /api/v2/pythia/orders/{id}/cancel</code></p>
+<h3 id='description-10'>Description</h3>
+<p>Cancels a resting order and releases its locked collateral. Only the unmatched remainder is cancellable; matched positions are held to settlement.</p>
+<h2 id='get-your-contracts-positions'><span class="request-type__get">GET</span> Your contracts / positions</h2>
+<p><code>GET /api/v2/atlas/account/predictions/contracts</code><br/>
+<code>GET /api/v2/atlas/account/predictions/contracts/{id}</code></p>
+<h3 id='description-11'>Description</h3>
+<p>Your matched positions. Each contract shows the market, your side (YES/NO), share count, locked collateral, taker fee, and — once the event resolves — the settled state (<code>settled_yes</code> / <code>settled_no</code> / <code>voided</code>) and payout. You can only view contracts you are a party to.</p>
+<h1 id='non-custodial-trading'>Non-custodial Trading</h1>
+<p>Non-custodial trading lets a user <strong>keep their funds in their own on-chain wallet</strong> and trade the <strong>same</strong> Calibri order book as custodial users, without ever depositing into Calibri&#39;s custody.</p>
+<h3 id='how-it-differs-from-custodial'>How it differs from custodial</h3>
+<table><thead>
+<tr>
+<th></th>
+<th>Custodial</th>
+<th>Non-custodial</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Where funds live</strong></td>
+<td>Held by Calibri</td>
+<td>In <strong>your own Gnosis Safe</strong> on-chain (USDC) — you can always withdraw, even if Calibri is unavailable</td>
+</tr>
+<tr>
+<td><strong>How you order</strong></td>
+<td>Plain <code>POST /pythia/orders</code></td>
+<td>You <strong>sign an EIP-712 order</strong>; Calibri validates and relays it</td>
+</tr>
+<tr>
+<td><strong>Settlement</strong></td>
+<td>Off-chain ledger</td>
+<td><strong>On-chain</strong> via Gnosis Conditional Tokens (trustless)</td>
+</tr>
+<tr>
+<td><strong>Gas</strong></td>
+<td>None</td>
+<td>None for trading — Calibri&#39;s operator relays your Safe transactions (gasless); you only sign</td>
+</tr>
+<tr>
+<td><strong>Order book / prices</strong></td>
+<td>Shared</td>
+<td><strong>Same</strong> book and prices — custodial and non-custodial orders match against each other</td>
+</tr>
+</tbody></table>
+
+<p>The trust model is wallet-custody: Calibri can never move your funds; it can only match orders you have cryptographically signed, and settlement is enforced by the on-chain Conditional Tokens contracts. You still trust Calibri to report the correct outcome at resolution (a bounded on-chain deadman releases funds if it never does).</p>
+<h3 id='the-flow'>The flow</h3>
+<ol>
+<li><strong>Connect a wallet</strong> and sign in (Sign-In-With-Ethereum). Your member identity is keyed to your wallet address.</li>
+<li><strong>Fetch the market&#39;s CTF config</strong> (below). It returns your per-member Safe (<code>proxy_address</code>), the exchange address, chain id, the YES/NO ERC-1155 token ids, and a one-time <code>safe_setup</code> if your Safe still needs trading approvals.</li>
+<li><strong>If <code>safe_setup.ready</code> is false</strong>, sign each approval <code>hash</code> and relay it (gaslessly) via <a href="#relay-safe-transaction">Relay Safe transaction</a> to make the Safe trade-ready (USDC allowance + Conditional-Tokens operator approval). This is a one-time setup per Safe.</li>
+<li><strong>Build and sign an EIP-712 order</strong> (the Polymarket CTF Exchange <code>Order</code> struct — see below) with your wallet EOA: <code>maker</code> = your Safe, <code>signer</code> = your EOA, <code>signatureType</code> = <code>2</code> (POLY_GNOSIS_SAFE).</li>
+<li><strong>Submit the signed order</strong> via <a href="#place-signed-order">Place signed order</a>. Calibri fully validates it server-side, then places it on the shared book.</li>
+<li><strong>Matching and settlement happen on-chain.</strong> Funds move only via the Conditional Tokens contracts; your maker rebate and any winnings are credited the same as custodial.</li>
+</ol>
+<h2 id='get-ctf-config'><span class="request-type__get">GET</span> CTF config</h2>
+<p><code>GET /api/v2/atlas/account/predictions/markets/{id}/ctf-config</code></p>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"exchange_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"chain_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">137</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"yes_token_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"713..."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"no_token_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"451..."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"proxy_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0DECE7d83f8D47CD8dD8278c0F22c361C58577BD"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"signature_type"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"safe_setup"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"ready"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"calls"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w"> </span><span class="nl">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x..."</span><span class="p">,</span><span class="w"> </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x..."</span><span class="p">,</span><span class="w"> </span><span class="nl">"operation"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"nonce"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nl">"hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x..."</span><span class="w"> </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='description-12'>Description</h3>
+<p>Everything the browser needs to build and sign a non-custodial order for a CTF-registered market. <code>signature_type</code> is <code>2</code> (Gnosis Safe) when you have a Safe, or <code>0</code> (EOA-direct) otherwise. <code>safe_setup.calls</code> is non-empty only while the Safe still needs approvals — sign each <code>hash</code> and relay it (next endpoint); when already trade-ready it is <code>{ &quot;ready&quot;: true, &quot;calls&quot;: [] }</code>.</p>
+<h3 id='responses-2'>Responses</h3>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>200</td>
+<td>Config returned</td>
+</tr>
+<tr>
+<td>404</td>
+<td><code>Market is not CTF-registered</code></td>
+</tr>
+</tbody></table>
+<h2 id='post-relay-safe-transaction'><span class="request-type__post">POST</span> Relay Safe transaction</h2>
+<p><code>POST /api/v2/atlas/account/predictions/ctf/relay</code></p>
+<h3 id='description-13'>Description</h3>
+<p>Gasless relay: submit a Safe-exec for an approval <code>hash</code> you signed from <code>ctf-config</code>&#39;s <code>safe_setup</code>. Calibri&#39;s operator pays the gas and broadcasts it. Used to make your Safe trade-ready (one-time) — you sign, the operator executes.</p>
+<h2 id='post-place-signed-order'><span class="request-type__post">POST</span> Place signed order</h2>
+<p><code>POST /api/v2/atlas/account/predictions/orders</code></p>
+
+<blockquote>
+<p>Body</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"market"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ord_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"limit"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.60"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"signed_order"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"salt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5821..."</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"maker"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0DECE7d83f8D47CD8dD8278c0F22c361C58577BD"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"signer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xE1188438C85C98aADFf1a88f97764E607B4978C3"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"taker"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x0000000000000000000000000000000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"token_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"713..."</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"maker_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"taker_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"expiration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1788000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"nonce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"fee_rate_bps"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"signature_type"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"signature"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x..."</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='description-14'>Description</h3>
+<p>Places a <strong>non-custodial</strong> order. The <code>signed_order</code> is an EIP-712 signature over the Polymarket CTF Exchange <code>Order</code> struct, signed by your wallet. Calibri <strong>fully validates it server-side</strong> before placing — the leg price must equal <code>price</code>, <code>token_id</code> must be the market&#39;s YES/NO token for <code>side</code>, <code>taker</code> must be the zero address, <code>fee_rate_bps</code> must be <code>0</code>, <code>maker</code> must be your Safe and <code>signer</code> your EOA — so a tampered order is rejected, never placed.</p>
+
+<p><strong>EIP-712 domain:</strong> <code>{ name: &quot;Polymarket CTF Exchange&quot;, version: &quot;1&quot;, chainId, verifyingContract: exchange_address }</code>.</p>
+
+<p><strong><code>Order</code> struct fields:</strong> <code>salt</code> (uint256), <code>maker</code> (address — your Safe), <code>signer</code> (address — your EOA), <code>taker</code> (address — <code>0x0</code>), <code>tokenId</code> (uint256 — YES or NO token), <code>makerAmount</code> (uint256 — collateral you provide, 6-dec USDC), <code>takerAmount</code> (uint256 — shares, 6-dec), <code>expiration</code> (uint256 — unix seconds), <code>nonce</code> (uint256), <code>feeRateBps</code> (uint256 — <code>0</code>), <code>side</code> (uint8 — <code>0</code> = BUY), <code>signatureType</code> (uint8 — <code>2</code> = POLY_GNOSIS_SAFE).</p>
+<h3 id='parameters-3'>Parameters</h3>
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>market</td>
+<td>string</td>
+<td>Market id</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>side</td>
+<td>string</td>
+<td><code>yes</code> or <code>no</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>ord_type</td>
+<td>string</td>
+<td><code>limit</code> or <code>market</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>volume</td>
+<td>string</td>
+<td>Number of shares</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>price</td>
+<td>string</td>
+<td>Limit price <code>0.01</code>–<code>0.99</code></td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>signed_order</td>
+<td>object</td>
+<td>The EIP-712-signed <code>Order</code> (fields above)</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<h3 id='responses-3'>Responses</h3>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>201</td>
+<td>Signed order accepted and placed</td>
+</tr>
+<tr>
+<td>422</td>
+<td><code>signed_order with signature is required</code> or signature/validation failure</td>
+</tr>
+</tbody></table>
 <h1 id='public'>Public</h1><h2 id='get-alive'><span class="request-type__get">GET</span> Alive</h2>
 <p><code>/public/health/alive</code></p>
-<h3 id='description'>Description</h3>
+<h3 id='description-15'>Description</h3>
 <p>Check that the trade engine is running. Occasionally the trade engine will be temporarily taken offline for udpates and general maintenance. Maintenence will usually not take longer than a few minutes.</p>
-<h3 id='responses'>Responses</h3>
+<h3 id='responses-4'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -944,11 +1359,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-get-vasps'><span class="request-type__get">GET</span> Get VASPs</h2>
 <p><code>/public/vasps</code></p>
-<h3 id='description-2'>Description</h3>
+<h3 id='description-16'>Description</h3>
 <p>Retrieve a paginated list of active Virtual Asset Service Providers (VASPs) registered in the system. VASPs are used for travel rule compliance when creating beneficiaries with cryptocurrency addresses.</p>
 
 <p>When creating a beneficiary with travel rule information, use the <code>id</code> from this endpoint as the <code>vasp_id</code> in the beneficiary data.</p>
-<h3 id='parameters'>Parameters</h3>
+<h3 id='parameters-4'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -993,7 +1408,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>Total number of VASPs available</td>
 </tr>
 </tbody></table>
-<h3 id='responses-2'>Responses</h3>
+<h3 id='responses-5'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1009,9 +1424,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-ticker'><span class="request-type__get">GET</span> Ticker</h2>
 <p><code>/public/markets/{market}/tickers</code></p>
-<h3 id='description-3'>Description</h3>
+<h3 id='description-17'>Description</h3>
 <p>Get ticker of specific market.</p>
-<h3 id='parameters-2'>Parameters</h3>
+<h3 id='parameters-5'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1029,7 +1444,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-3'>Responses</h3>
+<h3 id='responses-6'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1045,9 +1460,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-all-tickers'><span class="request-type__get">GET</span> All tickers</h2>
 <p><code>/public/markets/tickers</code></p>
-<h3 id='description-4'>Description</h3>
+<h3 id='description-18'>Description</h3>
 <p>Get ticker of all markets</p>
-<h3 id='responses-4'>Responses</h3>
+<h3 id='responses-7'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1063,9 +1478,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-k-line'><span class="request-type__get">GET</span> K Line</h2>
 <p><code>/public/markets/{market}/k-line</code></p>
-<h3 id='description-5'>Description</h3>
+<h3 id='description-19'>Description</h3>
 <p>Get K-Line (OHLC) of specific market.</p>
-<h3 id='parameters-3'>Parameters</h3>
+<h3 id='parameters-6'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1111,7 +1526,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-5'>Responses</h3>
+<h3 id='responses-8'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1125,9 +1540,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-orderbook'><span class="request-type__get">GET</span> Orderbook</h2>
 <p><code>/public/markets/{market}/depth</code></p>
-<h3 id='description-6'>Description</h3>
+<h3 id='description-20'>Description</h3>
 <p>Get the orderbook for the specified market eg. &#39;btczar&#39;. Asks and bids are sorted away from the spread, ie asks are sorted low to high, and bids are sorted high to low. Results are returned in tupples of [price, amount] in the base currency eg. &#39;btc&#39;.</p>
-<h3 id='parameters-4'>Parameters</h3>
+<h3 id='parameters-7'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1152,7 +1567,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-6'>Responses</h3>
+<h3 id='responses-9'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1166,9 +1581,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-market-trades'><span class="request-type__get">GET</span> Market trades</h2>
 <p><code>/public/markets/{market}/trades</code></p>
-<h3 id='description-7'>Description</h3>
+<h3 id='description-21'>Description</h3>
 <p>Get recent trades for the specified market, results are paginated</p>
-<h3 id='parameters-5'>Parameters</h3>
+<h3 id='parameters-8'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1221,7 +1636,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-7'>Responses</h3>
+<h3 id='responses-10'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1237,9 +1652,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-markets'><span class="request-type__get">GET</span> Markets</h2>
 <p><code>/public/markets</code></p>
-<h3 id='description-8'>Description</h3>
+<h3 id='description-22'>Description</h3>
 <p>Get all available markets.</p>
-<h3 id='parameters-6'>Parameters</h3>
+<h3 id='parameters-9'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1292,7 +1707,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-8'>Responses</h3>
+<h3 id='responses-11'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1308,9 +1723,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-all-currencies'><span class="request-type__get">GET</span> All Currencies</h2>
 <p><code>/public/currencies</code></p>
-<h3 id='description-9'>Description</h3>
+<h3 id='description-23'>Description</h3>
 <p>Get list of currencies</p>
-<h3 id='parameters-7'>Parameters</h3>
+<h3 id='parameters-10'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1342,7 +1757,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-9'>Responses</h3>
+<h3 id='responses-12'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1358,9 +1773,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-single-currency'><span class="request-type__get">GET</span> Single Currency</h2>
 <p><code>/public/currencies/{id}</code></p>
-<h3 id='description-10'>Description</h3>
+<h3 id='description-24'>Description</h3>
 <p>Get a single currency</p>
-<h3 id='parameters-8'>Parameters</h3>
+<h3 id='parameters-11'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1378,7 +1793,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-10'>Responses</h3>
+<h3 id='responses-13'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1394,11 +1809,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h1 id='account'>Account</h1><h2 id='get-get-transaction-history'><span class="request-type__get">GET</span> Get transaction history</h2>
 <p><code>/account/transactions</code></p>
-<h3 id='description-11'>Description</h3>
+<h3 id='description-25'>Description</h3>
 <p>Retrieve your complete transaction history with flexible filtering options. This endpoint returns all types of transactions including deposits, withdrawals, trades, internal transfers, referrals, and maker rewards.</p>
 
 <p>Transactions can be filtered by currency (matches both credit and debit currencies), transaction type, time range, and specific transaction ID. Results are paginated and can be ordered by creation time.</p>
-<h3 id='parameters-9'>Parameters</h3>
+<h3 id='parameters-12'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1485,7 +1900,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>Number of results per page</td>
 </tr>
 </tbody></table>
-<h3 id='responses-11'>Responses</h3>
+<h3 id='responses-14'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1536,11 +1951,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="nx">getTransactions</span><span class="p">();</span>
 </code></pre></div><h2 id='post-create-new-beneficiary'><span class="request-type__post">POST</span> Create new beneficiary</h2>
 <p><code>/account/beneficiaries</code></p>
-<h3 id='description-12'>Description</h3>
+<h3 id='description-26'>Description</h3>
 <p>Create a new beneficiary for cryptocurrency or fiat withdrawals. Beneficiaries can be cryptocurrency wallet addresses (with required travel rule information) or bank accounts for fiat transfers. All beneficiaries created via the API are automatically activated and ready for use.</p>
 
 <p>For cryptocurrency beneficiaries with travel rule requirements, you can specify whether the wallet is your own (<code>is_own</code>), unhosted (<code>is_unhosted</code>), or associated with a Virtual Asset Service Provider (VASP). Use the <a href="#get-get-vasps">Get VASPs</a> endpoint to retrieve available VASP IDs.</p>
-<h3 id='parameters-10'>Parameters</h3>
+<h3 id='parameters-13'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1876,7 +2291,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <li><strong>XRP destination tags</strong> must be unsigned int32 (maximum: 4294967295)</li>
 <li><strong>Duplicate addresses</strong> are not allowed for the same currency/blockchain combination</li>
 </ul>
-<h3 id='responses-12'>Responses</h3>
+<h3 id='responses-15'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1892,11 +2307,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='patch-activate-beneficiary'><span class="request-type__patch">PATCH</span> Activate beneficiary</h2>
 <p><code>/account/beneficiaries/{id}/activate</code></p>
-<h3 id='description-13'>Description</h3>
+<h3 id='description-27'>Description</h3>
 <p>Activates a new beneficiary with pin emailed during beneficiary creation.</p>
 
 <p><strong>Note:</strong> This activation step is only required for beneficiaries created through the web interface. Beneficiaries created via the API are automatically activated and do not require this step.</p>
-<h3 id='parameters-11'>Parameters</h3>
+<h3 id='parameters-14'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1921,7 +2336,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-13'>Responses</h3>
+<h3 id='responses-16'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1937,9 +2352,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='delete-delete-beneficiary'><span class="request-type__delete">DELETE</span> Delete beneficiary</h2>
 <p><code>/account/beneficiaries/{id}</code></p>
-<h3 id='description-14'>Description</h3>
+<h3 id='description-28'>Description</h3>
 <p>Delete beneficiary</p>
-<h3 id='parameters-12'>Parameters</h3>
+<h3 id='parameters-15'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1957,7 +2372,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-14'>Responses</h3>
+<h3 id='responses-17'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -1971,9 +2386,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-beneficiary-by-id'><span class="request-type__get">GET</span> Beneficiary by id</h2>
 <p><code>/account/beneficiaries/{id}</code></p>
-<h3 id='description-15'>Description</h3>
+<h3 id='description-29'>Description</h3>
 <p>Get beneficiary by id</p>
-<h3 id='parameters-13'>Parameters</h3>
+<h3 id='parameters-16'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -1991,7 +2406,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-15'>Responses</h3>
+<h3 id='responses-18'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2007,9 +2422,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-list-beneficiaries'><span class="request-type__get">GET</span> List Beneficiaries</h2>
 <p><code>/account/beneficiaries</code></p>
-<h3 id='description-16'>Description</h3>
+<h3 id='description-30'>Description</h3>
 <p>Get list of user beneficiaries</p>
-<h3 id='parameters-14'>Parameters</h3>
+<h3 id='parameters-17'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2034,7 +2449,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-16'>Responses</h3>
+<h3 id='responses-19'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2052,9 +2467,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <p><code>/account/withdraws/quote/{currency}</code></p>
 
 <p><code>/account/withdraws/quote/{currency}?bolt=ln...</code></p>
-<h3 id='description-17'>Description</h3>
+<h3 id='description-31'>Description</h3>
 <p>Get the expected fee to withdraw the specified currency. Submit the quote_id with your withdraw request payload to honor that fee during the withdrawal. Quotes are currently valid for 90 seconds, ensure you submit the withdrawal request before the expires_at parameter.</p>
-<h3 id='parameters-15'>Parameters</h3>
+<h3 id='parameters-18'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2079,7 +2494,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-17'>Responses</h3>
+<h3 id='responses-20'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2100,11 +2515,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='post-new-withdrawal'><span class="request-type__post">POST</span> New withdrawal</h2>
 <p><code>/account/withdraws</code></p>
-<h3 id='description-18'>Description</h3>
+<h3 id='description-32'>Description</h3>
 <p>Creates new withdrawal to active beneficiary.</p>
 
 <p><strong>Note:</strong> OTP is <strong>not required</strong> when creating withdrawals via the API. The OTP requirement only applies to withdrawals created through the web app, however 2FA must still be enabled on the account to enable withdraws.</p>
-<h3 id='parameters-16'>Parameters</h3>
+<h3 id='parameters-19'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2143,7 +2558,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-18'>Responses</h3>
+<h3 id='responses-21'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2157,9 +2572,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-withdrawal-history'><span class="request-type__post">GET</span> Withdrawal history</h2>
 <p><code>/account/withdraws</code></p>
-<h3 id='description-19'>Description</h3>
+<h3 id='description-33'>Description</h3>
 <p>Get your withdraw history, paginated.</p>
-<h3 id='parameters-17'>Parameters</h3>
+<h3 id='parameters-20'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2205,7 +2620,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-19'>Responses</h3>
+<h3 id='responses-22'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2221,11 +2636,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-get-deposit-methods'><span class="request-type__get">GET</span> Get deposit methods</h2>
 <p><code>/api/v2/payments/deposits/methods</code></p>
-<h3 id='description-20'>Description</h3>
+<h3 id='description-34'>Description</h3>
 <p>Get all available deposit methods for the authenticated user. Returns deposit methods for both cryptocurrencies and fiat currencies, filtered based on the user&#39;s KYC level and remaining transaction limits.</p>
 
 <p>Each method includes minimum and maximum amounts, fees, provider information, and remaining limits for different time periods (daily, weekly, monthly, yearly).</p>
-<h3 id='responses-20'>Responses</h3>
+<h3 id='responses-23'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2241,11 +2656,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-get-withdraw-methods'><span class="request-type__get">GET</span> Get withdraw methods</h2>
 <p><code>/api/v2/payments/withdraws/methods</code></p>
-<h3 id='description-21'>Description</h3>
+<h3 id='description-35'>Description</h3>
 <p>Get all available withdrawal methods for the authenticated user. Returns withdrawal methods for both cryptocurrencies and fiat currencies, filtered based on the user&#39;s KYC level and remaining transaction limits.</p>
 
 <p>Each method includes minimum and maximum amounts, fees, provider information, processor details, and remaining limits for different time periods (daily, weekly, monthly, yearly).</p>
-<h3 id='responses-21'>Responses</h3>
+<h3 id='responses-24'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2261,9 +2676,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='post-redeem-voucher'><span class="request-type__post">POST</span> Redeem voucher</h2>
 <p><code>/payments/vouchers/new</code></p>
-<h3 id='description-22'>Description</h3>
+<h3 id='description-36'>Description</h3>
 <p>Redeem a voucher code.</p>
-<h3 id='parameters-18'>Parameters</h3>
+<h3 id='parameters-21'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2295,7 +2710,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-22'>Responses</h3>
+<h3 id='responses-25'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2311,11 +2726,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-deposit-address'><span class="request-type__get">GET</span> Deposit address</h2>
 <p><code>/account/deposit_address/{currency}</code></p>
-<h3 id='description-23'>Description</h3>
+<h3 id='description-37'>Description</h3>
 <p>Fetch the deposit address for the specified currency.</p>
 
 <p>Note: If your currency deposit address has not been created yet, the result may return empty while the address is being created. If it is empty, please try again in a few seconds.</p>
-<h3 id='parameters-19'>Parameters</h3>
+<h3 id='parameters-22'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2333,7 +2748,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-23'>Responses</h3>
+<h3 id='responses-26'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2349,9 +2764,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-deposit-by-id'><span class="request-type__get">GET</span> Deposit by ID</h2>
 <p><code>/account/deposits/{id}</code></p>
-<h3 id='description-24'>Description</h3>
+<h3 id='description-38'>Description</h3>
 <p>Get details of a specific deposit by its internal deposit ID.</p>
-<h3 id='parameters-20'>Parameters</h3>
+<h3 id='parameters-23'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2369,7 +2784,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-24'>Responses</h3>
+<h3 id='responses-27'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2385,11 +2800,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='post-submit-deposit-travel-rule'><span class="request-type__post">POST</span> Submit deposit travel rule</h2>
 <p><code>/account/deposits/{id}/travel_rule</code></p>
-<h3 id='description-25'>Description</h3>
+<h3 id='description-39'>Description</h3>
 <p>Submit travel rule compliance information for a cryptocurrency deposit that is on hold pending travel rule verification.</p>
 
 <p><strong>Note:</strong> This endpoint is only applicable for cryptocurrency deposits in the <code>on_hold_travel_rule_customer</code> state. The deposit must be a coin deposit (not fiat).</p>
-<h3 id='parameters-21'>Parameters</h3>
+<h3 id='parameters-24'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2493,7 +2908,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>ISO country code (e.g., &quot;US&quot;, &quot;ZA&quot;, &quot;GB&quot;)</td>
 </tr>
 </tbody></table>
-<h3 id='responses-25'>Responses</h3>
+<h3 id='responses-28'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2514,9 +2929,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-deposit-history'><span class="request-type__get">GET</span> Deposit history</h2>
 <p><code>/account/deposits</code></p>
-<h3 id='description-26'>Description</h3>
+<h3 id='description-40'>Description</h3>
 <p>Get your deposit history. You can filter by specific deposit transaction using the <code>txid</code> query parameter, or fetch all deposits with optional filters for currency and state</p>
-<h3 id='parameters-22'>Parameters</h3>
+<h3 id='parameters-25'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2562,7 +2977,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-26'>Responses</h3>
+<h3 id='responses-29'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2578,9 +2993,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-balance'><span class="request-type__get">GET</span> Balance</h2>
 <p><code>/account/balances/{currency}</code></p>
-<h3 id='description-27'>Description</h3>
+<h3 id='description-41'>Description</h3>
 <p>Get single account balance by currency code eg. &#39;btc&#39;</p>
-<h3 id='parameters-23'>Parameters</h3>
+<h3 id='parameters-26'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2598,7 +3013,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-27'>Responses</h3>
+<h3 id='responses-30'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2614,9 +3029,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-all-balances'><span class="request-type__get">GET</span> All balances</h2>
 <p><code>/account/balances</code></p>
-<h3 id='description-28'>Description</h3>
+<h3 id='description-42'>Description</h3>
 <p>Get account balances for all currencies</p>
-<h3 id='parameters-24'>Parameters</h3>
+<h3 id='parameters-27'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2648,7 +3063,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>Boolean</td>
 </tr>
 </tbody></table>
-<h3 id='responses-28'>Responses</h3>
+<h3 id='responses-31'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2664,13 +3079,13 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='post-new-lightning-payment'><span class="request-type__post">POST</span> New lightning payment</h2>
 <p><code>/account/lightning/pays</code></p>
-<h3 id='description-29'>Description</h3>
+<h3 id='description-43'>Description</h3>
 <p>Submits a payment request to pay a BTC Lightning BOLT11 invoice (withdraws this balance from your BTC account).</p>
 
 <p>As the payment is requested and validated on the lightning network, please query your withdrawal history to confirm that the payment succeeded.</p>
 
 <p><strong>Note:</strong> OTP is <strong>not required</strong> when creating withdrawals via the API. The OTP requirement only applies to withdrawals created through the web app, however 2FA must still be enabled on the account to enable withdraws.</p>
-<h3 id='parameters-25'>Parameters</h3>
+<h3 id='parameters-28'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2818,7 +3233,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>Type of identification document</td>
 </tr>
 </tbody></table>
-<h3 id='responses-29'>Responses</h3>
+<h3 id='responses-32'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2834,13 +3249,13 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='post-create-a-lightning-invoice'><span class="request-type__post">POST</span> Create a Lightning invoice</h2>
 <p><code>/account/lightning/invoices</code></p>
-<h3 id='description-30'>Description</h3>
+<h3 id='description-44'>Description</h3>
 <p>Create a new lightning invoice to be paid (receive) over the BTC Lightning network.</p>
 
 <p>You can optionally specify a conversion_percent (1 = 100%, 0.1 = 10%) to automatically convert once the invoice is paid. The conversion percent should be such that the conversion amount is greater than or equal to the minimum order amount for the market eg. &#39;btczar&#39;. For example if receiving BTC 0.00001, and the minimum order amount on &#39;btczar&#39; is 0.00001, your conversion percent would have to be 1 (100%). Anything less would cause the invoice creation to fail, as the conversion amount would be below the minimum market order amount.</p>
 
 <p>The invoice expires in 1 hour.</p>
-<h3 id='parameters-26'>Parameters</h3>
+<h3 id='parameters-29'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -2879,7 +3294,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-30'>Responses</h3>
+<h3 id='responses-33'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -2931,9 +3346,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="nx">createSubAccount</span><span class="p">();</span>
 </code></pre></div>
 <p><code>/persona/resource/sub_accounts</code></p>
-<h3 id='description-31'>Description</h3>
+<h3 id='description-45'>Description</h3>
 <p>Create a new sub-account that inherits the parent&#39;s KYC verification. Sub-accounts cannot login independently and are managed by the parent account.</p>
-<h3 id='parameters-27'>Parameters</h3>
+<h3 id='parameters-30'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3035,7 +3450,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
     </span><span class="nl">"max_slippage"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><h3 id='responses-31'>Responses</h3>
+</span></code></pre></div><h3 id='responses-34'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3082,9 +3497,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="nx">listSubAccounts</span><span class="p">();</span>
 </code></pre></div>
 <p><code>/persona/resource/sub_accounts</code></p>
-<h3 id='description-32'>Description</h3>
+<h3 id='description-46'>Description</h3>
 <p>Get a paginated list of the user&#39;s sub-accounts.</p>
-<h3 id='parameters-28'>Parameters</h3>
+<h3 id='parameters-31'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3109,7 +3524,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-32'>Responses</h3>
+<h3 id='responses-35'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3152,9 +3567,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="nx">getSubAccount</span><span class="p">();</span>
 </code></pre></div>
 <p><code>/persona/resource/sub_accounts/{uid}</code></p>
-<h3 id='description-33'>Description</h3>
+<h3 id='description-47'>Description</h3>
 <p>Retrieve a specific sub-account by its unique identifier.</p>
-<h3 id='parameters-29'>Parameters</h3>
+<h3 id='parameters-32'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3172,7 +3587,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-33'>Responses</h3>
+<h3 id='responses-36'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3225,9 +3640,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="nx">updateSubAccount</span><span class="p">();</span>
 </code></pre></div>
 <p><code>/persona/resource/sub_accounts/{uid}</code></p>
-<h3 id='description-34'>Description</h3>
+<h3 id='description-48'>Description</h3>
 <p>Update sub-account settings.</p>
-<h3 id='parameters-30'>Parameters</h3>
+<h3 id='parameters-33'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3252,7 +3667,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-34'>Responses</h3>
+<h3 id='responses-37'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3305,9 +3720,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="nx">deleteSubAccount</span><span class="p">();</span>
 </code></pre></div>
 <p><code>/persona/resource/sub_accounts/{uid}</code></p>
-<h3 id='description-35'>Description</h3>
+<h3 id='description-49'>Description</h3>
 <p>Soft delete a sub-account (sets state to &#39;deleted&#39;). The sub-account will no longer be accessible.</p>
-<h3 id='parameters-31'>Parameters</h3>
+<h3 id='parameters-34'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3325,7 +3740,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-35'>Responses</h3>
+<h3 id='responses-38'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3343,13 +3758,13 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h1 id='trading'>Trading</h1><h2 id='post-create-order-2'><span class="request-type__post">POST</span> Create Order</h2>
 <p><code>/market/orders</code></p>
-<h3 id='description-36'>Description</h3>
+<h3 id='description-50'>Description</h3>
 <p>Submits a Buy/Sell order to the order book. Orders should be confirmed that they have been created either by querying the order ID that is returned in the response, or subscribing to the websockets for order updates.</p>
 
 <p>You can supply your own custom_order_id for tracking purposes for you own system.</p>
 
 <p>For limit orders, you can specify post_only to ensure that orders wont complete if they would have matched. The order request will fail if post_only is true, and the order would have matched.</p>
-<h3 id='parameters-32'>Parameters</h3>
+<h3 id='parameters-35'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3401,7 +3816,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-36'>Responses</h3>
+<h3 id='responses-39'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3417,9 +3832,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-order-by-id'><span class="request-type__get">GET</span> Order by id</h2>
 <p><code>/market/orders/{id}</code></p>
-<h3 id='description-37'>Description</h3>
+<h3 id='description-51'>Description</h3>
 <p>Get single order details.</p>
-<h3 id='parameters-33'>Parameters</h3>
+<h3 id='parameters-36'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3437,7 +3852,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-37'>Responses</h3>
+<h3 id='responses-40'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3453,9 +3868,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-all-orders'><span class="request-type__post">GET</span> All orders</h2>
 <p><code>/market/orders</code></p>
-<h3 id='description-38'>Description</h3>
+<h3 id='description-52'>Description</h3>
 <p>Get orders, result is paginated.</p>
-<h3 id='parameters-34'>Parameters</h3>
+<h3 id='parameters-37'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3543,7 +3958,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>integer</td>
 </tr>
 </tbody></table>
-<h3 id='responses-38'>Responses</h3>
+<h3 id='responses-41'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3559,9 +3974,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='get-trades'><span class="request-type__get">GET</span> Trades</h2>
 <p><code>/market/trades</code></p>
-<h3 id='description-39'>Description</h3>
+<h3 id='description-53'>Description</h3>
 <p>Fetch your trades executed on your orders.</p>
-<h3 id='parameters-35'>Parameters</h3>
+<h3 id='parameters-38'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3621,7 +4036,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-39'>Responses</h3>
+<h3 id='responses-42'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3635,11 +4050,11 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>[ <a href="#trade">Trade</a> ]</td>
 </tr>
 </tbody></table>
-<h2 id='post-cancel-order'><span class="request-type__post">POST</span> Cancel Order</h2>
+<h2 id='post-cancel-order-2'><span class="request-type__post">POST</span> Cancel Order</h2>
 <p><code>/market/orders/{id}/cancel</code></p>
-<h3 id='description-40'>Description</h3>
+<h3 id='description-54'>Description</h3>
 <p>Cancel a specific order by Order id.</p>
-<h3 id='parameters-36'>Parameters</h3>
+<h3 id='parameters-39'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3657,7 +4072,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-40'>Responses</h3>
+<h3 id='responses-43'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3671,9 +4086,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </tbody></table>
 <h2 id='post-cancel-all-orders'><span class="request-type__post">POST</span> Cancel All Orders</h2>
 <p><code>/market/orders/cancel</code></p>
-<h3 id='description-41'>Description</h3>
+<h3 id='description-55'>Description</h3>
 <p>Cancel all of your open orders.</p>
-<h3 id='parameters-37'>Parameters</h3>
+<h3 id='parameters-40'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3698,7 +4113,7 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-41'>Responses</h3>
+<h3 id='responses-44'>Responses</h3>
 <table><thead>
 <tr>
 <th>Code</th>
@@ -3773,13 +4188,13 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <span class="nx">connectWssPublic</span><span class="p">();</span>
 </code></pre></div>
 <p><code>?stream={market}.ob-inc</code></p>
-<h3 id='description-42'>Description</h3>
+<h3 id='description-56'>Description</h3>
 <p>Subscribe to orderbook updates for the specified market. You can subscribe to multiple markets at the same time by adding each market as a param, eg</p>
 
 <p><code>?stream=btczar.ob-inc&amp;ethzar.ob-inc</code></p>
 
 <p>Note: if the amount is empty &quot;&quot;, the order has been removed from the orderbook</p>
-<h3 id='parameters-38'>Parameters</h3>
+<h3 id='parameters-41'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3797,7 +4212,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-42'>Responses</h3>
+<h3 id='responses-45'>Responses</h3>
 <table><thead>
 <tr>
 <th>Description</th>
@@ -3844,9 +4259,9 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <span class="nx">connectWssPublic</span><span class="p">();</span>
 </code></pre></div>
 <p><code>?stream={market}.kline-{period}</code></p>
-<h3 id='description-43'>Description</h3>
+<h3 id='description-57'>Description</h3>
 <p>Subscribe to the K-LINE (OHLC) for the specified market to get updates on the OHLC for each period. Similary to the otherendpoints, you can combine streams into a single subscription request.</p>
-<h3 id='parameters-39'>Parameters</h3>
+<h3 id='parameters-42'>Parameters</h3>
 <table><thead>
 <tr>
 <th>Name</th>
@@ -3871,7 +4286,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>string</td>
 </tr>
 </tbody></table>
-<h3 id='responses-43'>Responses</h3>
+<h3 id='responses-46'>Responses</h3>
 <table><thead>
 <tr>
 <th>Name</th>
