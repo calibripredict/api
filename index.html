@@ -334,14 +334,6 @@
               </ul>
           </li>
           <li>
-            <a href="#public-request-example" class="toc-h1 toc-link" data-title="Public request example">Public request example</a>
-              <ul class="toc-list-h2">
-                  <li>
-                    <a href="#get-get-available-markets" class="toc-h2 toc-link" data-title="GET Get available markets"><span class="request-type__get">GET</span> Get available markets</a>
-                  </li>
-              </ul>
-          </li>
-          <li>
             <a href="#prediction-markets" class="toc-h1 toc-link" data-title="Prediction Markets">Prediction Markets</a>
               <ul class="toc-list-h2">
                   <li>
@@ -579,12 +571,6 @@
                     <a href="#remaining-limits" class="toc-h2 toc-link" data-title="Remaining Limits">Remaining Limits</a>
                   </li>
                   <li>
-                    <a href="#voucher-redemption" class="toc-h2 toc-link" data-title="Voucher Redemption">Voucher Redemption</a>
-                  </li>
-                  <li>
-                    <a href="#change-voucher" class="toc-h2 toc-link" data-title="Change voucher">Change voucher</a>
-                  </li>
-                  <li>
                     <a href="#lightning-payment" class="toc-h2 toc-link" data-title="Lightning payment">Lightning payment</a>
                   </li>
                   <li>
@@ -598,17 +584,6 @@
                   </li>
                   <li>
                     <a href="#states" class="toc-h2 toc-link" data-title="States">States</a>
-                  </li>
-              </ul>
-          </li>
-          <li>
-            <a href="#lists" class="toc-h1 toc-link" data-title="Lists">Lists</a>
-              <ul class="toc-list-h2">
-                  <li>
-                    <a href="#source-of-funds" class="toc-h2 toc-link" data-title="Source of funds">Source of funds</a>
-                  </li>
-                  <li>
-                    <a href="#occupations" class="toc-h2 toc-link" data-title="Occupations">Occupations</a>
                   </li>
               </ul>
           </li>
@@ -745,18 +720,16 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="nx">createOrder</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">;</span>
-  <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/atlas/market/orders`</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/pythia/orders`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">headers</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">generateHeaders</span><span class="p">();</span>
 
   <span class="kd">const</span> <span class="nx">orderData</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="na">market</span><span class="p">:</span> <span class="dl">"</span><span class="s2">btczar</span><span class="dl">"</span><span class="p">,</span>
-    <span class="na">side</span><span class="p">:</span> <span class="dl">"</span><span class="s2">sell</span><span class="dl">"</span><span class="p">,</span>
-    <span class="na">volume</span><span class="p">:</span> <span class="dl">"</span><span class="s2">0.00001</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">market</span><span class="p">:</span> <span class="dl">"</span><span class="s2">12</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">side</span><span class="p">:</span> <span class="dl">"</span><span class="s2">yes</span><span class="dl">"</span><span class="p">,</span>
     <span class="na">ord_type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">limit</span><span class="dl">"</span><span class="p">,</span>
-    <span class="na">price</span><span class="p">:</span> <span class="dl">"</span><span class="s2">800000</span><span class="dl">"</span><span class="p">,</span>
-    <span class="na">post_only</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="na">custom_order_id</span><span class="p">:</span> <span class="dl">"</span><span class="s2">302b0494-1a06-4089-846c-0c6b13f1b661</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">volume</span><span class="p">:</span> <span class="dl">"</span><span class="s2">100</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">price</span><span class="p">:</span> <span class="dl">"</span><span class="s2">0.60</span><span class="dl">"</span><span class="p">,</span>
   <span class="p">};</span>
 
   <span class="kd">const</span> <span class="nx">axiosConfig</span> <span class="o">=</span> <span class="p">{</span>
@@ -779,25 +752,22 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 </blockquote>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">173757</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7e86a4fa-fcae-4953-b9bc-d6f328beea48"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sell"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"market"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"ord_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"limit"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"800000.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"avg_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"market"</span><span class="p">:</span><span class="w"> </span><span class="s2">"btczar"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.60"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wait"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"origin_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"remaining_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"contracts_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-08T08:46:59+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-08T08:46:59+01:00"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"origin_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00001"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"remaining_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00001"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"executed_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"trades_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"custom_order_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"302b0494-1a06-4089-846c-0c6b13f1b661"</span><span class="w">
+  </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-08T08:46:59+01:00"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><code>https://app.calibri.io/api/v2/atlas/market/orders</code></p>
+<p><code>https://app.calibri.io/api/v2/pythia/orders</code></p>
 
-<p>Create a new order on your account by signing your request and submitting the request</p>
+<p>Buys 100 YES shares at <code>0.60</code> USDC each, locking <code>60.00</code> USDC of collateral. Create a new order on your account by signing your request and submitting it.</p>
 <h2 id='post-create-order-as-sub-account'><span class="request-type__post">POST</span> Create order as sub-account</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// generateHeadersWithSubAccount.js</span>
 
 <span class="kd">const</span> <span class="nx">crypto</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">crypto</span><span class="dl">"</span><span class="p">);</span>
@@ -832,16 +802,16 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
 <span class="nx">createOrder</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">;</span>
-  <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/atlas/market/orders`</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/pythia/orders`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
   <span class="kd">const</span> <span class="nx">headers</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">generateHeaders</span><span class="p">();</span>
 
   <span class="kd">const</span> <span class="nx">orderData</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="na">market</span><span class="p">:</span> <span class="dl">"</span><span class="s2">btczar</span><span class="dl">"</span><span class="p">,</span>
-    <span class="na">side</span><span class="p">:</span> <span class="dl">"</span><span class="s2">buy</span><span class="dl">"</span><span class="p">,</span>
-    <span class="na">volume</span><span class="p">:</span> <span class="dl">"</span><span class="s2">0.00001</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">market</span><span class="p">:</span> <span class="dl">"</span><span class="s2">12</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">side</span><span class="p">:</span> <span class="dl">"</span><span class="s2">no</span><span class="dl">"</span><span class="p">,</span>
     <span class="na">ord_type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">limit</span><span class="dl">"</span><span class="p">,</span>
-    <span class="na">price</span><span class="p">:</span> <span class="dl">"</span><span class="s2">750000</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">volume</span><span class="p">:</span> <span class="dl">"</span><span class="s2">50</span><span class="dl">"</span><span class="p">,</span>
+    <span class="na">price</span><span class="p">:</span> <span class="dl">"</span><span class="s2">0.40</span><span class="dl">"</span><span class="p">,</span>
   <span class="p">};</span>
 
   <span class="kd">const</span> <span class="nx">axiosConfig</span> <span class="o">=</span> <span class="p">{</span>
@@ -859,89 +829,9 @@ Ensure you have <strong>Enabled 2FA</strong> and <strong>Created your API key</s
   <span class="p">}</span>
 <span class="p">};</span>
 </code></pre></div>
-<p><code>https://app.calibri.io/api/v2/atlas/market/orders</code></p>
+<p><code>https://app.calibri.io/api/v2/pythia/orders</code></p>
 
 <p>When the <code>X-Auth-Subaccount-Uid</code> header is included, the order is created on behalf of the specified sub-account or customer. The parent account&#39;s API credentials are used for authentication, but the operation is performed in the context of the sub-account.</p>
-<h1 id='public-request-example'>Public request example</h1><h2 id='get-get-available-markets'><span class="request-type__get">GET</span> Get available markets</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">axios</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">axios</span><span class="dl">"</span><span class="p">);</span>
-
-<span class="nx">getMarkets</span> <span class="o">=</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://app.calibri.io</span><span class="dl">"</span><span class="p">;</span>
-  <span class="kd">const</span> <span class="nx">method</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">GET</span><span class="dl">"</span><span class="p">;</span>
-  <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/api/v2/atlas/public/markets`</span><span class="p">;</span>
-  <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
-
-  <span class="kd">const</span> <span class="nx">axiosConfig</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="na">method</span><span class="p">:</span> <span class="nx">method</span><span class="p">,</span>
-    <span class="na">url</span><span class="p">:</span> <span class="nx">url</span><span class="p">,</span>
-  <span class="p">};</span>
-
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">axios</span><span class="p">(</span><span class="nx">axiosConfig</span><span class="p">);</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-
-<span class="nx">getMarkets</span><span class="p">();</span>
-</code></pre></div>
-<blockquote>
-<p>Markets response:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"btczar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC/ZAR"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"base_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"btc"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"quote_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"min_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"200000.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"max_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1200000.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"min_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00001"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"amount_precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"price_precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"enabled"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ethzar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ETH/ZAR"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"base_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eth"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"quote_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"min_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"max_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100000.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"min_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0001"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"amount_precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"price_precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"enabled"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xrpzar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XRP/ZAR"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"base_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xrp"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"quote_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"min_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"max_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"min_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"amount_precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"price_precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"enabled"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdczar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USDC/ZAR"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"base_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"quote_unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"min_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"14.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"max_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"29.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"min_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.5"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"amount_precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"price_precision"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"enabled"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre></div>
-<p><code>GET https://app.calibri.io/api/v2/atlas/public/markets</code></p>
-
-<p>Returns a list of all available markets</p>
 <h1 id='prediction-markets'>Prediction Markets</h1>
 <p>Calibri&#39;s prediction-market endpoints. The model is <strong>events → markets → contracts</strong>:</p>
 
@@ -1446,7 +1336,7 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 <tr>
 <td>currency</td>
 <td>query</td>
-<td>Filter by currency code (matches credit or debit currency, e.g., &quot;btc&quot;, &quot;zar&quot;)</td>
+<td>Filter by currency code (matches credit or debit currency, e.g., &quot;btc&quot;, &quot;usdc&quot;)</td>
 <td>No</td>
 <td>string</td>
 </tr>
@@ -1572,7 +1462,7 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 </code></pre></div><h2 id='post-create-new-beneficiary'><span class="request-type__post">POST</span> Create new beneficiary</h2>
 <p><code>/account/beneficiaries</code></p>
 <h3 id='description-17'>Description</h3>
-<p>Create a new beneficiary (a saved withdrawal destination — a cryptocurrency wallet address or a bank account for fiat transfers). All beneficiaries created via the API are automatically activated and ready for use.</p>
+<p>Create a new beneficiary (a saved withdrawal destination — a cryptocurrency wallet address). All beneficiaries created via the API are automatically activated and ready for use.</p>
 <h3 id='parameters-5'>Parameters</h3>
 <table><thead>
 <tr>
@@ -1587,7 +1477,7 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 <tr>
 <td>currency</td>
 <td>formData</td>
-<td>Currency code (e.g., &quot;btc&quot;, &quot;eth&quot;, &quot;zar&quot;, &quot;gbp&quot;)</td>
+<td>Currency code (e.g., &quot;btc&quot;, &quot;eth&quot;, &quot;usdc&quot;, &quot;usdt&quot;, &quot;xrp&quot;, &quot;sol&quot;)</td>
 <td>Yes</td>
 <td>string</td>
 <td>10 chars</td>
@@ -1657,84 +1547,6 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 <td>Destination tag (for XRP, Stellar, etc.) - max: 4294967295</td>
 </tr>
 </tbody></table>
-
-<p>Fiat <code>data</code> Object Fields</p>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>full_name</td>
-<td>string</td>
-<td><strong>Yes</strong></td>
-<td>Account holder&#39;s full legal name (mandatory for fiat)</td>
-</tr>
-<tr>
-<td>account_number</td>
-<td>string</td>
-<td>No</td>
-<td>Bank account number</td>
-</tr>
-<tr>
-<td>bank_name</td>
-<td>string</td>
-<td>No</td>
-<td>Name of the bank</td>
-</tr>
-<tr>
-<td>bank_swift_code</td>
-<td>string</td>
-<td>No</td>
-<td>SWIFT/BIC code</td>
-</tr>
-<tr>
-<td>bank_routing_number</td>
-<td>string</td>
-<td>No</td>
-<td>Routing number (US banks)</td>
-</tr>
-<tr>
-<td>iban</td>
-<td>string</td>
-<td>No</td>
-<td>IBAN (International Bank Account Number)</td>
-</tr>
-<tr>
-<td>bank_address</td>
-<td>string</td>
-<td>No</td>
-<td>Bank&#39;s physical address</td>
-</tr>
-<tr>
-<td>bank_city</td>
-<td>string</td>
-<td>No</td>
-<td>Bank&#39;s city</td>
-</tr>
-<tr>
-<td>intermediary_bank_swift</td>
-<td>string</td>
-<td>No</td>
-<td>Intermediary bank SWIFT code (for international transfers)</td>
-</tr>
-<tr>
-<td>account_holder_name</td>
-<td>string</td>
-<td>No</td>
-<td>Account holder name (may differ from full_name)</td>
-</tr>
-<tr>
-<td>account_type</td>
-<td>string</td>
-<td>No</td>
-<td>Type of account (checking, savings, etc.)</td>
-</tr>
-</tbody></table>
 <h3 id='request-examples'>Request Examples</h3>
 <p><strong>Example 1: Crypto - Bitcoin</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
@@ -1757,71 +1569,18 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><strong>Example 3: Fiat - ZAR (South African Rand)</strong></p>
+<p><strong>Example 3: Crypto - USDC</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"South African Bank Account"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Personal savings account"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"My USDC Wallet"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Settlement wallet"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thabo Mbeki"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567890"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Standard Bank"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_swift_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SBZAZAJJ"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30 Baker Street"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Johannesburg"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"savings"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p><strong>Example 4: Fiat - GBP SWIFT Transfer</strong></p>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gbp"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UK Business Account"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Company bank account"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Smith"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Barclays Bank"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_swift_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BARCGB22"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Churchill Place"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"London"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"checking"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p><strong>Example 5: Fiat - EUR IBAN Transfer</strong></p>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eur"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EU Partner Account"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"European supplier payment"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jean Dupont"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR1420041010050500013M02606"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BNP Paribas"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_swift_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BNPAFRPP"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Paris"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p><strong>Example 6: Fiat - International with Intermediary Bank</strong></p>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usd"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"International Vendor"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Asian supplier USD payment"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABC Trading Company Ltd"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"account_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9876543210"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Asia Commercial Bank"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_swift_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACBVSGSG"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"intermediary_bank_swift"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHASUS33"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123 Business Street"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"bank_city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Singapore"</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x742d35Cc6634C0532925a3b844Bc454e4438f44e"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><h3 id='important-notes'>Important Notes</h3>
 <ul>
 <li><strong>API-created beneficiaries</strong> are automatically activated (state = <code>active</code>) and do not require PIN activation</li>
-<li><strong>Fiat beneficiaries</strong> must include <code>full_name</code> in the <code>data</code> object (mandatory)</li>
 <li><strong>Cryptocurrency addresses</strong> are validated against the blockchain service before creation</li>
 <li><strong>XRP destination tags</strong> must be unsigned int32 (maximum: 4294967295)</li>
 <li><strong>Duplicate addresses</strong> are not allowed for the same currency/blockchain combination</li>
@@ -2088,7 +1847,7 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 <tr>
 <td>note</td>
 <td>formData</td>
-<td>ZAR withdrawals only. Use &#39;same_day_rtc&#39; for <a href="https://calibri.io/help">Faster withdraws</a></td>
+<td>Optional note to attach to the withdrawal.</td>
 <td>No</td>
 <td>string</td>
 </tr>
@@ -2172,7 +1931,7 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 <h2 id='get-get-deposit-methods'><span class="request-type__get">GET</span> Get deposit methods</h2>
 <p><code>/api/v2/payments/deposits/methods</code></p>
 <h3 id='description-25'>Description</h3>
-<p>Get all available deposit methods for the authenticated user. Returns deposit methods for both cryptocurrencies and fiat currencies, filtered based on your remaining transaction limits.</p>
+<p>Get all available deposit methods for the authenticated user. Returns the supported cryptocurrency deposit methods, filtered based on your remaining transaction limits.</p>
 
 <p>Each method includes minimum and maximum amounts, fees, provider information, and remaining limits for different time periods (daily, weekly, monthly, yearly).</p>
 <h3 id='responses-14'>Responses</h3>
@@ -2192,7 +1951,7 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 <h2 id='get-get-withdraw-methods'><span class="request-type__get">GET</span> Get withdraw methods</h2>
 <p><code>/api/v2/payments/withdraws/methods</code></p>
 <h3 id='description-26'>Description</h3>
-<p>Get all available withdrawal methods for the authenticated user. Returns withdrawal methods for both cryptocurrencies and fiat currencies, filtered based on your remaining transaction limits.</p>
+<p>Get all available withdrawal methods for the authenticated user. Returns the supported cryptocurrency withdrawal methods, filtered based on your remaining transaction limits.</p>
 
 <p>Each method includes minimum and maximum amounts, fees, provider information, processor details, and remaining limits for different time periods (daily, weekly, monthly, yearly).</p>
 <h3 id='responses-15'>Responses</h3>
@@ -2513,7 +2272,7 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 <p>The <code>deposit_action</code> parameter accepts a JSON object with the following structure:</p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"none|aggregate|convert_and_withdraw|aggregate_convert_and_withdraw"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"target_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Required</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">convert</span><span class="w"> </span><span class="err">actions</span><span class="w"> </span><span class="err">(e.g.</span><span class="p">,</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w"> </span><span class="s2">"usd"</span><span class="err">)</span><span class="w">
+  </span><span class="nl">"target_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"currency_code"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Required</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">convert</span><span class="w"> </span><span class="err">actions</span><span class="w"> </span><span class="err">(e.g.</span><span class="p">,</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w"> </span><span class="s2">"btc"</span><span class="err">)</span><span class="w">
   </span><span class="nl">"beneficiary_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Required</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">withdraw</span><span class="w"> </span><span class="err">actions</span><span class="w">
   </span><span class="nl">"lightning_invoice"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lnbc..."</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Alternative</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="err">beneficiary_id</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">Lightning</span><span class="w"> </span><span class="err">withdrawals</span><span class="w">
   </span><span class="nl">"max_slippage"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Optional:</span><span class="w"> </span><span class="err">Max</span><span class="w"> </span><span class="err">slippage</span><span class="w"> </span><span class="err">percentage</span><span class="w"> </span><span class="err">(</span><span class="mf">0.1</span><span class="mi">-10</span><span class="p">,</span><span class="w"> </span><span class="err">default:</span><span class="w"> </span><span class="mf">2.0</span><span class="err">)</span><span class="w">
@@ -2567,10 +2326,10 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 </span></code></pre></div>
 <p><strong>Example with Convert and Withdraw:</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"account_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD Conversion Account"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"account_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USDC Conversion Account"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"deposit_action"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"convert_and_withdraw"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"target_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usd"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"target_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"beneficiary_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">789</span><span class="p">,</span><span class="w">
     </span><span class="nl">"max_slippage"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2910,13 +2669,13 @@ curl https://app.calibri.io/api/v2/atlas/account/predictions/contracts <span cla
 <p>To connect to the private endpoints on the websocket, send the authentication headers with the connection request, similar to the REST authentication, and subscribe to the streams you are interested in.
 You can combine multiple subscriptions in one request, and also provide the subscriptions at the same time as connecting - ie. you only need 1x request to get fully connected.</p>
 
-<p>You can also combine the public and private streams into one so that you only need to maintain 1x connection for example <code>?stream=btczar.ob-inc&amp;stream=order&amp;stream=trade&amp;stream=balance</code></p>
+<p>You can also combine the public and private streams into one so that you only need to maintain 1x connection for example <code>?stream=12.ob-inc&amp;stream=order&amp;stream=trade&amp;stream=balance</code></p>
 <h2 id='subscribe-orderbook'><span class="request-type__get">SUBSCRIBE</span> Orderbook</h2><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">WebSocket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">ws</span><span class="dl">"</span><span class="p">);</span>
 
 <span class="k">async</span> <span class="kd">function</span> <span class="nx">connectWssPublic</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.io/api/v2`</span><span class="p">;</span>
-    <span class="kd">const</span> <span class="nx">streams</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">?stream=btczar.ob-inc&amp;stream=ethzar.ob-inc</span><span class="dl">"</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">streams</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">?stream=12.ob-inc&amp;stream=15.ob-inc</span><span class="dl">"</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/websocket/public</span><span class="p">${</span><span class="nx">streams</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
 
     <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
@@ -2945,7 +2704,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <h3 id='description-37'>Description</h3>
 <p>Subscribe to orderbook updates for the specified market. You can subscribe to multiple markets at the same time by adding each market as a param, eg</p>
 
-<p><code>?stream=btczar.ob-inc&amp;ethzar.ob-inc</code></p>
+<p><code>?stream=12.ob-inc&amp;15.ob-inc</code></p>
 
 <p>Note: if the amount is empty &quot;&quot;, the order has been removed from the orderbook</p>
 <h3 id='parameters-23'>Parameters</h3>
@@ -2987,7 +2746,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <span class="k">async</span> <span class="kd">function</span> <span class="nx">connectWssPublic</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">try</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.io/api/v2`</span><span class="p">;</span>
-    <span class="kd">const</span> <span class="nx">streams</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">?stream=btczar.kline-15m</span><span class="dl">"</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">streams</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">?stream=12.kline-15m</span><span class="dl">"</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/websocket/public</span><span class="p">${</span><span class="nx">streams</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
 
     <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
@@ -3064,7 +2823,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
     <span class="kd">const</span> <span class="nx">baseUrl</span> <span class="o">=</span> <span class="s2">`wss://app.calibri.io/api/v2`</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">headers</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">generateHeaders</span><span class="p">();</span>
     <span class="kd">const</span> <span class="nx">streams</span> <span class="o">=</span>
-      <span class="dl">"</span><span class="s2">?stream=btczar.ob-inc&amp;stream=ethzar.ob-inc&amp;stream=order&amp;stream=trade&amp;stream=balance</span><span class="dl">"</span><span class="p">;</span>
+      <span class="dl">"</span><span class="s2">?stream=12.ob-inc&amp;stream=15.ob-inc&amp;stream=order&amp;stream=trade&amp;stream=balance</span><span class="dl">"</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">`/websocket/private</span><span class="p">${</span><span class="nx">streams</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
 
     <span class="nx">ws</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">baseUrl</span><span class="p">}${</span><span class="nx">path</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span> <span class="nx">headers</span> <span class="p">});</span>
@@ -3080,7 +2839,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
     <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="dl">"</span><span class="s2">xrpzar.ob-snap</span><span class="dl">"</span><span class="p">]</span> <span class="o">||</span> <span class="nx">data</span><span class="p">[</span><span class="dl">"</span><span class="s2">xrpzar.ob-inc</span><span class="dl">"</span><span class="p">])</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="dl">"</span><span class="s2">12.ob-snap</span><span class="dl">"</span><span class="p">]</span> <span class="o">||</span> <span class="nx">data</span><span class="p">[</span><span class="dl">"</span><span class="s2">12.ob-inc</span><span class="dl">"</span><span class="p">])</span> <span class="p">{</span>
       <span class="c1">// handle orderbook updates for subscribed markets</span>
       <span class="c1">// updateOrderBook(data);</span>
     <span class="p">}</span>
@@ -3108,7 +2867,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 
 <p><strong>Combining public orderbook + private streams (recommended):</strong></p>
 
-<p><code>?stream=btczar.ob-inc&amp;stream=order&amp;stream=trade&amp;stream=balance</code></p>
+<p><code>?stream=12.ob-inc&amp;stream=order&amp;stream=trade&amp;stream=balance</code></p>
 
 <p><strong>Benefits of combining streams:</strong></p>
 
@@ -3127,19 +2886,17 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"order"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">173757</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7e86a4fa-fcae-4953-b9bc-d6f328beea48"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sell"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"ord_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"limit"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"800000.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"avg_price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.60"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wait"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"market"</span><span class="p">:</span><span class="w"> </span><span class="s2">"btczar"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"market"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-08T08:46:59+01:00"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-08T08:46:59+01:00"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"origin_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00001"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"remaining_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00001"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"executed_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"trades_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="nl">"origin_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"remaining_volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"contracts_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
@@ -3162,15 +2919,15 @@ You can combine multiple subscriptions in one request, and also provide the subs
   </span><span class="nl">"trade"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12345</span><span class="p">,</span><span class="w">
     </span><span class="nl">"order_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">173757</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"800000.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00001"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"market"</span><span class="p">:</span><span class="w"> </span><span class="s2">"btczar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sell"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"taker_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"buy"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"fee_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.60"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"market"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"side"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"taker_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"fee_currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"fee"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.002"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"fee_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.016"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"fee_amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.12"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-08T08:47:01+01:00"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3190,10 +2947,10 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <p><strong>Response Format:</strong></p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"btc"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.05000000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00001000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.04999000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9940.00"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1702027621000</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3210,7 +2967,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>currency</td>
 <td>string</td>
-<td>Currency code (btc, eth, zar, usdt, etc.)</td>
+<td>Currency code (usdc, btc, eth, usdt, etc.)</td>
 </tr>
 <tr>
 <td>balance</td>
@@ -3237,33 +2994,33 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <p><strong>Balance Update Triggers:</strong></p>
 
 <ol>
-<li><strong>Order Creation</strong> - Locks balance when a limit or market order is placed</li>
-<li><strong>Order Cancellation</strong> - Unlocks balance when an order is canceled</li>
-<li><strong>Trade Execution (Maker)</strong> - Updates both base and quote currency balances</li>
-<li><strong>Trade Execution (Taker)</strong> - Updates both base and quote currency balances with fee deduction</li>
-<li><strong>Partial Fill</strong> - Each partial fill triggers separate balance updates</li>
-<li><strong>Order Rejection</strong> - Balance unlock if order validation fails after initial lock</li>
+<li><strong>Order Creation</strong> - Locks USDC collateral when a limit or market order is placed</li>
+<li><strong>Order Cancellation</strong> - Unlocks collateral when the unmatched remainder of an order is canceled</li>
+<li><strong>Settlement (winning side)</strong> - Credits USDC (<code>1.00</code> per winning share, minus fee) when the event resolves</li>
+<li><strong>Settlement (losing side)</strong> - Releases the locked collateral (losing shares settle to <code>0.00</code>)</li>
+<li><strong>Partial Fill</strong> - Each partial fill keeps the matched collateral locked against the new contract</li>
+<li><strong>Order Rejection</strong> - Collateral unlock if order validation fails after initial lock</li>
 </ol>
 
-<p><strong>Example 1: Order Creation (Balance Lock)</strong></p>
+<p><strong>Example 1: Order Creation (Collateral Lock)</strong></p>
 
-<p>When you place a buy order for 0.001 BTC @ 800,000 ZAR, your ZAR balance is locked:</p>
+<p>When you place a YES order for 100 shares @ <code>0.60</code> USDC, <code>60.00</code> USDC of collateral is locked:</p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000.00"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"800.00"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9200.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9940.00"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1702027621000</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><strong>Example 2: Order Cancellation (Balance Unlock)</strong></p>
+<p><strong>Example 2: Order Cancellation (Collateral Unlock)</strong></p>
 
-<p>When you cancel the order, the locked ZAR is released:</p>
+<p>When you cancel the unmatched remainder, the locked USDC is released:</p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000.00"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000.00"</span><span class="p">,</span><span class="w">
@@ -3271,41 +3028,28 @@ You can combine multiple subscriptions in one request, and also provide the subs
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p><strong>Example 3: Trade Execution - Sell Order (Base Currency)</strong></p>
+<p><strong>Example 3: Settlement (Winning Side)</strong></p>
 
-<p>When your sell order for 0.00001 BTC executes, you receive two balance updates. First, the BTC is deducted:</p>
+<p>When the event resolves in your favour, each winning share redeems to <code>1.00</code> USDC (minus the settlement fee) and the locked collateral is released as available balance:</p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"btc"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.04999000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00000000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.04999000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1702027630000</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p><strong>Example 4: Trade Execution - Sell Order (Quote Currency)</strong></p>
-
-<p>Immediately after, you receive ZAR (minus the taker fee of 0.2%):</p>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zar"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10007.984"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10039.80"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10007.984"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1702027630001</span><span class="w">
+    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10039.80"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1702027630000</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <p><strong>Example 4: Partial Fill</strong></p>
 
-<p>When your order is partially filled (50% of 0.001 BTC order):</p>
+<p>When your order is partially filled (50 of 100 shares match), the matched collateral remains locked against the new contract:</p>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"btc"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.04999500"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00000500"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.04999000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usdc"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"locked"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"available"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9940.00"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1702027635000</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3314,7 +3058,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 
 <ul>
 <li><strong>Atomic Updates</strong>: Balance updates are atomic - you receive one update per currency per event</li>
-<li><strong>Dual Updates for Trades</strong>: For each trade, expect <strong>two balance updates</strong> - one for the base currency and one for the quote currency</li>
+<li><strong>Single Settlement Currency</strong>: Markets are collateralised and settled in <strong>USDC</strong> - balance updates track your USDC collateral and payouts</li>
 <li><strong>Timestamp Precision</strong>: The <code>updated_at</code> field uses <strong>Unix milliseconds</strong> (not seconds)</li>
 <li><strong>String Values</strong>: Balance values are strings to preserve decimal precision - parse them as decimals, not floats</li>
 <li><strong>Rapid Updates</strong>: Multiple rapid trades may result in several balance updates in quick succession</li>
@@ -3326,8 +3070,8 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <ul>
 <li><strong>Insufficient Funds</strong>: No balance update is sent (order is rejected before locking funds)</li>
 <li><strong>Self-Trade Prevention</strong>: If a self-trade is prevented, balance may lock and then immediately unlock</li>
-<li><strong>Partial Fills</strong>: Each partial fill of an order triggers separate balance updates for both currencies</li>
-<li><strong>Maker vs Taker Fees</strong>: Fee amounts differ based on whether you&#39;re the maker (0.1%) or taker (0.2%)</li>
+<li><strong>Partial Fills</strong>: Each partial fill of an order triggers a balance update reflecting the locked collateral</li>
+<li><strong>Maker rebate vs Taker Fees</strong>: The taker pays the fee; the resting maker earns a rebate (a percentage of the taker fee) credited at settlement</li>
 </ul>
 
 <p><strong>Integration Example:</strong></p>
@@ -3575,7 +3319,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>side</td>
 <td>string</td>
-<td>Either &#39;sell&#39; or &#39;buy&#39;.</td>
+<td>Either &#39;yes&#39; or &#39;no&#39;.</td>
 </tr>
 <tr>
 <td>ord_type</td>
@@ -3590,12 +3334,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>price</td>
 <td>double</td>
-<td>Price for 1x base unit.</td>
-</tr>
-<tr>
-<td>avg_price</td>
-<td>double</td>
-<td>Average execution price over all executed trades.</td>
+<td>Probability price per share <code>0.01</code>–<code>0.99</code> (in USDC).</td>
 </tr>
 <tr>
 <td>state</td>
@@ -3605,7 +3344,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>market</td>
 <td>string</td>
-<td>The market in which the order is placed, e.g. &#39;btczar&#39;.</td>
+<td>The market in which the order is placed, e.g. &#39;12&#39;.</td>
 </tr>
 <tr>
 <td>created_at</td>
@@ -3620,27 +3359,32 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>origin_volume</td>
 <td>double</td>
-<td>The original amount of the order.</td>
+<td>The original number of shares of the order.</td>
 </tr>
 <tr>
 <td>remaining_volume</td>
 <td>double</td>
-<td>The remaining amount of the original order volume.</td>
+<td>The remaining (unmatched) shares of the order.</td>
 </tr>
 <tr>
-<td>executed_volume</td>
+<td>filled_volume</td>
 <td>double</td>
-<td>The executed volume of the original order volume.</td>
+<td>The matched share volume of the order.</td>
 </tr>
 <tr>
-<td>trades_count</td>
+<td>contracts_count</td>
 <td>integer</td>
-<td>Number of trades executed against this limit order.</td>
+<td>Number of contracts formed from this order.</td>
 </tr>
 <tr>
-<td>trades</td>
-<td>[<a href="#trade">Trade</a>]</td>
-<td>Array of trades executed against this order.</td>
+<td>locked</td>
+<td>double</td>
+<td>Collateral currently locked for this order (USDC).</td>
+</tr>
+<tr>
+<td>quote_currency</td>
+<td>string</td>
+<td>Settlement currency for the market (e.g. &#39;usdc&#39;).</td>
 </tr>
 </tbody></table>
 <h3 id='market'>Market</h3>
@@ -3654,7 +3398,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>id</td>
 <td>string</td>
-<td>Unique market id eg &#39;btczar&#39;</td>
+<td>Unique market id eg &#39;12&#39;</td>
 </tr>
 <tr>
 <td>name</td>
@@ -3664,27 +3408,27 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>base_unit</td>
 <td>string</td>
-<td>Market Base unit.</td>
+<td>Outcome share unit.</td>
 </tr>
 <tr>
 <td>quote_unit</td>
 <td>string</td>
-<td>Market Quote unit.</td>
+<td>Settlement currency (e.g. &#39;usdc&#39;).</td>
 </tr>
 <tr>
 <td>min_price</td>
 <td>double</td>
-<td>Minimum order price.</td>
+<td>Minimum order price (probability, e.g. 0.01).</td>
 </tr>
 <tr>
 <td>max_price</td>
 <td>double</td>
-<td>Maximum order price.</td>
+<td>Maximum order price (probability, e.g. 0.99).</td>
 </tr>
 <tr>
 <td>min_amount</td>
 <td>double</td>
-<td>Minimum order amount.</td>
+<td>Minimum order size in shares.</td>
 </tr>
 <tr>
 <td>amount_precision</td>
@@ -3965,7 +3709,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>data</td>
 <td>json</td>
-<td>Bank account details for a fiat beneficiary in JSON format. For crypto it&#39;s the blockchain address and/or tag</td>
+<td>The beneficiary&#39;s blockchain address and/or destination tag, in JSON format.</td>
 </tr>
 <tr>
 <td>state</td>
@@ -4105,16 +3849,6 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>custom_id</td>
 <td>string</td>
 <td>Custom identifier set by merchant/aggregator</td>
-</tr>
-<tr>
-<td>business_profile</td>
-<td>object</td>
-<td>Business details (legal_name, trading_name, registration_number, tax_id, incorporation_date, business_type, industry, address, city, postcode, country, website)</td>
-</tr>
-<tr>
-<td>ubos</td>
-<td>array</td>
-<td>Array of Ultimate Beneficial Owners with ownership details</td>
 </tr>
 <tr>
 <td>created_at</td>
@@ -4282,7 +4016,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>payment_method_provider</td>
 <td>string</td>
-<td>Payment provider (for fiat transactions)</td>
+<td>Payment provider (for provider-backed transactions)</td>
 </tr>
 <tr>
 <td>payment_method_name</td>
@@ -4298,26 +4032,6 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>payment_method_icon_url</td>
 <td>string</td>
 <td>Payment method icon URL</td>
-</tr>
-<tr>
-<td>voucher_pin</td>
-<td>string</td>
-<td>Voucher PIN (if applicable)</td>
-</tr>
-<tr>
-<td>change_voucher_pin</td>
-<td>string</td>
-<td>Change voucher PIN (if change was issued)</td>
-</tr>
-<tr>
-<td>change_voucher_expiry</td>
-<td>string</td>
-<td>Change voucher expiry date (ISO8601)</td>
-</tr>
-<tr>
-<td>change_voucher_amount</td>
-<td>decimal</td>
-<td>Change voucher amount</td>
 </tr>
 <tr>
 <td>description</td>
@@ -4365,11 +4079,6 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>Payment completion timestamp (ISO8601)</td>
 </tr>
 <tr>
-<td>expires_at</td>
-<td>string</td>
-<td>Expiry timestamp (ISO8601, for vouchers)</td>
-</tr>
-<tr>
 <td>created_at</td>
 <td>string</td>
 <td>Transaction creation timestamp (ISO8601)</td>
@@ -4406,7 +4115,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>currency</td>
 <td>string</td>
-<td>Currency code (e.g., &quot;btc&quot;, &quot;zar&quot;)</td>
+<td>Currency code (e.g., &quot;btc&quot;, &quot;usdc&quot;)</td>
 </tr>
 <tr>
 <td>expected_amount</td>
@@ -4620,32 +4329,32 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>currencyId</td>
 <td>string</td>
-<td>Currency identifier (e.g., &quot;btc&quot;, &quot;zar&quot;)</td>
+<td>Currency identifier (e.g., &quot;btc&quot;, &quot;usdc&quot;)</td>
 </tr>
 <tr>
 <td>symbol</td>
 <td>string</td>
-<td>Currency symbol (e.g., &quot;BTC&quot;, &quot;ZAR&quot;)</td>
+<td>Currency symbol (e.g., &quot;BTC&quot;, &quot;USDC&quot;)</td>
 </tr>
 <tr>
 <td>blockchainName</td>
 <td>string</td>
-<td>Blockchain network name (e.g., &quot;bitcoin&quot;, &quot;ethereum&quot;, &quot;fiat&quot;)</td>
+<td>Blockchain network name (e.g., &quot;bitcoin&quot;, &quot;ethereum&quot;, &quot;solana&quot;)</td>
 </tr>
 <tr>
 <td>type</td>
 <td>string</td>
-<td>Method type (e.g., &quot;bank&quot;, &quot;crypto&quot;, &quot;voucher&quot;)</td>
+<td>Method type (e.g., &quot;crypto&quot;, &quot;address&quot;, &quot;lightning&quot;)</td>
 </tr>
 <tr>
 <td>currencyType</td>
 <td>string</td>
-<td>Currency type: &quot;fiat&quot; or &quot;crypto&quot;</td>
+<td>Currency type: always &quot;crypto&quot;</td>
 </tr>
 <tr>
 <td>providerId</td>
 <td>string</td>
-<td>Payment provider identifier (e.g., &quot;stitch&quot;, &quot;xago&quot;, &quot;cape&quot;)</td>
+<td>Payment provider identifier (e.g., &quot;calibri&quot;)</td>
 </tr>
 <tr>
 <td>minAmount</td>
@@ -4670,7 +4379,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>feeCape</td>
 <td>number</td>
-<td>Cape&#39;s fee amount or percentage</td>
+<td>Platform fee amount or percentage</td>
 </tr>
 <tr>
 <td>feeProvider</td>
@@ -4729,32 +4438,32 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>currencyId</td>
 <td>string</td>
-<td>Currency identifier (e.g., &quot;btc&quot;, &quot;zar&quot;)</td>
+<td>Currency identifier (e.g., &quot;btc&quot;, &quot;usdc&quot;)</td>
 </tr>
 <tr>
 <td>symbol</td>
 <td>string</td>
-<td>Currency symbol (e.g., &quot;BTC&quot;, &quot;ZAR&quot;)</td>
+<td>Currency symbol (e.g., &quot;BTC&quot;, &quot;USDC&quot;)</td>
 </tr>
 <tr>
 <td>blockchainName</td>
 <td>string</td>
-<td>Blockchain network name (e.g., &quot;bitcoin&quot;, &quot;ethereum&quot;, &quot;fiat&quot;)</td>
+<td>Blockchain network name (e.g., &quot;bitcoin&quot;, &quot;ethereum&quot;, &quot;solana&quot;)</td>
 </tr>
 <tr>
 <td>type</td>
 <td>string</td>
-<td>Method type (e.g., &quot;crypto&quot;, &quot;bank&quot;, &quot;wallet&quot;)</td>
+<td>Method type (e.g., &quot;crypto&quot;, &quot;address&quot;, &quot;wallet&quot;)</td>
 </tr>
 <tr>
 <td>currencyType</td>
 <td>string</td>
-<td>Currency type: &quot;fiat&quot; or &quot;crypto&quot;</td>
+<td>Currency type: always &quot;crypto&quot;</td>
 </tr>
 <tr>
 <td>providerId</td>
 <td>string</td>
-<td>Payment provider identifier (e.g., &quot;xago&quot;, &quot;celbux&quot;, &quot;cape&quot;)</td>
+<td>Payment provider identifier (e.g., &quot;calibri&quot;)</td>
 </tr>
 <tr>
 <td>processorId</td>
@@ -4784,7 +4493,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>feeCape</td>
 <td>number</td>
-<td>Cape&#39;s withdrawal fee amount or percentage</td>
+<td>Platform withdrawal fee amount or percentage</td>
 </tr>
 <tr>
 <td>feeProvider</td>
@@ -4846,54 +4555,6 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>year_to_date</td>
 <td>number</td>
 <td>Remaining limit for the current year</td>
-</tr>
-</tbody></table>
-<h3 id='voucher-redemption'>Voucher Redemption</h3>
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>amount</td>
-<td>number</td>
-<td>The amount deposited after fees.</td>
-</tr>
-<tr>
-<td>origin_amount</td>
-<td>number</td>
-<td>The original amount of the voucher.</td>
-</tr>
-<tr>
-<td>change_voucher</td>
-<td><a href="#change-voucher">Change voucher</a></td>
-<td>Optional if provider offers this, a new voucher for the remaining amount</td>
-</tr>
-</tbody></table>
-<h3 id='change-voucher'>Change voucher</h3>
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>change_amount</td>
-<td>number</td>
-<td>Amount of change from the redeemed voucher, available to be spent</td>
-</tr>
-<tr>
-<td>change_expiry</td>
-<td>string</td>
-<td>Expiry date of the new voucher.</td>
-</tr>
-<tr>
-<td>change_pin</td>
-<td>number</td>
-<td>The new voucher_pin to be used for redemption.</td>
 </tr>
 </tbody></table>
 <h3 id='lightning-payment'>Lightning payment</h3>
@@ -4961,7 +4622,7 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <tr>
 <td>conversion_percent</td>
 <td>BigDecimal</td>
-<td>The amount to automatically convert to FIAT.</td>
+<td>The percentage to automatically convert to USDC on receipt.</td>
 </tr>
 <tr>
 <td>amount_msat</td>
@@ -5058,17 +4719,17 @@ You can combine multiple subscriptions in one request, and also provide the subs
 </tr>
 </tbody></table>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"btczar.ob-snap"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"12.ob-snap"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"asks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">[</span><span class="s2">"841039.73"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.156431"</span><span class="p">],</span><span class="w">
-      </span><span class="p">[</span><span class="s2">"845402.1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.004389"</span><span class="p">],</span><span class="w">
-      </span><span class="p">[</span><span class="s2">"900000.0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.00001"</span><span class="p">]</span><span class="w">
+      </span><span class="p">[</span><span class="s2">"0.62"</span><span class="p">,</span><span class="w"> </span><span class="s2">"150"</span><span class="p">],</span><span class="w">
+      </span><span class="p">[</span><span class="s2">"0.63"</span><span class="p">,</span><span class="w"> </span><span class="s2">"80"</span><span class="p">],</span><span class="w">
+      </span><span class="p">[</span><span class="s2">"0.65"</span><span class="p">,</span><span class="w"> </span><span class="s2">"200"</span><span class="p">]</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="nl">"bids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">[</span><span class="s2">"835956.8"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.047756"</span><span class="p">],</span><span class="w">
-      </span><span class="p">[</span><span class="s2">"831012.48"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.03749"</span><span class="p">],</span><span class="w">
-      </span><span class="p">[</span><span class="s2">"829990.51"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.019462"</span><span class="p">],</span><span class="w">
-      </span><span class="p">[</span><span class="s2">"400000.0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"0.0001"</span><span class="p">]</span><span class="w">
+      </span><span class="p">[</span><span class="s2">"0.60"</span><span class="p">,</span><span class="w"> </span><span class="s2">"100"</span><span class="p">],</span><span class="w">
+      </span><span class="p">[</span><span class="s2">"0.59"</span><span class="p">,</span><span class="w"> </span><span class="s2">"75"</span><span class="p">],</span><span class="w">
+      </span><span class="p">[</span><span class="s2">"0.58"</span><span class="p">,</span><span class="w"> </span><span class="s2">"120"</span><span class="p">],</span><span class="w">
+      </span><span class="p">[</span><span class="s2">"0.55"</span><span class="p">,</span><span class="w"> </span><span class="s2">"300"</span><span class="p">]</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="nl">"sequence"</span><span class="p">:</span><span class="w"> </span><span class="mi">9712</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -5166,809 +4827,6 @@ You can combine multiple subscriptions in one request, and also provide the subs
 <td>confirming</td>
 </tr>
 </tbody></table>
-<h1 id='lists'>Lists</h1>
-<p>Lists of supported Source of funds and occupations</p>
-<h3 id='source-of-funds'>Source of funds</h3>
-<p>Please see the array of supported source of funds to the right</p>
-
-<pre><code>SOURCE_OF_FUNDS = [
-'Angel Investments',
-'Business Income',
-'Client funds',
-'Crowdfunding',
-'Dividends',
-'Foreign Investments',
-'Gifts',
-'Government Benefits',
-'Grants and Scholarships',
-'Inheritance',
-'Insurance Payouts',
-'Investment Income',
-'Legal Settlements',
-'Loans',
-'Partnership or Shareholder Distributions',
-'Personal Savings',
-'Retirement Funds',
-'Royalties',
-'Salary or Wages',
-'Sale of Assets',
-'Shareholder funds',
-'Venture Capital',
-]</code></pre>
-<h3 id='occupations'>Occupations</h3>
-<p>Please see the array of supported occupations to the right</p>
-
-<pre><code>OCCUPATIONS = [
-'Account Collector',
-'Accountant',
-'Accounting Clerk',
-'Actor',
-'Actuary',
-'Acupuncturist',
-'Administrative Assistant',
-'Administrative Service and Facility Manager',
-'Adult Literacy Teacher',
-'Advertising Manager',
-'Advertising Sale Agent',
-'Aerospace Engineering and Operation Technician',
-'Aerospace Engineer',
-'Agent and Business Manager of Artist, Performer, and Athlete',
-'Agricultural Engineer',
-'Agricultural Inspector',
-'Agricultural Manager',
-'Agricultural Scientist',
-'Agricultural Technician',
-'Agricultural Worker',
-'Air Conditioning and Heating Mechanic and Installer',
-'Air Traffic Controller',
-'Aircraft Cargo Handling Supervisor',
-'Aircraft Equipment Mechanic and Technician',
-'Aircraft Service Attendant',
-'Airfield Operation Specialist',
-'Airline and Commercial Pilot',
-'Ambulance Dispatcher',
-'Ambulance Driver and Attendant (Except Emergency Medical Technician)',
-'Amusement and Recreation Attendant',
-'Animal Care and Service Worker',
-'Animal Control Worker',
-'Announcer',
-'Anthropologist',
-'Appraiser and Assessor of Property',
-'Arbitrator',
-'Archeologist',
-'Architect',
-'Architectural Manager',
-'Archivist',
-'Art Director',
-'Assembler',
-'Astronomer',
-'Athlete and Sport Competitor',
-'Athletic Trainer',
-'Atmospheric Scientist',
-'Attorney',
-'Avionic Equipment Mechanic and Technician',
-'Audio Technician',
-'Audiologist',
-'Audiovisual Equipment Installer and Repairer',
-'Auditing Clerk',
-'Auditor',
-'Author',
-'Automated Teller Machine (ATM) Repairer',
-'Automotive and Watercraft Service Attendant',
-'Automotive Body and Glass Repairer',
-'Automotive Service Technician and Mechanic',
-'Baggage Porter and Bellhop',
-'Bailiff',
-'Baker',
-'Barber',
-'Bartender',
-'Behavioral Disorder Counselor',
-'Benefit Manager',
-'Bicycle Repairer',
-'Bill Collector',
-'Biochemist and Biophysicist',
-'Bioengineer',
-'Biological Scientist (all other)',
-'Biological Technician',
-'Biomedical Engineer',
-'Blockmason',
-'Boiler Operator',
-'Boilermaker',
-'Bookkeeping Clerk',
-'Brazer',
-'Brickmason',
-'Bridge and Lock Tender',
-'Broadcast Technician',
-'Budget Analyst',
-'Building Cleaner',
-'Building Cleaning Worker (all other)',
-'Building Inspector',
-'Bu Driver',
-'Business Operation Specialist (all other)',
-'Butcher',
-'Buyer',
-'Camera and Photographic Equipment Repairer',
-'Camera Operator',
-'Captioner',
-'Cardiovascular Technologist and Technician',
-'Career Counselor and Advisor',
-'Career and Technical Education Teacher',
-'Cargo and Freight Agent',
-'Carpenter',
-'Carpet Installer',
-'Cartographer',
-'Cashier',
-'Ceiling Tile Installer',
-'Cement Mason',
-'Chauffeur',
-'Chef',
-'Chemical Engineer',
-'Chemical Plant and System Operator',
-'Chemical Technician',
-'Chemist',
-'Childcare Center Director',
-'Childcare Worker',
-'Chiropractor',
-'Choreographer',
-'Civil Engineering Technician',
-'Civil Engineer',
-'Claim Adjuster, Appraiser, Examiner, and Investigator',
-'Clergy',
-'Clerk',
-'Bookkeeping, Accounting, and Auditing Clerk',
-'Counter and Rental Clerk',
-'Financial Clerk',
-'General Office Clerk',
-'Information Clerk',
-'Mail Clerk and Mail Machine Operator (Except Postal Service)',
-'Material Recording Clerk',
-'Clinical Laboratory Technologist and Technician',
-'Coach and Scout',
-'Coating Worker',
-'Commercial Designer',
-'Commercial Diver',
-'Commodity Sale Agent',
-'Communication Equipment Operator (all other)',
-'Community and Social Service Specialist (all other)',
-'Community Association Manager',
-'Community Health Worker',
-'Community Service Manager',
-'Compensation, Benefit, and Job Analysi Specialist',
-'Compensation and Benefit Manager',
-'Compliance Officer',
-'Composer - Music',
-'Computer Control Programmer and Operator',
-'Computer Hardware Engineer',
-'Computer Manager',
-'Computer Network Architect',
-'Computer Occupation (all other)',
-'Computer Programmer',
-'Computer Repairer',
-'Computer Scientist',
-'Computer Software Engineer',
-'Computer Support Specialist',
-'Computer System Analyst',
-'Computer System Administrator',
-'Concierge',
-'Conciliator',
-'Conservation Scientist',
-'Conservation Technician',
-'Construction and Related Worker (all other)',
-'Construction Equipment Operator',
-'Construction Inspector',
-'Construction Laborer and Helper',
-'Construction Manager',
-'Continuou Mining Machine Operator',
-'Control and Valve Installer and Repairer (Except Mechanical Door)',
-'Cook',
-'Correctional Officer',
-'Correctional Treatment Specialist',
-'Cosmetologist',
-'Cost Estimator',
-'Costume Attendant',
-'Counselor (all other)',
-'Counter and Rental Clerk',
-'Courier and Messenger',
-'Court Reporter',
-'Craft Artist',
-'Credit Analyst',
-'Credit Counselor',
-'Crematory Operator',
-'Crossing Guard',
-'Curator',
-'Customer Service Representative',
-'Cutter and Trimmer (Hand)',
-'Dancer',
-'Data Entry Keyer',
-'Data Scientist',
-'Database Administrator',
-'Delivery Truck Driver and Driver/Sale Worker',
-'Demonstrator and Product Promoter',
-'Dental Assistant',
-'Dental Hygienist',
-'Dental Laboratory Technician',
-'Dentist',
-'Derrick Operator (Oil and Ga)',
-'Designer (all other)',
-'Desktop Publisher',
-'Development Manager',
-'Diagnostic Medical Sonographer',
-'Diesel Service Technician and Mechanic',
-'Dietitian',
-'Digital Designer',
-'Director - Music',
-'Director - Film, Theater',
-'Disc Jockey / DJ',
-'Dishwasher',
-'Dispatcher (Police, Fire, and Ambulance)',
-'Dispatcher (Except Police, Fire, and Ambulance)',
-'Doctor',
-'Door-to-Door Sale Worker, New and Street Vendor, and Related Worker',
-'Drafter',
-'Drywall Installer',
-'Earth Driller (Except Oil and Ga)',
-'Economist',
-'Editor',
-'Education Administrator - Postsecondary',
-'Education Administrator - Elementary, Middle, and High School',
-'Education Administrator (all other)',
-'Education, Training, and Library Worker (all other)',
-'Electrical and Electronic Engineering Technician',
-'Electrical and Electronic Engineer',
-'Electrical and Electronic Installer and Repairer',
-'Electrician',
-'Electro-mechanical Technician',
-'Elementary School Principal',
-'Elementary School Teacher',
-'Elevator Installer and Repairer',
-'Embalmer',
-'Emergency Management Director',
-'Emergency Medical Technician (EMT)',
-'Emergency Response Dispatcher',
-'Engineering Manager',
-'Engineering Technician, except Drafter (all other)',
-'Aerospace Engineer',
-'Agricultural Engineer',
-'Biomedical Engineer',
-'Chemical Engineer',
-'Civil Engineer',
-'Computer Hardware Engineer',
-'Computer Software Engineer',
-'Electrical and Electronic Engineer',
-'Environmental Engineer',
-'Flight Engineer',
-'Geological Engineer',
-'Health and Safety Engineer',
-'Industrial Engineer',
-'Manufacturing Engineer',
-'Marine Engineer',
-'Material Engineer',
-'Mechanical Engineer',
-'Mining Engineer',
-'Mining Safety Engineer',
-'Nuclear Engineer',
-'Petroleum Engineer',
-'Sale Engineer',
-'Stationary Engineer',
-'All other Engineer',
-'English a a Second Language (ESL) Teacher',
-'Entertainer and Performer, Sport and Related Worker (all other)',
-'Entertainment Attendant and Related Worker (all other)',
-'Environmental Engineering Technologist and Technician',
-'Environmental Science and Protection Technician',
-'Environmental Scientist and Specialist',
-'Epidemiologist',
-'Escalator Installer and Repairer',
-'Etcher and Engraver',
-'Exercise Physiologist',
-'Explosive Worker, Ordnance Handling Expert, and Blaster',
-'Extraction Worker Helper',
-'Extraction Worker (all other)',
-'Fabric and Apparel Patternmaker',
-'Fabricator',
-'Family Therapist',
-'Farm Labor Contractor',
-'Farmer',
-'Fashion Designer',
-'Fence Erector',
-'Film Editor',
-'Financial Analyst',
-'Financial Clerk',
-'Financial Clerk (all other)',
-'Financial Examiner',
-'Financial Manager',
-'Financial Service Sale Agent',
-'Fine Artist',
-'Fire Inspector and Investigator',
-'Firefighter',
-'First-Line Supervisor of Construction Trade and Extraction Worker',
-'First-Line Supervisor of Correctional Officer',
-'First-Line Supervisor of Farming, Fishing, and Forestry Worker',
-'First-Line Supervisor of Fire Fighting and Prevention Worker',
-'First-Line Supervisor of Food Preparation and Serving Worker',
-'First-Line Supervisor of Housekeeping and Janitorial Worker',
-'First-Line Supervisor of Landscaping, Lawn Service, and Groundskeeping Worker',
-'First-Line Supervisor of Mechanic, Installer, and Repairer',
-'First-Line Supervisor of Nonretail Sale Worker',
-'First-Line Supervisor of Office and Administrative Support Worker',
-'First-Line Supervisor of Personal Service Worker',
-'First-Line Supervisor of Police Officer and Detective',
-'First-Line Supervisor of Production and Operating Worker',
-'First-Line Supervisor of Protective Service Worker (all other)',
-'First-Line Supervisor of Retail Sale Worker',
-'First-Line Supervisor of Transportation and Material-Moving Machine and Vehicle Operator',
-'Fishing Worker',
-'Fitness Trainer and Instructor',
-'Flight Attendant',
-'Floor Layer, Sander and Finisher',
-'Flooring Installer',
-'Floral Designer',
-'Food and Beverage Serving and Related Worker',
-'Food Preparation Worker',
-'Food Processing Equipment Worker',
-'Food Science Technician',
-'Food Scientist',
-'Food Preparation and Serving Related Worker (all over)',
-'Food Service Manager',
-'Forensic Science Technician',
-'Forest and Conservation Technician',
-'Forest and Conservation Worker',
-'Forest Fire Inspector and Prevention Specialist',
-'Forester',
-'Fundraiser',
-'Fundraising Manager',
-'Funeral Attendant',
-'Funeral Service Worker',
-'G.E.D. Teacher',
-'Gaming Change Person and Booth Cashier',
-'Gambing Service Worker',
-'Gambing Surveillance Officer',
-'Ga Compressor and Ga Pumping Station Operator',
-'Ga Plant Operator',
-'General Maintenance and Repair Worker',
-'Genetic Counselor',
-'Geographer',
-'Geological Technician',
-'Geoscientist',
-'Glazier',
-'Grader and Sorter (Agricultural Product)',
-'Graduate Teaching Assistant',
-'Graphic Designer',
-'Grinding and Polishing Worker (Hand)',
-'Ground Maintenance Worker',
-'Hairstylist',
-'Hand Laborer',
-'Hazardou Material Removal Worker',
-'Head Cook',
-'Health Diagnosing and Treating Practitioner (all other)',
-'Health Educator and Community Health Worker',
-'Health Information Technologist',
-'Health Service Manager',
-'Healthcare Support Worker (all other)',
-'Hearing Officer',
-'Heating and Air Conditioning Mechanic and Installer',
-'Heavy and Tractor-trailer Truck Driver',
-'Heavy Vehicle Service Technician',
-'High School Equivalency Diploma Teacher',
-'High School Principal',
-'High School Teacher',
-'Highway Maintenance Worker',
-'Historian',
-'Home Appliance Repairer',
-'Home Health Aide',
-'Hotel Manager',
-'Housekeeping Cleaner',
-'Human Resource Manager',
-'Human Resource Specialist',
-'Human Service Assistant',
-'Hunting Worker',
-'Hydrologic Technician',
-'Hydrologist',
-'Industrial Designer',
-'Industrial Engineering Technologist and Technician',
-'Industrial Machinery Mechanic and Maintenance Worker',
-'Industrial Production Manager',
-'Information Research Scientist',
-'Information Security Analyst',
-'Information System Manager',
-'Inspector, Tester, Sorter, Sampler, and Weigher',
-'Installation, Maintenance, and Repair Worker Helper',
-'Installation, Maintenance, and Repair Worker (all other)',
-'Instructional Coordinator',
-'Insulation Worker',
-'Insurance Sale Agent',
-'Insurance Underwriter',
-'Interior Designer',
-'Interpreter',
-'Iron Worker',
-'Janitor',
-'Jeweler',
-'Job Analysi Specialist',
-'Journalist',
-'Judge',
-'Kindergarten Teacher',
-'Labor Relation Specialist',
-'Laboratory Animal Caretaker',
-'Landscape Architect',
-'Lawyer',
-'Layout Worker (Metal and Plastic)',
-'Legal Assistant',
-'Legal Support Worker (all other)',
-'Legislator',
-'Librarian and Library Media Specialist',
-'Library Technician and Assistant',
-'Licensed Practical and Licensed Vocational Nurse',
-'Life Scientist (all other)',
-'Life, Physical, and Social Science Technician (all other)',
-'Lifeguard and Other Recreational Protective Service Worker',
-'Lighting Technician',
-'Line Installer and Repairer',
-'Loan Officer',
-'Locker Room, Coatroom, and Dressing Room Attendant',
-'Locksmith and Safe Repairer',
-'Lodging Manager',
-'Logging Worker',
-'Logistician',
-'Adhesive Bonding Machine Operator and Tender',
-'Chemical Equipment Operator and Tender',
-'Cleaning, Washing, and Metal Pickling Equipment Operator and Tender',
-'Cooling and Freezing Equipment Operator and Tender',
-'Crushing, Grinding, and Polishing Machine Setter, Operator, and Tender',
-'Cutting and Slicing Machine Setter, Operator, and Tender',
-'Extruding and Forming Machine Setter, Operator, and Tender (Synthetic and Glass Fiber)',
-'Extruding, Forming, Pressing, and Compacting Machine Setter, Operator, and Tender',
-'Furnace, Kiln, Oven, Drier, and Kettle Operator and Tender',
-'Mixing and Blending Machine Setter, Operator, and Tender',
-'Packaging and Filling Machine Operator and Tender',
-'Paper Good Machine Setter, Operator, and Tender',
-'Photographic Process Worker and Processing Machine Operator',
-'Separating, Filtering, Clarifying, Precipitating, and Still Machine Setter, Operator, and Tender',
-'Sewing Machine Operator',
-'Shoe Machine Operator and Tender',
-'Textile Bleaching and Dyeing Machine Operator and Tender',
-'Textile Cutting Machine Setter, Operator, and Tender',
-'Textile Knitting and Weaving Machine Setter, Operator, and Tender',
-'Textile Winding, Twisting, and Drawing Out Machine Setter, Operator, and Tender',
-'Machinist',
-'Maid',
-'Maintenance and Repair Worker, General',
-'Makeup Artist (Theatrical and Performance)',
-'Management Analyst',
-'Manager (all other)',
-'Manicurist',
-'Manufactured Building and Mobile Home Installer',
-'Manufacturing Sale Representative',
-'Mapping Technician',
-'Marble Setter',
-'Marine Mechanic',
-'Market Research Analyst',
-'Marketing Manager',
-'Marriage and Family Therapist',
-'Mason: Brick, Block, Stone, and Cement',
-'Massage Therapist',
-'Material Mover',
-'Material Moving Worker (all other)',
-'Material Moving Machine Operator',
-'Mathematical Science Occupation (all other)',
-'Material Scientist',
-'Mathematician',
-'Meat, Poultry, and Fish Cutter and Trimmer',
-'Meat Packer',
-'Mechanical Door Repairer',
-'Mechanical Engineering Technologist and Technician',
-'Mechanic - Automotive',
-'Mechanic - Diesel',
-'Mechanic - Heating, Air Conditioning, and Refrigeration',
-'Mechanic - Industrial Machinery',
-'Mechanic - Small Engine',
-'Mediator',
-'Medical Appliance Technician',
-'Medical Assistant',
-'Medical Billing and Coding',
-'Medical Doctor',
-'Medical Equipment Repairer',
-'Medical Laboratory Technologist and Technician',
-'Medical Record Technician',
-'Medical Registrar Technician',
-'Medical Scientist',
-'Medical Service Manager',
-'Medical Transcriptionist',
-'Meeting, Convention, and Event Planner',
-'Mental Health Counselor',
-'Merchandise Displayer and Window Trimmer',
-'Metal Machine Worker',
-'Metal Worker',
-'Metal Worker and Plastic Worker (all other)',
-'Meteorologist',
-'Meter Reader (Utility)',
-'Microbiologist',
-'Middle School Principal',
-'Middle School Teacher',
-'Millwright',
-'Mine Cutting and Channeling Machine Operator',
-'Mining Machine Operator (all other)',
-'Mobile Equipment Service Technician',
-'Model',
-'Model Maker (Wood)',
-'Molder, Shaper, and Caster (Except Metal and Plastic)',
-'Mortician',
-'Motel Manager',
-'Motion Picture Projectionist',
-'Motor Vehicle Operator (all other)',
-'Motorcycle Mechanic',
-'MRI Technologist',
-'Multimedia Artist and Animator',
-'Museum Technician',
-'Music Director and Composer',
-'Musical Instrument Repairer and Tuner',
-'Musician',
-'Nail Technician',
-'Natural Science Manager',
-'Naval Architect',
-'Network Architect',
-'Network System Administrator',
-'New Analyst',
-'Nuclear Medicine Technologist',
-'Nuclear Technician',
-'Nurse',
-'Nurse Anesthetist, Nurse Midwive, and Nurse Practitioner',
-'Nursing Assistant',
-'Nutritionist',
-'Office and Administrative Support Worker (all other)',
-'Office Clerk',
-'Office Machine Operator (Except Computer)',
-'Occupational Health and Safety Specialist',
-'Occupational Health and Safety Technician',
-'Occupational Therapist',
-'Occupational Therapy Assistant and Aide',
-'Operation Research Analyst',
-'Ophthalmic Medical Technician',
-'Optician, Dispensing',
-'Optometrist',
-'Orderly',
-'Orthotist',
-'Painter (Construction and Maintenance)',
-'Painting Worker',
-'Paperhanger',
-'Paralegal',
-'Paramedic',
-'Parking Enforcement Worker',
-'Parking Attendant',
-'Passenger Attendant',
-'Passenger Vehicle Driver',
-'Patternmaker (Wood)',
-'Payroll Clerk',
-'Pedicurist',
-'Personal Care Aide',
-'Personal Care and Service Worker (all other)',
-'Personal Financial Advisor',
-'Pest Control Worker',
-'Petroleum Pump System Operator, Refinery Operator, and Gauger',
-'Petroleum Technician',
-'Pharmacist',
-'Pharmacy Technician',
-'Phlebotomist',
-'Photogrammetrist',
-'Photographer',
-'Physical Scientist (all other)',
-'Physical Therapist Assistant and Aide',
-'Physical Therapist',
-'Physician Assistant',
-'Physician',
-'Physicist',
-'Pipefitter',
-'Pipelayer',
-'Plant and System Operator (all other)',
-'Plasterer and Stucco Mason',
-'Plastic Machine Worker',
-'Plumber',
-'Podiatrist',
-'Police Officer and Detective',
-'Police Dispatcher',
-'Political Scientist',
-'Postal Service Worker',
-'Postmaster and Mail Superintendent',
-'Postsecondary Education Administrator',
-'Postsecondary Teacher',
-'Postsecondary Teacher (all other)',
-'Power Plant Operator, Distributor, and Dispatcher',
-'Practical Nurse, Licensed',
-'Preciou Stone and Metal Worker',
-'Precision Instrument and Equipment Repairer (all other)',
-'Prepress Technician and Worker',
-'Preschool Director',
-'Preschool Teacher',
-'Presser (Textile, Garment, and Related Material)',
-'Print Binding and Finishing Worker',
-'Printing Press Operator',
-'Private Detective and Investigator',
-'Probation Officer',
-'Producer - Film, Theater',
-'Production Manager',
-'Production Worker Helper',
-'Production Worker (all other)',
-'Promotion Manager',
-'Proofreader and Copy Marker',
-'Property Appraiser and Assessor',
-'Property Manager',
-'Prosthetist',
-'Protective Service Worker (all other)',
-'Psychiatric Technician and Aide',
-'Psychologist',
-'Public Safety Telecommunicator',
-'Public Relation Manager',
-'Public Relation Specialist',
-'Pump Operator',
-'Purchasing Agent and Manager',
-'Quality Assurance Analyst',
-'Quality Control Inspector',
-'Quarry Rock Splitter',
-'Radiation Therapist',
-'Radio, Cellular, and Tower Equipment Installer and Repairer',
-'Radiologic Technologist',
-'Rail Transportation Worker (all other)',
-'Rail-Track Laying and Maintenance Equipment Operator',
-'Railroad Occupation',
-'Rancher',
-'Real Estate Appraiser and Assessor',
-'Real Estate Broker and Sale Agent',
-'Real Estate Manager',
-'Receptionist',
-'Recreation Worker',
-'Recreational Therapist',
-'Recreational Vehicle Service Technician',
-'Referee, Umpire, and Other Sport Official',
-'Refractory Material Repairer (Except Brickmason)',
-'Refrigeration Mechanic and Installer',
-'Registered Nurse',
-'Rehabilitation Counselor',
-'Reinforcing Iron and Rebar Worker',
-'Religiou Activity and Education Director',
-'Religiou Worker (all other)',
-'Repair and Maintenance Worker, General',
-'Reporter',
-'Retail Sale Worker',
-'Rigger',
-'Roof Bolter (Mining)',
-'Roofer',
-'Rotary Drill Operator (Oil and Ga)',
-'Roustabout (Oil and Ga)',
-'Sale and Related Worker (all other)',
-'Sale Manager',
-'Sale Representative, Service (all other)',
-'School Counselor and Advisor',
-'School Principal - Elementary, Middle, and High',
-'Science Technician',
-'Secretary',
-'Security Sale Agent',
-'Security and Fire Alarm System Installer',
-'Security Guard',
-'Segmental Paver',
-'Semi Truck Driver',
-'Septic Tank Servicer and Sewer Pipe Cleaner',
-'Service Unit Operator (Oil, Ga, and Mining)',
-'Set and Exhibit Designer',
-'Sewer (Hand)',
-'Shampooer',
-'Sheet Metal Worker',
-'Shipping, Receiving, and Traffic Clerk',
-'Shoe and Leather Worker and Repairer',
-'Signal and Track Switch Repairer',
-'Singer',
-'Ski Patrol and Other Recreational Protective Service Worker',
-'Skincare Specialist',
-'Slaughterer',
-'Small Engine Mechanic',
-'Social Science Research Assistant',
-'Social Scientist and Related Worker (all other)',
-'Social Service Assistant',
-'Social Service Manager',
-'Social Worker',
-'Sociologist',
-'Software Developer',
-'Software Engineer',
-'Solar Photovoltaic Installer',
-'Solderer',
-'Sound Engineering Technician',
-'Special Education Teacher',
-'Special Effect Artist and Animator',
-'Speech-Language Pathologist',
-'Statistical Assistant',
-'Statistician',
-'Steamfitter',
-'Steel Worker',
-'Stone Setter',
-'Stonemason',
-'Substance Abuse Counselor',
-'Subway and Streetcar Operator',
-'Surgeon',
-'Surgical Assistant and Surgical Technologist',
-'Survey Researcher',
-'Surveying Technician',
-'Surveyor',
-'Switchboard Operator (Including Answering Service)',
-'System Analyst',
-'Tailor, Dressmaker, and Custom Sewer',
-'Tank Car, Truck, and Ship Loader',
-'Taper (Drywall)',
-'Tax Examiner and Collector, and Revenue Agent',
-'Tax Preparer',
-'Taxi Driver',
-'Teacher Assistant',
-'Adult Basic and Secondary Education and ESL Teacher',
-'High School Teacher',
-'Kindergarten and Elementary School Teacher',
-'Middle School Teacher',
-'Substitute Teacher',
-'All Other Teacher and Instructor',
-'Technical Writer',
-'Telecommunication Equipment Installer and Repairer (Except Line Installer)',
-'Telemarketer',
-'Telephone Operator',
-'Television, Video, and Motion Picture Camera Operator and Editor',
-'Teller',
-'Terrazzo Worker',
-'Textile Career',
-'Textile, Apparel, and Furnishing Worker (all other)',
-'Therapist (all other)',
-'Tile Setter',
-'Timekeeping Clerk',
-'Tire Builder',
-'Tire Repairer and Changer',
-'Tobacco Processing Worker',
-'Tool and Die Maker',
-'Tool Grinder, Filer, and Sharpener',
-'Top Executive',
-'Tour Guide and Escort',
-'Traffic Technician',
-'Training Manager',
-'Training and Development Specialist',
-'Translator',
-'Transportation Attendant',
-'Transportation Inspector',
-'Transportation Security Screener',
-'Transportation Worker (all other)',
-'Transportation, Storage, and Distribution Manager',
-'Travel Agent',
-'Travel Clerk',
-'Truck Driver - Delivery and Sale Worker',
-'Truck Driver - Heavy and Tractor-trailer',
-'Ultrasound Technician',
-'Umpire, Referee, and Other Sport Official',
-'Upholsterer',
-'Urban and Regional Planner',
-'Usher, Lobby Attendant, and Ticket Taker',
-'Vascular Technologist',
-'Vending, Coin, and Amusement Machine Servicer and Repairer',
-'Veterinarian',
-'Veterinary Assistant',
-'Veterinary Technologist and Technician',
-'Video Editor',
-'Video Technician',
-'Vocational Nurse, Licensed',
-'Waiter or Waitress',
-'Watch Repairer',
-'Water and Wastewater Treatment Plant and System Operator',
-'Water Transportation Occupation',
-'Web Developer',
-'Weigher, Measurer, Checker, and Sampler, Recordkeeping',
-'Welder and Cutter',
-'Wellhead Pumper',
-'Wholesale Sale Representative',
-'Wildlife Biologist',
-'Wind Turbine Technician',
-'Word Processor and Typist',
-'Woodworker',
-'Woodworker (all other)',
-'Writer',
-'X-Ray Technician',
-'Yard Conductor',
-'Yoga Instructor/Teacher',
-'Youth Program Director',
-'Youth Worker',
-'Zookeeper',
-'Zoologist',
-]</code></pre>
 <h1 id='errors'>Errors</h1>
 <table><thead>
 <tr>
