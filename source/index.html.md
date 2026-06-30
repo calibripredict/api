@@ -43,12 +43,12 @@ The API suite consists of public and private endpoints. Private endpoints requir
 
 Use your API key and secret to sign your requests for all private endpoints. (Public endpoints do not require authentication)
 
-All requests unless otherwise noted (EG for sub-account / customer management) use the following base URLs:
+All private requests use the following base URLs:
 
 - Base url REST: `https://app.calibri.io/api/v2/atlas`
 - Base url Websocket: `wss://app.calibri.io/api/v2/websocket`
 
-For Sub-account and customer management (noted in the routes below):
+For identity and session management (sign-in):
 
 - Base url: `https://app.calibri.io/api/v2/persona`
 
@@ -63,7 +63,7 @@ const crypto = require("crypto");
 const apiKey = "123456...";
 const secret = "ABCDEF...";
 
-module.exports = async (subAccountUid = {}) => {
+module.exports = async () => {
   const timeStamp = new Date().getTime();
   const queryString = `${timeStamp}${apikey}`;
   const signature = crypto
@@ -76,9 +76,6 @@ module.exports = async (subAccountUid = {}) => {
     "X-Auth-Apikey": apikey,
     "X-Auth-Nonce": timeStamp,
     "X-Auth-Signature": signature,
-    "X-Auth-Signature": signature,
-    // Only for sub-account / customer requests:
-    "X-Auth-Subaccount-UID": subAccountUid,
   };
 };
 ```
@@ -95,17 +92,9 @@ Generate a new signature for each new request, and add these headers to the requ
 2. <strong>X-Auth-Apikey</strong>: Your API key
 3. <strong>X-Auth-Signature</strong>: HMAC-SHA256 encrypted string of the combined timestamp, apikey and secret (see JS example)
 
-## Acting on Behalf of Sub-Accounts or Customers
-
-When making requests on behalf of a sub-account or customer, include an additional optional header:
-
-4. <strong>X-Auth-Subaccount-Uid</strong>: The UID of the sub-account or customer you want to act as
-
-This allows the parent account (or merchant/aggregator) to make authenticated requests as if they were the sub-account or customer. The regular authentication headers (API key, nonce, signature) must still be included.
-
 # Example using Authentication
 
-## <span class="request-type__post">POST</span> Create order
+## <span class="request-type__get">GET</span> Account balances
 
 ```javascript
 // generateHeaders.js
@@ -134,30 +123,21 @@ module.exports = async () => {
 > Send the authenticated request:
 
 ```javascript
-// createOrder.js
+// getBalances.js
 const axios = require("axios");
 const generateHeaders = require("./generateHeaders");
 
-createOrder = async () => {
+getBalances = async () => {
   const baseUrl = "https://app.calibri.io";
-  const method = "POST";
-  const path = `/api/v2/pythia/orders`;
+  const method = "GET";
+  const path = `/api/v2/atlas/account/balances`;
   const url = `${baseUrl}${path}`;
   const headers = await generateHeaders();
-
-  const orderData = {
-    market: "12",
-    side: "yes",
-    ord_type: "limit",
-    volume: "100",
-    price: "0.60",
-  };
 
   const axiosConfig = {
     method: method,
     url: url,
     headers: headers,
-    data: orderData,
   };
 
   try {
@@ -169,98 +149,21 @@ createOrder = async () => {
 };
 ```
 
-> Create order response:
+> Account balances response:
 
 ```json
-{
-  "id": 173757,
-  "market": "12",
-  "side": "yes",
-  "ord_type": "limit",
-  "price": "0.60",
-  "state": "wait",
-  "origin_volume": "100",
-  "remaining_volume": "100",
-  "locked": "60.0",
-  "contracts_count": 0,
-  "created_at": "2023-12-08T08:46:59+01:00",
-  "updated_at": "2023-12-08T08:46:59+01:00"
-}
-```
-
-`https://app.calibri.io/api/v2/pythia/orders`
-
-Buys 100 YES shares at `0.60` USDC each, locking `60.00` USDC of collateral. Create a new order on your account by signing your request and submitting it.
-
-## <span class="request-type__post">POST</span> Create order as sub-account
-
-```javascript
-// generateHeadersWithSubAccount.js
-
-const crypto = require("crypto");
-const apiKey = "123456...";
-const secret = "ABCDEF...";
-const subAccountUid = "CCT1234567"; // Sub-account or customer UID
-
-module.exports = async () => {
-  const timeStamp = new Date().getTime();
-  const queryString = `${timeStamp}${apiKey}`;
-  const signature = crypto
-    .createHmac("sha256", secret)
-    .update(queryString)
-    .digest("hex");
-
-  return {
-    "Content-Type": "application/json;charset=utf-8",
-    "X-Auth-Apikey": apiKey,
-    "X-Auth-Nonce": timeStamp,
-    "X-Auth-Signature": signature,
-    "X-Auth-Subaccount-Uid": subAccountUid, // Act on behalf of sub-account/customer
-  };
-};
-```
-
-> Send the authenticated request as sub-account:
-
-```javascript
-// createOrderAsSubAccount.js
-const axios = require("axios");
-const generateHeaders = require("./generateHeadersWithSubAccount");
-
-createOrder = async () => {
-  const baseUrl = "https://app.calibri.io";
-  const method = "POST";
-  const path = `/api/v2/pythia/orders`;
-  const url = `${baseUrl}${path}`;
-  const headers = await generateHeaders();
-
-  const orderData = {
-    market: "12",
-    side: "no",
-    ord_type: "limit",
-    volume: "50",
-    price: "0.40",
-  };
-
-  const axiosConfig = {
-    method: method,
-    url: url,
-    headers: headers,
-    data: orderData,
-  };
-
-  try {
-    const results = await axios(axiosConfig);
-    console.log(JSON.stringify(results.data, undefined, 2));
-  } catch (err) {
-    console.log(err);
+[
+  {
+    "currency": "usdc",
+    "balance": "1250.00",
+    "locked": "60.00"
   }
-};
+]
 ```
 
-`https://app.calibri.io/api/v2/pythia/orders`
+`https://app.calibri.io/api/v2/atlas/account/balances`
 
-When the `X-Auth-Subaccount-Uid` header is included, the order is created on behalf of the specified sub-account or customer. The parent account's API credentials are used for authentication, but the operation is performed in the context of the sub-account.
+Returns your account balances (available and locked, per currency). Sign every private request with your API key as shown above.
 
 # Prediction Markets
 
@@ -343,45 +246,6 @@ The public trade tape — recently matched contracts (price, volume, time) for t
 ### Description
 
 Per-market ticker, candlestick (K-line) history, and a tickers snapshot across all markets.
-
-## <span class="request-type__post">POST</span> Place order (custodial)
-
-`POST /api/v2/pythia/orders`
-
-> Body
-
-```json
-{
-  "market": "12",
-  "side": "yes",
-  "ord_type": "limit",
-  "volume": "100",
-  "price": "0.60"
-}
-```
-
-### Description
-
-Places an order on the market's book using your **custodial** balance. Collateral (`price × volume` for the chosen side) is locked from your account immediately. This is the simplest way to trade — Calibri holds your funds and settles you off-chain at resolution.
-
-Self-custody members must **not** use this endpoint; they place [non-custodial signed orders](#non-custodial-trading) instead, and a direct call returns `market.order.use_signed_endpoint`.
-
-### Parameters
-
-| Name     | Type   | Description                                            | Required |
-| -------- | ------ | ------------------------------------------------------ | -------- |
-| market   | string | Market id                                              | Yes      |
-| side     | string | `yes` or `no`                                          | Yes      |
-| ord_type | string | `limit` or `market`                                    | Yes      |
-| volume   | string | Number of shares                                       | Yes      |
-| price    | string | Limit price `0.01`–`0.99` (required for `limit`)       | For limit |
-
-### Responses
-
-| Code | Meaning                                          |
-| ---- | ------------------------------------------------ |
-| 201  | Order accepted (returns the order with its `id` and `state`) |
-| 422  | Validation error (e.g. `market.order.invalid_price`) |
 
 ## <span class="request-type__get">GET</span> Your orders / trades
 
@@ -766,342 +630,6 @@ getTransactions = async () => {
 getTransactions();
 ```
 
-## <span class="request-type__post">POST</span> Create new beneficiary
-
-`/account/beneficiaries`
-
-### Description
-
-Create a new beneficiary (a saved withdrawal destination — a cryptocurrency wallet address). All beneficiaries created via the API are automatically activated and ready for use.
-
-### Parameters
-
-| Name               | Located in | Description                                                                                   | Required | Schema  | Max Length |
-| ------------------ | ---------- | --------------------------------------------------------------------------------------------- | -------- | ------- | ---------- |
-| currency           | formData   | Currency code (e.g., "btc", "eth", "usdc", "usdt", "xrp", "sol")                              | Yes      | string  | 10 chars   |
-| name               | formData   | Display name for the beneficiary                                                              | Yes      | string  | 64 chars   |
-| description        | formData   | Optional notes about the beneficiary                                                          | No       | string  | 255 chars  |
-| blockchain_key     | formData   | Blockchain identifier (defaults to currency's blockchain if omitted)                          | No       | string  | 255 chars  |
-| withdraw_method_id | formData   | Specific withdrawal method ID (auto-selected if omitted)                                      | No       | integer | -          |
-| data               | formData   | Address/account details in JSON format (structure varies by currency type - see tables below) | Yes      | json    | -          |
-
-Cryptocurrency `data` Object Fields
-
-| Field          | Type    | Required | Description                                                             |
-| -------------- | ------- | -------- | ----------------------------------------------------------------------- |
-| address        | string  | Yes      | Cryptocurrency wallet address                                           |
-| tag            | string  | No       | Destination tag (for XRP, Stellar, etc.) - max: 4294967295              |
-
-### Request Examples
-
-**Example 1: Crypto - Bitcoin**
-
-```json
-{
-  "currency": "btc",
-  "name": "My Bitcoin Wallet",
-  "description": "Personal cold storage wallet",
-  "data": {
-    "address": "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq"
-  }
-}
-```
-
-**Example 2: Crypto - XRP with Destination Tag**
-
-```json
-{
-  "currency": "xrp",
-  "name": "Exchange XRP Account",
-  "description": "My Binance XRP deposit",
-  "data": {
-    "address": "rN7n7otQDd6FczFgLdlqtyMVrn3qHwuSaDcqC",
-    "tag": "123456789"
-  }
-}
-```
-
-**Example 3: Crypto - USDC**
-
-```json
-{
-  "currency": "usdc",
-  "name": "My USDC Wallet",
-  "description": "Settlement wallet",
-  "data": {
-    "address": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
-  }
-}
-```
-
-### Important Notes
-
-- **API-created beneficiaries** are automatically activated (state = `active`) and do not require PIN activation
-- **Cryptocurrency addresses** are validated against the blockchain service before creation
-- **XRP destination tags** must be unsigned int32 (maximum: 4294967295)
-- **Duplicate addresses** are not allowed for the same currency/blockchain combination
-
-### Responses
-
-| Code | Description            | Schema                      |
-| ---- | ---------------------- | --------------------------- |
-| 201  | Create new beneficiary | [Beneficiary](#beneficiary) |
-
-## <span class="request-type__patch">PATCH</span> Activate beneficiary
-
-`/account/beneficiaries/{id}/activate`
-
-### Description
-
-Activates a new beneficiary with pin emailed during beneficiary creation.
-
-**Note:** This activation step is only required for beneficiaries created through the web interface. Beneficiaries created via the API are automatically activated and do not require this step.
-
-### Parameters
-
-| Name | Located in | Description                         | Required | Schema  |
-| ---- | ---------- | ----------------------------------- | -------- | ------- |
-| id   | path       | Beneficiary Identifier              | Yes      | integer |
-| pin  | formData   | Pin code for beneficiary activation | Yes      | integer |
-
-### Responses
-
-| Code | Description                    | Schema                      |
-| ---- | ------------------------------ | --------------------------- |
-| 200  | Activates beneficiary with pin | [Beneficiary](#beneficiary) |
-
-## <span class="request-type__delete">DELETE</span> Delete beneficiary
-
-` /account/beneficiaries/{id}`
-
-### Description
-
-Delete beneficiary
-
-### Parameters
-
-| Name | Located in | Description            | Required | Schema  |
-| ---- | ---------- | ---------------------- | -------- | ------- |
-| id   | path       | Beneficiary Identifier | Yes      | integer |
-
-### Responses
-
-| Code | Description        |
-| ---- | ------------------ |
-| 204  | Delete beneficiary |
-
-## <span class="request-type__get">GET</span> Beneficiary by id
-
-`/account/beneficiaries/{id}`
-
-### Description
-
-Get beneficiary by id
-
-### Parameters
-
-| Name | Located in | Description            | Required | Schema  |
-| ---- | ---------- | ---------------------- | -------- | ------- |
-| id   | path       | Beneficiary Identifier | Yes      | integer |
-
-### Responses
-
-| Code | Description           | Schema                      |
-| ---- | --------------------- | --------------------------- |
-| 200  | Get beneficiary by id | [Beneficiary](#beneficiary) |
-
-## <span class="request-type__get">GET</span> List Beneficiaries
-
-`/account/beneficiaries`
-
-### Description
-
-Get list of user beneficiaries
-
-### Parameters
-
-| Name     | Located in | Description                                                                                                                 | Required | Schema |
-| -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------- | -------- | ------ |
-| currency | query      | Beneficiary currency code.                                                                                                  | No       | string |
-| state    | query      | Defines either beneficiary active - user can use it to withdraw moneyor pending - requires beneficiary activation with pin. | No       | string |
-
-### Responses
-
-| Code | Description                    | Schema                          |
-| ---- | ------------------------------ | ------------------------------- |
-| 200  | Get list of user beneficiaries | [ [Beneficiary](#beneficiary) ] |
-
-## <span class="request-type__post">GET</span> Withdraw quote
-
-`/account/withdraws/quote/{currency}`
-
-`/account/withdraws/quote/{currency}?bolt=ln...`
-
-### Description
-
-Get the expected fee to withdraw the specified currency. Submit the quote_id with your withdraw request payload to honor that fee during the withdrawal. Quotes are currently valid for 90 seconds, ensure you submit the withdrawal request before the expires_at parameter.
-
-### Parameters
-
-| Name     | Located in | Description                                                                      | Required | Schema  |
-| -------- | ---------- | -------------------------------------------------------------------------------- | -------- | ------- |
-| currency | path       | Currency code.                                                                   | Yes      | string  |
-| bolt     | query      | For BTC Lightning payments, supply the Bolt11 invoice. Fees are returned in BTC. | No       | integer |
-
-### Responses
-
-| Code | Description              | Schema                                                               |
-| ---- | ------------------------ | -------------------------------------------------------------------- |
-| 200  | Returns a withdraw quote | [ [Withdraw quote](#withdraw-quote) ]                                |
-| 422  | Unproccesable entity     | Error array containing the reason why the quote could not be created |
-
-## <span class="request-type__post">POST</span> New withdrawal
-
-`/account/withdraws`
-
-### Description
-
-Creates new withdrawal to active beneficiary.
-
-**Note:** OTP is **not required** when creating withdrawals via the API. The OTP requirement only applies to withdrawals created through the web app, however 2FA must still be enabled on the account to enable withdraws.
-
-### Parameters
-
-| Name           | Located in | Description                                                                                                                                                   | Required | Schema  |
-| -------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| beneficiary_id | formData   | ID of active Beneficiary.                                                                                                                                     | Yes      | integer |
-| currency       | formData   | The currency code matching the beneficiary.                                                                                                                   | Yes      | string  |
-| amount         | formData   | The amount to withdraw.                                                                                                                                       | Yes      | double  |
-| note           | formData   | Optional note to attach to the withdrawal.                                                                                                                   | No       | string  |
-
-### Responses
-
-| Code | Description             |
-| ---- | ----------------------- |
-| 201  | Creates new withdrawal. |
-
-## <span class="request-type__post">GET</span> Withdrawal history
-
-`/account/withdraws`
-
-### Description
-
-Get your withdraw history, paginated.
-
-### Parameters
-
-| Name     | Located in | Description                                                     | Required | Schema  |
-| -------- | ---------- | --------------------------------------------------------------- | -------- | ------- |
-| currency | query      | Currency code.                                                  | No       | string  |
-| limit    | query      | Number of withdraws per page (defaults to 100, maximum is 100). | No       | integer |
-| state    | query      | Filter by withdraw state. [ [Withdraw states](#states) ]        | No       | string  |
-| rid      | query      | Destination address (blockchain withdraws only).                | No       | string  |
-| page     | query      | Page number (defaults to 1).                                    | No       | integer |
-
-### Responses
-
-| Code | Description          | Schema                    |
-| ---- | -------------------- | ------------------------- |
-| 200  | List your withdraws. | [ [Withdraw](#withdraw) ] |
-
-## <span class="request-type__get">GET</span> Get deposit methods
-
-`/api/v2/payments/deposits/methods`
-
-### Description
-
-Get all available deposit methods for the authenticated user. Returns the supported cryptocurrency deposit methods, filtered based on your remaining transaction limits.
-
-Each method includes minimum and maximum amounts, fees, provider information, and remaining limits for different time periods (daily, weekly, monthly, yearly).
-
-### Responses
-
-| Code | Description                         | Schema                                |
-| ---- | ----------------------------------- | ------------------------------------- |
-| 200  | Array of available deposit methods. | [ [Deposit Method](#deposit-method) ] |
-
-## <span class="request-type__get">GET</span> Get withdraw methods
-
-`/api/v2/payments/withdraws/methods`
-
-### Description
-
-Get all available withdrawal methods for the authenticated user. Returns the supported cryptocurrency withdrawal methods, filtered based on your remaining transaction limits.
-
-Each method includes minimum and maximum amounts, fees, provider information, processor details, and remaining limits for different time periods (daily, weekly, monthly, yearly).
-
-### Responses
-
-| Code | Description                            | Schema                                  |
-| ---- | -------------------------------------- | --------------------------------------- |
-| 200  | Array of available withdrawal methods. | [ [Withdraw Method](#withdraw-method) ] |
-
-## <span class="request-type__get">GET</span> Deposit address
-
-`/account/deposit_address/{currency}`
-
-### Description
-
-Fetch the deposit address for the specified currency.
-
-Note: If your currency deposit address has not been created yet, the result may return empty while the address is being created. If it is empty, please try again in a few seconds.
-
-### Parameters
-
-| Name     | Located in | Description              | Required | Schema |
-| -------- | ---------- | ------------------------ | -------- | ------ |
-| currency | path       | The currency to receive. | Yes      | string |
-
-### Responses
-
-| Code | Description                                                                        | Schema              |
-| ---- | ---------------------------------------------------------------------------------- | ------------------- |
-| 200  | Deposit address. (May be empty on first request for new accounts, see note above). | [Deposit](#deposit) |
-
-## <span class="request-type__get">GET</span> Deposit by ID
-
-`/account/deposits/{id}`
-
-### Description
-
-Get details of a specific deposit by its internal deposit ID.
-
-### Parameters
-
-| Name | Located in | Description | Required | Schema  |
-| ---- | ---------- | ----------- | -------- | ------- |
-| id   | path       | Deposit ID  | Yes      | integer |
-
-### Responses
-
-| Code | Description                      | Schema              |
-| ---- | -------------------------------- | ------------------- |
-| 200  | Get details of specific deposit. | [Deposit](#deposit) |
-
-## <span class="request-type__get">GET</span> Deposit history
-
-`/account/deposits`
-
-### Description
-
-Get your deposit history. You can filter by specific deposit transaction using the `txid` query parameter, or fetch all deposits with optional filters for currency and state
-
-### Parameters
-
-| Name     | Located in | Description                                                    | Required | Schema  |
-| -------- | ---------- | -------------------------------------------------------------- | -------- | ------- |
-| currency | query      | Currency code                                                  | No       | string  |
-| state    | query      | Filter deposits by deposit state [States](#states)             | No       | string  |
-| txid     | query      | Deposit transaction id.                                        | No       | string  |
-| limit    | query      | Number of deposits per page (defaults to 100, maximum is 100). | No       | integer |
-| page     | query      | Page number (defaults to 1).                                   | No       | integer |
-
-### Responses
-
-| Code | Description               | Schema                  |
-| ---- | ------------------------- | ----------------------- |
-| 200  | Get your deposit history. | [ [Deposit](#deposit) ] |
-
 ## <span class="request-type__get">GET</span> Balance
 
 `/account/balances/{currency}`
@@ -1143,337 +671,6 @@ Get account balances for all currencies
 | Code | Description       | Schema                  |
 | ---- | ----------------- | ----------------------- |
 | 200  | Array of balances | [ [Account](#account) ] |
-
-# Sub-Accounts
-
-**Note:** Sub-account endpoints use the `/api/v2/persona` base path instead of `/api/v2/atlas`.
-
-**Sub-Account actions:** To make API requests for a sub-account (e.g., placing trades, checking balances), include the `X-Auth-Subaccount-Uid` header with the sub-account's UID. Your parent account's API credentials are used for authentication, but operations are performed in the sub-account's context.
-
-## <span class="request-type__post">POST</span> Create Sub-Account
-
-```javascript
-// createSubAccount.js
-const axios = require("axios");
-const generateHeaders = require("./generateHeaders");
-
-createSubAccount = async () => {
-  const baseUrl = "https://app.calibri.io";
-  const method = "POST";
-  const path = `/api/v2/persona/resource/sub_accounts`;
-  const url = `${baseUrl}${path}`;
-  const headers = await generateHeaders();
-
-  const subAccountData = {
-    account_name: "Trading Account 1",
-    deposit_action: "transfer_to_parent",
-  };
-
-  const axiosConfig = {
-    method: method,
-    url: url,
-    headers: headers,
-    data: subAccountData,
-  };
-
-  try {
-    const results = await axios(axiosConfig);
-    console.log(JSON.stringify(results.data, undefined, 2));
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-createSubAccount();
-```
-
-`/persona/resource/sub_accounts`
-
-### Description
-
-Create a new sub-account managed by the parent account. Sub-accounts cannot login independently and are managed by the parent account.
-
-### Parameters
-
-| Name           | Located in | Description                                                                        | Required | Schema |
-| -------------- | ---------- | ---------------------------------------------------------------------------------- | -------- | ------ |
-| account_name   | formData   | Display name for the sub-account (1-100 characters)                                | Yes      | string |
-| deposit_action | formData   | JSON object defining automated deposit handling (see deposit action options below) | No       | json   |
-| data           | formData   | Optional additional data in JSON format                                            | No       | json   |
-
-**Deposit Action Options:**
-
-Configure automatic actions for deposits received by this sub-account.
-
-The `deposit_action` parameter accepts a JSON object with the following structure:
-
-```json
-{
-  "action": "none|aggregate|convert_and_withdraw|aggregate_convert_and_withdraw",
-  "target_currency": "currency_code", // Required for convert actions (e.g., "usdc", "btc")
-  "beneficiary_id": 123, // Required for withdraw actions
-  "lightning_invoice": "lnbc...", // Alternative to beneficiary_id for Lightning withdrawals
-  "max_slippage": 2.5, // Optional: Max slippage percentage (0.1-10, default: 2.0)
-  "beneficiary_amount": "50.00" // Optional: Exact amount the beneficiary should receive
-}
-```
-
-**Beneficiary Amount:**
-
-When `beneficiary_amount` is specified (as a string), it defines the exact amount that the beneficiary should receive in the target currency. If, after conversion, the account does not have sufficient funds to cover this amount, the withdrawal will **not** be placed. Instead, the payment will be marked as `completed`, with the converted funds remaining in the account.
-
-**Note:** When using `lightning_invoice` together with `beneficiary_amount`, the invoice amount must match the `beneficiary_amount`.
-
-**Available Actions:**
-
-| Action                           | Description                                                    | Required Fields                                            |
-| -------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------- |
-| `none`                           | No automatic action (default)                                  | None                                                       |
-| `aggregate`                      | Automatically transfer deposits to parent account              | None                                                       |
-| `convert_and_withdraw`           | Convert deposit to target currency and withdraw to beneficiary | `target_currency`, `beneficiary_id` or `lightning_invoice` |
-| `aggregate_convert_and_withdraw` | Transfer to parent, then convert and withdraw                  | `target_currency`, `beneficiary_id` or `lightning_invoice` |
-
-**Example with Simple Aggregate:**
-
-```json
-{
-  "account_name": "Trading Account 1",
-  "deposit_action": {
-    "action": "aggregate"
-  }
-}
-```
-
-**Example with Convert and Withdraw:**
-
-```json
-{
-  "account_name": "USDC Conversion Account",
-  "deposit_action": {
-    "action": "convert_and_withdraw",
-    "target_currency": "usdc",
-    "beneficiary_id": 789,
-    "max_slippage": 2.5
-  }
-}
-```
-
-### Responses
-
-| Code | Description                      | Schema                    |
-| ---- | -------------------------------- | ------------------------- |
-| 201  | Sub-account created successfully | [SubAccount](#subaccount) |
-| 422  | Validation error                 | Error array               |
-
-## <span class="request-type__get">GET</span> List Sub-Accounts
-
-```javascript
-// listSubAccounts.js
-const axios = require("axios");
-const generateHeaders = require("./generateHeaders");
-
-listSubAccounts = async () => {
-  const baseUrl = "https://app.calibri.io";
-  const method = "GET";
-  const path = `/api/v2/persona/resource/sub_accounts?page=1&limit=100`;
-  const url = `${baseUrl}${path}`;
-  const headers = await generateHeaders();
-
-  const axiosConfig = {
-    method: method,
-    url: url,
-    headers: headers,
-  };
-
-  try {
-    const results = await axios(axiosConfig);
-    console.log(JSON.stringify(results.data, undefined, 2));
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-listSubAccounts();
-```
-
-`/persona/resource/sub_accounts`
-
-### Description
-
-Get a paginated list of the user's sub-accounts.
-
-### Parameters
-
-| Name  | Located in | Description                                          | Required | Schema  |
-| ----- | ---------- | ---------------------------------------------------- | -------- | ------- |
-| page  | query      | Page number (defaults to 1)                          | No       | integer |
-| limit | query      | Number of results per page (default: 100, max: 1000) | No       | integer |
-
-### Responses
-
-| Code | Description          | Schema                        |
-| ---- | -------------------- | ----------------------------- |
-| 200  | List of sub-accounts | [ [SubAccount](#subaccount) ] |
-
-## <span class="request-type__get">GET</span> Get Sub-Account by UID
-
-```javascript
-// getSubAccount.js
-const axios = require("axios");
-const generateHeaders = require("./generateHeaders");
-
-getSubAccount = async () => {
-  const baseUrl = "https://app.calibri.io";
-  const method = "GET";
-  const subAccountUid = "CCT1234567";
-  const path = `/api/v2/persona/resource/sub_accounts/${subAccountUid}`;
-  const url = `${baseUrl}${path}`;
-  const headers = await generateHeaders();
-
-  const axiosConfig = {
-    method: method,
-    url: url,
-    headers: headers,
-  };
-
-  try {
-    const results = await axios(axiosConfig);
-    console.log(JSON.stringify(results.data, undefined, 2));
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-getSubAccount();
-```
-
-`/persona/resource/sub_accounts/{uid}`
-
-### Description
-
-Retrieve a specific sub-account by its unique identifier.
-
-### Parameters
-
-| Name | Located in | Description            | Required | Schema |
-| ---- | ---------- | ---------------------- | -------- | ------ |
-| uid  | path       | Sub-account identifier | Yes      | string |
-
-### Responses
-
-| Code | Description       | Schema                    |
-| ---- | ----------------- | ------------------------- |
-| 200  | Sub-account found | [SubAccount](#subaccount) |
-| 404  | Not found         | Error array               |
-
-## <span class="request-type__put">PUT</span> Update Sub-Account
-
-```javascript
-// updateSubAccount.js
-const axios = require("axios");
-const generateHeaders = require("./generateHeaders");
-
-updateSubAccount = async () => {
-  const baseUrl = "https://app.calibri.io";
-  const method = "PUT";
-  const subAccountUid = "CCT1234567";
-  const path = `/api/v2/persona/resource/sub_accounts/${subAccountUid}`;
-  const url = `${baseUrl}${path}`;
-  const headers = await generateHeaders();
-
-  const updateData = {
-    deposit_action: "none",
-  };
-
-  const axiosConfig = {
-    method: method,
-    url: url,
-    headers: headers,
-    data: updateData,
-  };
-
-  try {
-    const results = await axios(axiosConfig);
-    console.log(JSON.stringify(results.data, undefined, 2));
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-updateSubAccount();
-```
-
-`/persona/resource/sub_accounts/{uid}`
-
-### Description
-
-Update sub-account settings.
-
-### Parameters
-
-| Name           | Located in | Description                                         | Required | Schema |
-| -------------- | ---------- | --------------------------------------------------- | -------- | ------ |
-| uid            | path       | Sub-account identifier                              | Yes      | string |
-| deposit_action | formData   | Action for deposits: 'none' or 'transfer_to_parent' | No       | string |
-
-### Responses
-
-| Code | Description                      | Schema                    |
-| ---- | -------------------------------- | ------------------------- |
-| 200  | Sub-account updated successfully | [SubAccount](#subaccount) |
-| 404  | Not found                        | Error array               |
-| 422  | Validation error                 | Error array               |
-
-## <span class="request-type__delete">DELETE</span> Delete Sub-Account
-
-```javascript
-// deleteSubAccount.js
-const axios = require("axios");
-const generateHeaders = require("./generateHeaders");
-
-deleteSubAccount = async () => {
-  const baseUrl = "https://app.calibri.io";
-  const method = "DELETE";
-  const subAccountUid = "CCT1234567";
-  const path = `/api/v2/persona/resource/sub_accounts/${subAccountUid}`;
-  const url = `${baseUrl}${path}`;
-  const headers = await generateHeaders();
-
-  const axiosConfig = {
-    method: method,
-    url: url,
-    headers: headers,
-  };
-
-  try {
-    const results = await axios(axiosConfig);
-    console.log("Sub-account deleted successfully");
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-deleteSubAccount();
-```
-
-`/persona/resource/sub_accounts/{uid}`
-
-### Description
-
-Soft delete a sub-account (sets state to 'deleted'). The sub-account will no longer be accessible.
-
-### Parameters
-
-| Name | Located in | Description            | Required | Schema |
-| ---- | ---------- | ---------------------- | -------- | ------ |
-| uid  | path       | Sub-account identifier | Yes      | string |
-
-### Responses
-
-| Code | Description                      |
-| ---- | -------------------------------- |
-| 204  | Sub-account deleted successfully |
-| 404  | Not found                        |
 
 # Websocket
 
@@ -2023,106 +1220,6 @@ All paginated list endpoints return an array of items in the response body, with
 | layer_two_max_deposit_amount  | string | (Layer two dependant) The maximum deposit amount                      |
 | layer_two_max_withdraw_amount | string | (Layer two dependant) The maxumum withdrawal amount                   |
 
-### Withdraw
-
-| Name            | Type    | Description                                             |
-| --------------- | ------- | ------------------------------------------------------- |
-| id              | integer | The withdrawal id.                                      |
-| currency        | string  | The currency code.                                      |
-| type            | string  | The withdrawal type                                     |
-| amount          | string  | The withdrawal amount                                   |
-| fee             | double  | The exchange fee.                                       |
-| blockchain_txid | string  | The withdrawal transaction id.                          |
-| rid             | string  | The beneficiary ID or wallet address on the Blockchain. |
-| state           | string  | The withdrawal state.                                   |
-| confirmations   | integer | Number of confirmations.                                |
-| note            | string  | Optional withdraw note.                                 |
-| created_at      | string  | The datetime for the withdrawal.                        |
-| updated_at      | string  | The datetime for the withdrawal.                        |
-| done_at         | string  | The datetime when withdraw was completed                |
-
-### Withdraw quote
-
-| Name       | Type   | Description                                                   |
-| ---------- | ------ | ------------------------------------------------------------- |
-| id         | string | The id of the quote. Submit this with your withdrawal request |
-| currency   | string | The currency code.                                            |
-| fee        | string | The fee for the withdrawal                                    |
-| blockchain | string | The blockchain for this quote                                 |
-| created_at | string | The datetime the quote was created.                           |
-| expires_at | string | The datetime the quote expires.                               |
-
-### Beneficiary
-
-| Name        | Type    | Description                                                                                                                                     |
-| ----------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| uuid        | integer | Beneficiary Identifier                                                                                                                          |
-| currency    | string  | Beneficiary currency code.                                                                                                                      |
-| name        | string  | Name of the beneficiary.                                                                                                                        |
-| description | string  | A personal description of the beneficiary for your records.                                                                                     |
-| data        | json    | The beneficiary's blockchain address and/or destination tag, in JSON format. |
-| state       | string  | Pending, Active, Archived (0,1,2)                                                                                                               |
-
-### SubAccount
-
-| Name           | Type   | Description                                                                               |
-| -------------- | ------ | ----------------------------------------------------------------------------------------- |
-| uid            | string | Sub-account unique identifier                                                             |
-| account_name   | string | Display name for the sub-account                                                          |
-| state          | string | Account state (active, deleted)                                                           |
-| deposit_action | string | Action for deposits: 'none' (keep in sub-account) or 'transfer_to_parent' (auto-transfer) |
-| created_at     | string | Timestamp when the sub-account was created in ISO 8601 format                             |
-
-### Customer
-
-Customer accounts come in two types with different response structures:
-
-- **Individual Customers** - See [Customer (Individual)](#customer-individual) for personal account structure
-- **Business Customers** - See [Customer (Business)](#customer-business) for business account structure
-
-### Customer (Individual)
-
-| Name                      | Type   | Description                                                              |
-| ------------------------- | ------ | ------------------------------------------------------------------------ |
-| uid                       | string | Customer unique identifier                                               |
-| account_name              | string | Display name for the customer (usually custom_id)                        |
-| state                     | string | Account state (active, deleted)                                          |
-| custom_id                 | string | Custom identifier set by merchant/aggregator                             |
-| created_at                | string | Timestamp when customer was created in ISO 8601 format                   |
-| profile                   | object | Customer profile information (first_name, last_name, dob, address, etc.) |
-| phone                     | object | Phone information (country, number, validated_at)                        |
-
-### Customer (Business)
-
-| Name             | Type    | Description                                                                                                                                                      |
-| ---------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id               | integer | Customer database ID                                                                                                                                             |
-| uid              | string  | Customer unique identifier                                                                                                                                       |
-| email            | string  | Business email address                                                                                                                                           |
-| role             | string  | Account role (customer)                                                                                                                                          |
-| entity_type      | string  | Entity type (business)                                                                                                                                           |
-| level            | integer | Account level                                                                                                                                                    |
-| state            | string  | Account state (active, pending, deleted)                                                                                                                         |
-| custom_id        | string  | Custom identifier set by merchant/aggregator                                                                                                                     |
-| created_at       | string  | Timestamp when customer was created in ISO 8601 format                                                                                                           |
-| updated_at       | string  | Timestamp when customer was last updated in ISO 8601 format                                                                                                      |
-
-### Deposit
-
-| Name          | Type    | Description                               |
-| ------------- | ------- | ----------------------------------------- |
-| id            | integer | Unique deposit id.                        |
-| blockchain    | string  | Blockchain id.                            |
-| currency      | string  | Deposit currency id.                      |
-| amount        | double  | Deposit amount.                           |
-| fee           | double  | Deposit fee.                              |
-| txid          | string  | Deposit transaction id.                   |
-| confirmations | integer | Number of deposit confirmations.          |
-| state         | string  | Deposit state.                            |
-| created_at    | string  | The datetime when deposit was created.    |
-| completed_at  | string  | The datetime when deposit was completed.. |
-| tid           | string  | The shared transaction ID                 |
-
 ### Transaction
 
 | Name                     | Type    | Description                                                                            |
@@ -2159,56 +1256,6 @@ Customer accounts come in two types with different response structures:
 | created_at               | string  | Transaction creation timestamp (ISO8601)                                               |
 | updated_at               | string  | Last update timestamp (ISO8601)                                                        |
 
-### PaymentReference
-
-| Name                 | Type    | Description                                                            |
-| -------------------- | ------- | ---------------------------------------------------------------------- |
-| id                   | integer | Payment reference ID                                                   |
-| reference            | string  | Unique payment reference code (used by customer for deposits)          |
-| uid                  | string  | Customer sub-account UID                                               |
-| currency             | string  | Currency code (e.g., "btc", "usdc")                                    |
-| expected_amount      | string  | Expected deposit amount (null if not specified)                        |
-| deposit_action       | object  | Automated action configuration (null if not configured)                |
-| state                | string  | Current state (see PaymentReference States)                            |
-| expires_at           | string  | ISO8601 expiration timestamp                                           |
-| usage_count          | integer | Number of times the reference has been used                            |
-| last_used_at         | string  | ISO8601 timestamp of last use (null if never used)                     |
-| webhook_url          | string  | Webhook URL (only included if configured)                              |
-| webhook_protocol     | string  | Webhook protocol: "hmac", "plain_text", or "none" (only if configured) |
-| webhook_secret       | string  | Webhook secret (only included for owner with includeSecret option)     |
-| deposit_id           | integer | Linked deposit ID (only included if linked)                            |
-| order_id             | integer | Linked order ID (only included if linked)                              |
-| withdraw_id          | integer | Linked withdrawal ID (only included if linked)                         |
-| internal_transfer_id | integer | Linked internal transfer ID (only included if linked)                  |
-| error                | string  | Error message (only included if state is "failed")                     |
-| created_at           | string  | ISO8601 creation timestamp                                             |
-| updated_at           | string  | ISO8601 last update timestamp                                          |
-
-**Deposit Action Object Structure:**
-
-| Field              | Type    | Description                                                                                                                                                                                                                                                                                          |
-| ------------------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| action             | string  | Action type: "none", "aggregate", "convert_and_withdraw", "aggregate_convert_and_withdraw"                                                                                                                                                                                                           |
-| target_currency    | string  | Target currency for conversion (only for convert actions)                                                                                                                                                                                                                                            |
-| beneficiary_id     | integer | Beneficiary ID for withdrawals (only for withdraw actions)                                                                                                                                                                                                                                           |
-| lightning_invoice  | string  | Lightning invoice for lightning withdrawals (alternative to beneficiary_id)                                                                                                                                                                                                                          |
-| max_slippage       | number  | Maximum slippage percentage                                                                                                                                                                                                                                                                          |
-| beneficiary_amount | string  | Exact amount the beneficiary should receive. If specified and account has insufficient funds after conversion, the withdrawal is skipped and payment is marked as completed with converted funds remaining in the account. When using `lightning_invoice`, the invoice amount must match this value. |
-
-**PaymentReference States:**
-
-Payment references progress through various states based on the configured actions. Webhook notifications are sent when the reference reaches `completed` or `failed` state.
-
-| State                     | Description                         |
-| ------------------------- | ----------------------------------- |
-| pending_deposit           | Waiting for deposit                 |
-| pending_internal_transfer | Processing aggregation              |
-| pending_buy_order         | Processing conversion (buy)         |
-| pending_sell_order        | Processing conversion (sell)        |
-| pending_withdraw          | Processing withdrawal               |
-| completed                 | All actions completed successfully  |
-| failed                    | Processing failed (see error field) |
-
 ### Account
 
 | Name     | Type   | Description           |
@@ -2216,95 +1263,6 @@ Payment references progress through various states based on the configured actio
 | currency | string | Currency code.        |
 | balance  | double | Account balance.      |
 | locked   | double | Account locked funds. |
-
-### Deposit Method
-
-| Name            | Type    | Description                                                      |
-| --------------- | ------- | ---------------------------------------------------------------- |
-| uuid            | string  | Unique identifier for the deposit method                         |
-| name            | string  | Display name of the deposit method                               |
-| description     | string  | Human-readable description of the method                         |
-| currencyId      | string  | Currency identifier (e.g., "btc", "usdc")                        |
-| symbol          | string  | Currency symbol (e.g., "BTC", "USDC")                            |
-| blockchainName  | string  | Blockchain network name (e.g., "bitcoin", "ethereum", "solana") |
-| type            | string  | Method type (e.g., "crypto", "address", "lightning")            |
-| currencyType    | string  | Currency type: always "crypto"                                  |
-| providerId      | string  | Payment provider identifier (e.g., "calibri")                   |
-| minAmount       | number  | Minimum deposit amount (after baseFactor conversion)             |
-| maxAmount       | number  | Maximum deposit amount (derived from remaining limits)           |
-| baseFactor      | number  | Conversion factor (divide stored amounts by this for display)    |
-| precision       | number  | Decimal precision for display                                    |
-| feeCape         | number  | Platform fee amount or percentage                               |
-| feeProvider     | number  | Provider's fee amount or percentage                              |
-| position        | number  | Display order position                                           |
-| iconUrl         | string  | Icon URL for UI display                                          |
-| verified        | boolean | Whether user is verified for this method                         |
-| remainingLimits | object  | Remaining transaction limits (see Remaining Limits object below) |
-
-### Withdraw Method
-
-| Name            | Type    | Description                                                      |
-| --------------- | ------- | ---------------------------------------------------------------- |
-| uuid            | string  | Unique identifier for the withdraw method                        |
-| id              | number  | Database ID (included for legacy support)                        |
-| name            | string  | Display name of the withdraw method                              |
-| description     | string  | Human-readable description of the method                         |
-| currencyId      | string  | Currency identifier (e.g., "btc", "usdc")                        |
-| symbol          | string  | Currency symbol (e.g., "BTC", "USDC")                            |
-| blockchainName  | string  | Blockchain network name (e.g., "bitcoin", "ethereum", "solana") |
-| type            | string  | Method type (e.g., "crypto", "address", "wallet")               |
-| currencyType    | string  | Currency type: always "crypto"                                  |
-| providerId      | string  | Payment provider identifier (e.g., "calibri")                   |
-| processorId     | string  | Processor that handles withdrawals for this method               |
-| minAmount       | number  | Minimum withdrawal amount (after baseFactor conversion)          |
-| maxAmount       | number  | Maximum withdrawal amount (derived from remaining limits)        |
-| baseFactor      | number  | Conversion factor (divide stored amounts by this for display)    |
-| precision       | number  | Decimal precision for display                                    |
-| feeCape         | number  | Platform withdrawal fee amount or percentage                    |
-| feeProvider     | number  | Provider's withdrawal fee amount or percentage                   |
-| position        | number  | Display order position                                           |
-| iconUrl         | string  | Icon URL for UI display                                          |
-| verified        | boolean | Whether user is verified for this method                         |
-| remainingLimits | object  | Remaining transaction limits (see Remaining Limits object below) |
-
-### Remaining Limits
-
-The `remainingLimits` object is included in both Deposit Method and Withdraw Method responses.
-
-| Name            | Type   | Description                                   |
-| --------------- | ------ | --------------------------------------------- |
-| transaction_max | number | Maximum amount allowed per single transaction |
-| day             | number | Remaining limit for the current day           |
-| week            | number | Remaining limit for the current week          |
-| month           | number | Remaining limit for the current month         |
-| year_to_date    | number | Remaining limit for the current year          |
-
-### Lightning payment
-
-| Name               | Type                       | Description                                                     |
-| ------------------ | -------------------------- | --------------------------------------------------------------- |
-| bolt               | String                     | The invoice bolt11.                                             |
-| address            | String                     | The address of the invoice if not bolt11.                       |
-| amount             | number                     | Invoice amount paid in SAT.                                     |
-| description        | String                     | Description for this invoice in the bolt11.                     |
-| member_description | String                     | Private member description for this invoice provided by member. |
-| state              | String                     | Payment state.                                                  |
-| created_at         | String (ISO8601 formatted) | The datetime when payment was created.                          |
-
-### Lightning invoice
-
-| Name               | Type                       | Description                                  |
-| ------------------ | -------------------------- | -------------------------------------------- |
-| bolt               | String                     | The invoice in bolt11.                       |
-| amount             | BigDecimal                 | Invoice amount to be paid in SAT.            |
-| conversion_percent | BigDecimal                 | The percentage to automatically convert to USDC on receipt. |
-| amount_msat        | BigDecimal                 | Invoice amount to be paid in Mili SAT.       |
-| description        | String                     | Description for this invoice.                |
-| member_description | String                     | Private member Description for this invoice. |
-| state              | String                     | Payment state.                               |
-| created_at         | String (ISO8601 formatted) | The datetime when invoice was created.       |
-| expires_at         | String (ISO8601 formatted) | The datetime when invoice expires.           |
-| paid_at            | String (ISO8601 formatted) | The datetime when invoice was paid.          |
 
 ### Websocket orderbook snapshot
 
